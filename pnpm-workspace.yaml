@@ -1,6 +1,9 @@
 allowBuilds:
   esbuild: true
   sharp: true
+  workerd: true
 minimumReleaseAgeExclude:
   - '@astrojs/markdown-satteri@0.4.1'
   - astro@7.3.2
+  - miniflare@5.20260908.0-alpha
+  - wrangler@4.130.0

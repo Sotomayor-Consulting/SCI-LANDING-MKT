@@ -465,13 +465,24 @@ const faqs = [
                 </Field>
               </div>
 
+              <div class="absolute -left-[9999px]" aria-hidden="true">
+                <label for="website">Sitio web</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
               <Alert
                 id="form-error-2"
                 variant="error"
                 class="hidden py-3 text-red-100"
-                ><AlertDescription class="text-xs"
-                  >Revisa los campos indicados antes de continuar.</AlertDescription
-                ></Alert
+                ><AlertDescription id="form-error-2-description" class="text-xs"
+                   >Revisa los campos indicados antes de continuar.</AlertDescription
+                 ></Alert
               >
             </CardContent>
             <CardFooter class="flex-col gap-4 border-white/10 bg-transparent">
@@ -485,6 +496,7 @@ const faqs = [
                   >Volver</Button
                 >
                 <Button
+                  id="lead-submit"
                   type="submit"
                   variant="primary"
                   size="lg"
@@ -521,7 +533,7 @@ const faqs = [
           >
           <CardContent
             ><div
-              class="w-[calc(100%+5rem)] -mx-10 overflow-hidden bg-background mt-5"
+              class="w-[calc(100%+5rem)] -mx-10 overflow-hidden bg-background mt-5 rounded-b-xl"
             >
               <iframe
                 id="calendar-frame"
@@ -890,6 +902,27 @@ const faqs = [
   const calendarTitle = document.querySelector<HTMLElement>("#calendar-title");
   const error1 = document.querySelector<HTMLElement>("#form-error-1");
   const error2 = document.querySelector<HTMLElement>("#form-error-2");
+  const error2Description = document.querySelector<HTMLElement>(
+    "#form-error-2-description"
+  );
+  const phoneInput = document.querySelector<HTMLInputElement>("#phone");
+  const submitButton = document.querySelector<HTMLButtonElement>("#lead-submit");
+  const submissionId = crypto.randomUUID();
+  let isSubmitting = false;
+
+  function setForm2Error(message: string) {
+    if (error2Description) error2Description.textContent = message;
+    error2?.classList.remove("hidden");
+  }
+
+  function setSubmitting(submitting: boolean) {
+    isSubmitting = submitting;
+    if (!submitButton) return;
+    submitButton.disabled = submitting;
+    submitButton.textContent = submitting ? "Guardando..." : "Elegir horario";
+    if (submitting) submitButton.setAttribute("aria-busy", "true");
+    else submitButton.removeAttribute("aria-busy");
+  }
 
   function showStep(step: HTMLElement | null | undefined) {
     [formStep1, formStep2, calendarStep].forEach((s) => s?.classList.add("hidden"));
@@ -918,31 +951,65 @@ const faqs = [
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  form2?.addEventListener("submit", (event) => {
+  phoneInput?.addEventListener("input", () => {
+    phoneInput.setCustomValidity("");
+  });
+
+  form2?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (isSubmitting) return;
+    phoneInput?.setCustomValidity("");
+    const phoneDigits = String(phoneInput?.value || "").replace(/\D/g, "");
+    if (phoneInput?.value && phoneDigits.length < 7) {
+      phoneInput.setCustomValidity(
+        "Escribe un número de teléfono válido (al menos 7 dígitos)."
+      );
+    }
     if (!form2.checkValidity()) {
       form2.reportValidity();
-      error2?.classList.remove("hidden");
+      setForm2Error("Revisa los campos indicados antes de continuar.");
       return;
     }
     error2?.classList.add("hidden");
-    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
-    const phoneDigits = String(phoneInput?.value || "").replace(/\D/g, "");
-    if (phoneDigits.length < 7) {
-      phoneInput?.setCustomValidity(
-        "Escribe un número de teléfono válido (al menos 7 dígitos)."
-      );
-      phoneInput?.reportValidity();
-      error2?.classList.remove("hidden");
-      return;
-    }
-    phoneInput?.setCustomValidity("");
     const data2 = new FormData(form2);
     const data1 = form1 ? new FormData(form1) : new FormData();
     const name = String(data2.get("name") || "");
     const phone = `${data2.get("country") || ""}${String(data2.get("phone") || "")
       .replace(/\D/g, "")
       .replace(/^0+/, "")}`;
+
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submissionId,
+          name,
+          email: String(data2.get("email") || ""),
+          countryCode: String(data2.get("country") || ""),
+          phone: String(data2.get("phone") || ""),
+          activity: String(data1.get("activity") || ""),
+          advice: String(data1.get("advice") || ""),
+          question: String(data1.get("question") || ""),
+          source: "landing",
+          website: String(data2.get("website") || ""),
+        }),
+      });
+
+      if (!response.ok) {
+        setForm2Error("No pudimos guardar tus datos. Inténtalo nuevamente.");
+        return;
+      }
+    } catch {
+      setForm2Error(
+        "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente."
+      );
+      return;
+    } finally {
+      setSubmitting(false);
+    }
+
     const url = new URL("https://zcal.co/t/agendar-asesoria-llc/60min");
     url.searchParams.set("name", name);
     url.searchParams.set("email", String(data2.get("email") || ""));

@@ -2,12 +2,14 @@
   "name": "proper-point",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@12.3.4",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "pages:dev": "pnpm run build && wrangler pages dev dist",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -24,5 +26,8 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "wrangler": "4.130.0"
   }
 }

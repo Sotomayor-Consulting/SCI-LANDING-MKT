@@ -1,0 +1,194 @@
+begin;
+
+alter table public.leads
+  add column if not exists submission_id uuid default gen_random_uuid(),
+  add column if not exists name text,
+  add column if not exists email text,
+  add column if not exists country_code text,
+  add column if not exists phone text,
+  add column if not exists phone_normalized text,
+  add column if not exists activity text,
+  add column if not exists advice text,
+  add column if not exists question text,
+  add column if not exists status text default 'new',
+  add column if not exists source text default 'landing',
+  add column if not exists created_at timestamptz default now();
+
+do $$
+begin
+  if (
+    select data_type
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'leads'
+      and column_name = 'submission_id'
+  ) <> 'uuid' then
+    alter table public.leads
+      alter column submission_id drop identity if exists,
+      alter column submission_id drop default;
+
+    alter table public.leads
+      alter column submission_id type uuid
+      using (
+        case
+          when submission_id is null then gen_random_uuid()
+          else md5('lead-submission-' || submission_id::text)::uuid
+        end
+      );
+  end if;
+end
+$$;
+
+update public.leads
+set
+  submission_id = coalesce(submission_id, gen_random_uuid()),
+  status = coalesce(status, 'new'),
+  source = coalesce(source, 'landing'),
+  created_at = coalesce(created_at, now())
+where
+  submission_id is null
+  or status is null
+  or source is null
+  or created_at is null;
+
+alter table public.leads
+  alter column submission_id set default gen_random_uuid(),
+  alter column submission_id set not null,
+  alter column name set not null,
+  alter column email set not null,
+  alter column country_code set not null,
+  alter column phone set not null,
+  alter column phone_normalized set not null,
+  alter column activity set not null,
+  alter column advice set not null,
+  alter column status set default 'new',
+  alter column status set not null,
+  alter column source set default 'landing',
+  alter column source set not null,
+  alter column created_at set default now(),
+  alter column created_at set not null;
+
+create unique index if not exists leads_submission_id_key
+  on public.leads (submission_id);
+
+create index if not exists leads_created_at_idx
+  on public.leads (created_at desc);
+
+create index if not exists leads_email_idx
+  on public.leads (email);
+
+create index if not exists leads_status_idx
+  on public.leads (status);
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_name_length_check'
+  ) then
+    alter table public.leads add constraint leads_name_length_check
+      check (char_length(btrim(name)) between 2 and 120);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_email_check'
+  ) then
+    alter table public.leads add constraint leads_email_check
+      check (
+        char_length(email) <= 254
+        and email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
+      );
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_country_code_check'
+  ) then
+    alter table public.leads add constraint leads_country_code_check
+      check (country_code ~ '^\+[1-9][0-9]{0,3}$');
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_phone_length_check'
+  ) then
+    alter table public.leads add constraint leads_phone_length_check
+      check (char_length(phone) between 7 and 32);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_phone_normalized_check'
+  ) then
+    alter table public.leads add constraint leads_phone_normalized_check
+      check (phone_normalized ~ '^\+[1-9][0-9]{7,14}$');
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_activity_length_check'
+  ) then
+    alter table public.leads add constraint leads_activity_length_check
+      check (char_length(btrim(activity)) between 1 and 160);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_advice_length_check'
+  ) then
+    alter table public.leads add constraint leads_advice_length_check
+      check (char_length(btrim(advice)) between 1 and 160);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_question_length_check'
+  ) then
+    alter table public.leads add constraint leads_question_length_check
+      check (question is null or char_length(question) <= 2000);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_status_check'
+  ) then
+    alter table public.leads add constraint leads_status_check
+      check (status in ('new', 'contacted', 'qualified', 'scheduled', 'won', 'lost', 'spam'));
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+    where conrelid = 'public.leads'::regclass
+      and conname = 'leads_source_length_check'
+  ) then
+    alter table public.leads add constraint leads_source_length_check
+      check (char_length(btrim(source)) between 1 and 80);
+  end if;
+end
+$$;
+
+alter table public.leads enable row level security;
+
+revoke all on table public.leads from anon, authenticated;
+grant select, insert, update on table public.leads to service_role;
+
+comment on table public.leads is
+  'Leads captured by the landing page through the Cloudflare Worker.';
+
+comment on column public.leads.submission_id is
+  'Client-generated idempotency key used to prevent duplicate submissions.';
+
+comment on column public.leads.phone_normalized is
+  'Phone number normalized to E.164 format.';
+
+commit;
