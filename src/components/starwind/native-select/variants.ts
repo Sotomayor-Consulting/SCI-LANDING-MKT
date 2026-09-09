@@ -28,7 +28,7 @@ export const nativeSelect = tv({
 
 export const nativeSelectIcon = tv({
   base: [
-    "text-foreground pointer-events-none absolute top-1/2 -translate-y-1/2 opacity-50",
+    "text-white pointer-events-none absolute top-1/2 -translate-y-1/2 opacity-50",
   ],
   variants: {
     size: {

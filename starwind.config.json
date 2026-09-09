@@ -66,6 +66,30 @@
       "version": "1.0.1",
       "framework": "astro",
       "registry": "default"
+    },
+    {
+      "name": "radio-group",
+      "version": "3.0.2",
+      "framework": "astro",
+      "registry": "default"
+    },
+    {
+      "name": "textarea",
+      "version": "1.4.0",
+      "framework": "astro",
+      "registry": "default"
+    },
+    {
+      "name": "label",
+      "version": "1.3.0",
+      "framework": "astro",
+      "registry": "default"
+    },
+    {
+      "name": "select",
+      "version": "2.1.1",
+      "framework": "astro",
+      "registry": "default"
     }
   ],
   "tailwind": {
