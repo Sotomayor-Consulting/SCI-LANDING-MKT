@@ -497,7 +497,7 @@ const faqs = [
             </CardFooter>
           </Form>
         </div>
-        <div id="calendar-step" class="hidden">
+        <div id="calendar-step" class="hidden gap-5">
           <CardHeader
             ><Badge
               tone="primary-accent"
@@ -520,7 +520,9 @@ const faqs = [
             /></CardHeader
           >
           <CardContent
-            ><div class="overflow-hidden rounded-xl bg-background">
+            ><div
+              class="w-[calc(100%+5rem)] -mx-10 overflow-hidden bg-background mt-5"
+            >
               <iframe
                 id="calendar-frame"
                 title="Calendario de reservas"
