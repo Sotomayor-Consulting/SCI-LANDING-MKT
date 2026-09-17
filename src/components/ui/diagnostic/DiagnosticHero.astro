@@ -1,0 +1,98 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+
+interface Props {
+  eyebrow: string;
+  titleBefore: string;
+  titleAccent: string;
+  titleAfter: string;
+  description: string;
+  badges: string[];
+  disclaimer: string;
+}
+
+const {
+  eyebrow,
+  titleBefore,
+  titleAccent,
+  titleAfter,
+  description,
+  badges,
+  disclaimer,
+} = Astro.props as Props;
+---
+
+<section
+  id="welcome-screen"
+  class="relative isolate flex min-h-dvh items-center overflow-hidden bg-[#0e2637] px-5 py-28 text-white"
+>
+  <img
+    src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=85"
+    alt=""
+    aria-hidden="true"
+    loading="eager"
+    class="absolute inset-0 -z-20 size-full object-cover object-center"
+  />
+  <div
+    class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(14,38,55,.55),rgba(14,38,55,.82)_42%,rgba(14,38,55,.98)_82%)]"
+  >
+  </div>
+  <header
+    class="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-white/10 bg-[#0e2637]/90 px-5 py-4 backdrop-blur-xl"
+  >
+    <img
+      src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-7.png"
+      alt="Sotomayor Consulting"
+      class="h-11 w-auto"
+    />
+  </header>
+
+  <div class="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+    <Badge
+      tone="primary-accent"
+      appearance="frosted"
+      eyebrow
+      class="border-primary/30 bg-primary/10 text-primary"
+    >
+      {eyebrow}
+    </Badge>
+    <h1
+      id="diagnostic-hero-title"
+      class="font-display text-4xl leading-[1.05] font-extrabold tracking-[-.045em] sm:text-6xl"
+    >
+      <span data-title-before>{titleBefore}</span>
+      <span class="text-primary italic" data-title-accent>{titleAccent}</span>
+      <span data-title-after>{titleAfter}</span>
+    </h1>
+    <p
+      id="diagnostic-hero-description"
+      class="max-w-2xl text-base leading-7 text-white/70 sm:text-lg"
+    >
+      {description}
+    </p>
+    <div class="flex flex-wrap justify-center gap-2">
+      {
+        badges.map((badge) => (
+          <Badge
+            tone="neutral"
+            appearance="frosted"
+            class="border-white/10 bg-white/8 px-4 py-2 text-white"
+          >
+            <span class="text-primary mr-1" aria-hidden="true">✓</span>
+            {badge}
+          </Badge>
+        ))
+      }
+    </div>
+    <Button
+      id="start-diagnostic"
+      type="button"
+      size="lg"
+      class="mt-2 min-w-64 rounded-xl bg-[linear-gradient(135deg,#a9741f,#c0872e_55%,#e4c078)] px-8 font-bold text-white shadow-xl shadow-amber-950/30 hover:brightness-110"
+    >
+      Empezar el diagnóstico →
+    </Button>
+    <p class="max-w-2xl text-xs leading-5 text-white/50">{disclaimer}</p>
+  </div>
+</section>
