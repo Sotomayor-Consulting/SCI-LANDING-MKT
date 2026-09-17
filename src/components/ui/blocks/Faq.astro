@@ -1,0 +1,46 @@
+---
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/starwind/accordion";
+import { Card, CardContent } from "@/components/starwind/card";
+
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+}
+
+const { faqs, label, title, description } = Astro.props as Props;
+---
+
+<div
+  class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.65fr_1.35fr] lg:px-8"
+>
+  <div>
+    <p class="section-kicker">{label}</p><h2 class="section-title">
+      {title}
+    </h2><p class="mt-5 text-sm leading-6 text-slate-500">
+      {description}
+    </p>
+  </div><Card class="rounded-2xl"
+    ><CardContent
+      ><Accordion defaultValue="faq-1"
+        >{
+          faqs.map((faqs, index) => (
+            <AccordionItem value={`faq-${index + 1}`}>
+              <AccordionTrigger>{faqs.question}</AccordionTrigger>
+              <AccordionContent>{faqs.answer}</AccordionContent>
+            </AccordionItem>
+          ))
+        }</Accordion
+      ></CardContent
+    ></Card
+  >
+</div>

@@ -23,6 +23,9 @@ pnpm-debug.log*
 # cloudflare local state
 .wrangler/
 
+# Supabase CLI local state
+supabase/.temp/
+
 # macOS-specific files
 .DS_Store
 

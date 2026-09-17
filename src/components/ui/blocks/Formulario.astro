@@ -1,0 +1,389 @@
+---
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/starwind/select";
+import {
+  Field,
+  FieldControl,
+  FieldError,
+  FieldLabel,
+} from "@/components/starwind/field";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/starwind/native-select";
+import { Badge } from "@/components/starwind/badge";
+import { Form } from "@/components/starwind/form";
+import { Textarea } from "@/components/starwind/textarea";
+import { Alert, AlertDescription } from "@/components/starwind/alert";
+import { Button } from "@/components/starwind/button";
+
+interface Props {
+  activities: string[];
+  adviceOptions: string[];
+}
+
+const { activities, adviceOptions } = Astro.props as Props;
+---
+
+<Card
+  id="agendar"
+  class="border-primary-accent/40 bg-foreground text-background grid min-h-150 scroll-mt-24 rounded-[1.75rem] px-5 shadow-2xl shadow-slate-900/20"
+>
+  <div id="form-step-1" class="form-step flex flex-col gap-3">
+    <CardHeader>
+      <div class="mb-3 flex items-center justify-between">
+        <Badge
+          class="mx-5 flex w-full items-center justify-center bg-[#f9fafb] text-center text-black"
+          tone="primary-accent"
+          appearance="frosted"
+          eyebrow
+          size="sm">Asesoría gratuita</Badge
+        >
+        <Badge
+          tone="neutral"
+          appearance="text"
+          size="sm"
+          class="mx-5"
+          class="text-white/50">Paso 1 de 3</Badge
+        >
+      </div>
+      <CardTitle
+        ><h2 class="font-display text-2xl font-semibold text-white">
+          Cuéntanos tu caso
+        </h2></CardTitle
+      >
+      <CardDescription class="text-white/65"
+        >Responde unas preguntas y después completaremos tus datos.</CardDescription
+      >
+    </CardHeader>
+    <Form id="lead-form-1" novalidate class="flex flex-col gap-5">
+      <CardContent class="flex flex-col gap-6">
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-white/75">
+            ¿Para qué actividad quieres crear tu LLC?
+          </p>
+          <p class="text-xs text-white/50">
+            Selecciona tu actividad principal.
+          </p>
+          <Select name="activity" required>
+            <SelectTrigger
+              size="sm"
+              class="w-full border-white/15 bg-white/7 text-white data-placeholder:text-white/40"
+              placeholder="Selecciona una actividad"
+              aria-label="selector"
+            >
+              <SelectValue placeholder="Selecciona una actividad" />
+            </SelectTrigger>
+            <SelectContent>
+              {
+                activities.map((activity) => (
+                  <SelectItem value={activity} class="max-w-full">
+                    {activity}
+                  </SelectItem>
+                ))
+              }
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-white/75">
+            ¿Quieres una asesoría gratuita por Zoom?
+          </p>
+          <Select name="advice" required>
+            <SelectTrigger
+              size="sm"
+              class="w-full border-white/15 bg-white/7 text-white data-placeholder:text-white/40"
+              placeholder="Selecciona una opción"
+              aria-label="selector"
+            >
+              <SelectValue placeholder="Selecciona una opción" />
+            </SelectTrigger>
+            <SelectContent>
+              {
+                adviceOptions.map((option) => (
+                  <SelectItem value={option}>{option}</SelectItem>
+                ))
+              }
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-white/75">
+            ¿Qué duda principal quieres resolver en la asesoría?
+          </p>
+          <Textarea
+            id="question"
+            name="question"
+            rows={4}
+            placeholder="Cuéntanos tu duda principal..."
+            class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
+          />
+        </div>
+
+        <Alert
+          id="form-error-1"
+          variant="error"
+          class="hidden py-3 text-red-100"
+          ><AlertDescription class="text-xs"
+            >Revisa los campos indicados antes de continuar.</AlertDescription
+          ></Alert
+        >
+      </CardContent>
+      <CardFooter class="flex-col gap-4 border-white/10 bg-transparent">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          class="w-full rounded-xl font-bold">Continuar</Button
+        >
+      </CardFooter>
+    </Form>
+  </div>
+  <div
+    id="form-step-2"
+    class="form-step hidden h-full min-h-full flex-col gap-3"
+  >
+    <CardHeader>
+      <div class="flex items-center justify-between">
+        <Badge
+          class="mx-5 flex w-full items-center justify-center bg-[#f9fafb] text-center text-black"
+          tone="primary-accent"
+          appearance="frosted"
+          eyebrow
+          size="sm">Asesoría gratuita</Badge
+        >
+        <Badge tone="neutral" appearance="text" size="sm" class="text-white/50"
+          >Paso 2 de 3</Badge
+        >
+      </div>
+      <CardTitle
+        ><h2
+          id="contact-title"
+          tabindex="-1"
+          class="font-display text-2xl font-semibold text-white outline-none"
+        >
+          Datos de contacto
+        </h2></CardTitle
+      >
+      <CardDescription class="text-white/65"
+        >Completa tus datos para reservar tu asesoría.</CardDescription
+      >
+    </CardHeader>
+    <Form id="lead-form-2" novalidate class="grid gap-5">
+      <CardContent class="flex h-full flex-col gap-6">
+        <Field name="name" class="gap-1.5">
+          <FieldLabel for="name" class="text-sm text-white/75"
+            >Nombre completo</FieldLabel
+          >
+          <FieldControl
+            size="sm"
+            id="name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            minlength="2"
+            placeholder="Tu nombre y apellido"
+            class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
+          />
+          <FieldError match="valueMissing"
+            >Escribe tu nombre completo.</FieldError
+          >
+          <FieldError match="tooShort"
+            >Escribe al menos dos caracteres.</FieldError
+          >
+        </Field>
+        <Field name="email" class="gap-1.5">
+          <FieldLabel for="email" class="text-sm text-white/75"
+            >Correo electrónico</FieldLabel
+          >
+          <FieldControl
+            size="sm"
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="nombre@empresa.com"
+            class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
+          />
+          <FieldError match="valueMissing">Escribe tu correo.</FieldError>
+          <FieldError match="typeMismatch">Escribe un correo válido.</FieldError
+          >
+        </Field>
+        <div class="grid grid-cols-[7.5rem_1fr] gap-2">
+          <Field class="gap-1.5">
+            <FieldLabel for="country" class="text-sm text-white/75"
+              >País</FieldLabel
+            >
+            <NativeSelect
+              id="country"
+              size="sm"
+              name="country"
+              class="border-white/15 bg-white/7 text-white"
+            >
+              <NativeSelectOption value="+593">EC +593</NativeSelectOption
+              ><NativeSelectOption value="+57">CO +57</NativeSelectOption
+              ><NativeSelectOption value="+52">MX +52</NativeSelectOption
+              ><NativeSelectOption value="+51">PE +51</NativeSelectOption
+              ><NativeSelectOption value="+1">US +1</NativeSelectOption
+              ><NativeSelectOption value="+34">ES +34</NativeSelectOption>
+              <NativeSelectOption value="+54">AR +54</NativeSelectOption>
+            </NativeSelect>
+          </Field>
+          <Field name="phone" class="gap-1.5">
+            <FieldLabel for="phone" class="text-sm text-white/75"
+              >Teléfono / WhatsApp</FieldLabel
+            >
+            <FieldControl
+              size="sm"
+              id="phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              required
+              pattern="[0-9+\-().\s]+"
+              minlength="7"
+              maxlength="15"
+              placeholder="099 123 4567"
+              class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
+            />
+            <FieldError match="valueMissing">Escribe tu número.</FieldError>
+            <FieldError match="tooShort"
+              >Escribe un número de teléfono válido.</FieldError
+            >
+            <FieldError match="patternMismatch"
+              >Solo se permiten números, espacios o guiones.</FieldError
+            >
+          </Field>
+        </div>
+
+        <div class="absolute -left-[9999px]" aria-hidden="true">
+          <label for="website">Sitio web</label>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <Alert
+          id="form-error-2"
+          variant="error"
+          class="hidden py-3 text-red-100"
+          ><AlertDescription id="form-error-2-description" class="text-xs"
+            >Revisa los campos indicados antes de continuar.</AlertDescription
+          ></Alert
+        >
+      </CardContent>
+      <CardFooter
+        class="flex-col justify-end gap-4 border-white/10 bg-transparent"
+      >
+        <div
+          class="grid h-full w-full min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-2"
+        >
+          <Button
+            id="back-btn"
+            type="button"
+            variant="outline"
+            size="lg"
+            class="bg-background text-foreground w-full min-w-0 rounded-xl px-2 text-sm font-bold sm:px-8 sm:text-lg"
+            >Volver</Button
+          >
+          <Button
+            id="lead-submit"
+            type="submit"
+            variant="primary"
+            size="lg"
+            class="w-full min-w-0 rounded-xl px-2 text-sm font-bold sm:px-8 sm:text-lg"
+            >Elegir horario</Button
+          >
+        </div>
+        <p class="text-center text-[.7rem] leading-5 text-white/45">
+          Tus datos se utilizan únicamente para gestionar esta asesoría.
+        </p>
+      </CardFooter>
+    </Form>
+  </div>
+  <div id="calendar-step" class="form-step hidden gap-5">
+    <CardHeader
+      ><Badge
+        tone="primary-accent"
+        appearance="outline"
+        eyebrow
+        size="sm"
+        class="w-fit">Paso 3 de 3</Badge
+      ><CardTitle
+        ><h2
+          id="calendar-title"
+          tabindex="-1"
+          class="font-display text-2xl font-semibold text-white outline-none"
+        >
+          Elige tu horario
+        </h2></CardTitle
+      ><CardDescription
+        id="calendar-greeting"
+        aria-live="polite"
+        class="text-white/65"
+      /></CardHeader
+    >
+    <CardContent
+      ><div
+        class="bg-background -mx-10 mt-5 w-[calc(100%+5rem)] overflow-hidden rounded-b-xl"
+      >
+        <iframe
+          id="calendar-frame"
+          title="Calendario de reservas"
+          class="h-[540px] w-full border-0"></iframe>
+      </div></CardContent
+    >
+  </div>
+</Card>
+
+<style>
+  .form-step:not(.hidden) {
+    animation: form-step-enter 240ms ease-out both;
+  }
+
+  #agendar[data-step-direction="backward"] .form-step:not(.hidden) {
+    animation-name: form-step-enter-backward;
+  }
+
+  @keyframes form-step-enter {
+    from {
+      opacity: 0;
+      transform: translateX(0.75rem);
+    }
+  }
+
+  @keyframes form-step-enter-backward {
+    from {
+      opacity: 0;
+      transform: translateX(-0.75rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .form-step:not(.hidden) {
+      animation: none;
+    }
+  }
+</style>

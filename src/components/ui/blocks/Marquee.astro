@@ -1,0 +1,21 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  logos:{
+    name:string;
+    size: string;
+  }[]
+}
+
+const { logos } = Astro.props
+---
+
+<div
+  class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-12 gap-y-5 px-5 text-center lg:px-8"
+>
+  <Badge tone="neutral" appearance="text" eyebrow size="sm"
+    >Acompañamiento para</Badge
+  >{logos.map((logo) => <Icon name={logo.name} class={`${logo.size} delay-150 hover:scale-120 transition-all`} />)}
+</div>

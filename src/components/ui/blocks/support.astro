@@ -1,0 +1,127 @@
+---
+interface Props {
+    badge: string;
+    title: string;
+    description1: string;
+    description2: string;
+    description3: string;
+    bottom: string;
+    titleCard: string;
+    titlecorreo:string;
+    tituloatencion:string;
+    descripcionatencion:string;
+    titulorespuesta:string;
+    descripcionrespuesta:string;
+}
+
+const { badge, title, description1, description2, description3, bottom, titleCard, titlecorreo, tituloatencion, descripcionatencion, titulorespuesta, descripcionrespuesta } = Astro.props as Props;
+---
+
+<section class="py-30">
+    <div
+      aria-hidden="true"
+      class="absolute start-1/2 -top-96 flex -translate-x-1/2 transform"
+    >
+      <div
+        class="h-175 w-100 -translate-x-40 rotate-[-60deg] transform bg-linear-to-r from-yellow-700 to-yellow-100 blur-3xl dark:from-yellow-100 dark:to-yellow-600"
+      >
+      </div>
+      <div
+        class="from-[#b98d33] via-[#b98d33]/20 to-[#b98d33] rounded-fulls dark:from-primary-900/70 dark:via-primary-900/70 dark:to-primary-900/70 h-200 w-360 origin-top-left -translate-x-60 -rotate-12 bg-linear-to-tl blur-3xl"
+      >
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <div>
+          <span
+            class="inline-flex rounded-full bg-[#b98d33] px-3 py-1 text-sm font-medium text-white"
+          >
+             {badge}
+          </span>
+
+          <h1
+            class="mt-4 text-3xl font-bold text-primario-black sm:text-4xl lg:text-5xl lg:leading-tight dark:text-white"
+          >
+             {title}
+          </h1>
+
+          <p
+            class="mt-4 text-base text-primario-black sm:text-lg dark:text-neutral-400"
+          >
+            {description1}
+          </p>
+
+          <p
+            class="mt-4 text-base text-primario-black sm:text-lg dark:text-neutral-400"
+          >
+            {description2}
+            <a
+              href="mailto:soporte@sotomayorconsulting.com"
+              class="font-semibold text-primario-black hover:underline dark:text-white"
+            >
+              soporte@sotomayorconsulting.com
+            </a>
+             {description3}
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a
+              href="mailto:soporte@sotomayorconsulting.com"
+              class="inline-flex items-center justify-center rounded-lg border dark:hover:border-[#b98d33] px-5 py-3 text-sm font-medium focus:outline-hidden dark:text-white dark:hover:text-[#b98d33] border-[#b98d33] text-white dark:bg-transparent bg-[#b98d33]"
+            >
+               {bottom}
+            </a>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div
+            class="dark:bg-neutral-800 bg-neutral-200 border-card-line rounded-2xl border p-6 shadow-sm sm:p-8"
+          >
+            <h2 class="text-xl font-semibold text-primario-black dark:text-white">
+               {titleCard}
+            </h2>
+
+            <div class="mt-6 space-y-5">
+              <div>
+                <p
+                  class="text-sm tracking-wide text-primario-black uppercase dark:text-white"
+                >
+                   {titlecorreo}
+                </p>
+                <a
+                  href="mailto:soporte@sotomayorconsulting.com"
+                  class="mt-1 block text-lg font-semibold text-primario-black dark:text-white hover:dark:text-white"
+                >
+                  soporte@sotomayorconsulting.com
+                </a>
+              </div>
+
+              <div>
+                <p
+                  class="text-sm tracking-wide text-primario-black uppercase dark:text-white"
+                >
+                  {tituloatencion}
+                </p>
+                <p class="mt-1 text-primario-black dark:text-neutral-400">
+                  {descripcionatencion}
+                </p>
+              </div>
+
+              <div>
+                <p
+                  class="text-sm tracking-wide text-primario-black uppercase dark:text-white"
+                >
+                  {titulorespuesta}
+                </p>
+                <p class="mt-1 text-primario-black dark:text-neutral-400">
+                  {descripcionrespuesta}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

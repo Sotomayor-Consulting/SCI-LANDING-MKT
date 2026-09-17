@@ -1,0 +1,130 @@
+---
+import { Image } from "astro:assets";
+import imagen1 from "@images/reunidos.webp";
+// import imagen2 from "@images/icono.png";
+import imagen3 from "@images/test.avif";
+import imagen4 from "@images/llc-imagen-1.png";
+import imagen5 from "@images/chart-imagen-2.png";
+import imagen6 from "@images/paper-imagen3.png";
+import imagen7 from "@images/imagen-tech-4.png";
+
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+  button: string;
+  label2: string;
+}
+
+const { label, title, description, button, label2 } = Astro.props;
+---
+
+<!-- Root section of the component -->
+<section
+  class="section mx-auto h-full w-full scroll-m-20 rounded-b-[50px] bg-white md:px-16 dark:bg-[#262626]"
+>
+  <div class="grid grid-cols-1 pt-8 sm:gap-4 md:grid-cols-2 md:gap-12">
+    <div class="pt-5 text-center md:text-left text-primario-black">
+      <span class="text-[10px] font-bold uppercase dark:text-white">
+        {label}
+      </span>
+      <h1 class="py-6 text-4xl font-bold dark:text-white">
+        {title}
+      </h1>
+      <div>
+        <p class="px-7 text-sm text-pretty md:pl-0 dark:text-white">
+          {description}
+        </p>
+      </div>
+      <div class="my-6 flex justify-center md:my-6 md:block">
+        <a
+          class="text-white hover:bg-day-secondary mx-7 w-full rounded-full bg-secundario py-6 text-xs font-bold transition-colors hover:bg-[#cca558] md:mx-0 md:w-2 md:px-6 md:py-3 dark:text-white"
+          aria-label="button booknow"
+          href="/contact"
+          rel="noopener noreferrer"
+        >
+          {button}
+        </a>
+      </div>
+      <div
+        class="video-container relative my-16 px-7 pt-5 md:my-8 md:w-full md:pr-48 md:pl-0"
+      >
+        <Image
+          src={imagen1}
+          alt="Reunion de Sotomayor Consulting International"
+          class="z-10 max-h-28 w-full rounded-lg object-cover opacity-45 shadow-lg transition-all hover:opacity-100 dark:border-0 dark:bg-black dark:shadow-none"
+        />
+        <div class="absolute bottom-[10%] left-[10%] text-left md:left-[2%]">
+          <h2 class="text-xs font-bold tracking-wide uppercase dark:text-white">
+            {label2}
+          </h2>
+        </div>
+        <a
+          class="text-primario-black hover:bg-day-secondary absolute right-[3%] bottom-[30%] rounded-full bg-secundario p-2 transition-colors hover:text-white md:right-[30%]"
+          aria-label="button play video"
+          href="https://youtu.be/8Z1Q9N_trjM"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-player-play"
+            ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+              d="M7 4v16l13 -8z"></path></svg
+          >
+        </a>
+      </div>
+    </div>
+    <div class="relative my-10 pb-0">
+      <!-- <Image
+        src={imagen2}
+        alt="icono"
+        class="absolute -top-10 left-0 object-cover opacity-10 md:-top-10 md:-left-12 lg:-top-10 lg:left-7"
+      />
+      <Image
+        src={imagen2}
+        alt="icono"
+        class="absolute right-0 -bottom-10 object-cover opacity-10 md:-right-12 md:bottom-10 lg:right-3 lg:-bottom-10 size-3"
+      /> -->
+
+      <div class="relative flex items-center justify-center px-8 md:px-0">
+        <Image
+          src={imagen3}
+          alt="experto"
+          class="mt-0 aspect-square h-[350px] w-[350px] rounded-tl-[100px] rounded-tr-[60px] rounded-br-[60px] rounded-bl-[260px] border-2 border-[#171717] object-none shadow-lg md:h-[400px] md:w-[400px] md:rounded-tl-[60px] md:rounded-bl-[60px]"
+        />
+
+        <Image
+          src={imagen4}
+          alt="LLC"
+          class="border-day-main absolute size-20 translate-x-[-175%] translate-y-[-100%] rounded-full border-2 object-none object-top md:translate-x-[-190%] md:translate-y-[-130%] lg:translate-x-[-240%] lg:translate-y-[-130%]"
+        />
+
+        <Image
+          src={imagen5}
+          alt="economia"
+          class="border-day-main absolute size-20 translate-x-[-160%] translate-y-[40%] rounded-full border-2 object-none object-top md:translate-x-[-190%] md:translate-y-[50%] lg:translate-x-[-240%] lg:translate-y-[50%]"
+        />
+        <Image
+          src={imagen6}
+          alt="economia"
+          class="border-day-main absolute size-20 translate-x-[-90%] translate-y-[155%] rounded-full border-2 object-cover md:translate-x-[-100%] md:translate-y-[250%]"
+        />
+
+        <Image
+          src={imagen7}
+          alt="economia"
+          class="border-day-main absolute size-20 translate-x-[50%] translate-y-[210%] rounded-full border-2 object-none md:translate-x-[50%] md:translate-y-[250%]"
+        />
+      </div>
+    </div>
+  </div>
+</section>

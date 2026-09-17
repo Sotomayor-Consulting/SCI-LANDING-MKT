@@ -1,0 +1,56 @@
+---
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Badge } from "@/components/starwind/badge";
+
+interface Props {
+    label: string;
+    title: string;
+    steps: {
+        titulo: string,
+        descripcion: string
+    }[]
+}
+
+const { steps, label, title } = Astro.props;
+---
+
+<div class="mx-auto max-w-7xl px-5 lg:px-8">
+  <div class="mx-auto max-w-2xl text-center">
+    <p class="section-kicker justify-center">{label}</p><h2
+      class="section-title"
+    >
+      {title}
+    </h2>
+  </div><div class="relative mt-14 grid gap-5 lg:grid-cols-3">
+    <div
+      class="bg-primary/40 absolute top-8 right-[16%] left-[16%] hidden h-px lg:block"
+    >
+    </div>{
+      steps.map((step, index) => (
+        <Card class="relative rounded-2xl hover:-translate-y-3 hover:shadow-2xl delay-120 transition-all">
+          <CardHeader>
+            <Badge
+              tone="primary-accent"
+              appearance="outline"
+              size="lg"
+              class="font-display relative z-10 size-16 justify-center rounded-2xl p-0 text-lg"
+            >
+              0{index + 1}
+            </Badge>
+            <CardTitle>
+              <h3 class="font-display text-xl font-semibold">{step.titulo}</h3>
+            </CardTitle>
+            <CardDescription class="leading-6">
+              {step.descripcion}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      ))
+    }
+  </div>
+</div>

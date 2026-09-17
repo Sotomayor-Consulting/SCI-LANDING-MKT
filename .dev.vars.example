@@ -1,2 +1,4 @@
 SUPABASE_URL="https://vzrrjkdhqqkxjedeukml.supabase.co"
 SUPABASE_SERVICE_ROLE_KEY="replace-with-your-service-role-key"
+CALENDAR_WEBHOOK_SECRET="replace-with-a-long-random-secret"
+TURNSTILE_SECRET_KEY="replace-with-your-turnstile-secret-key"

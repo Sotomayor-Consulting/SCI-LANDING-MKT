@@ -1,0 +1,120 @@
+---
+const pathname = Astro.url.pathname;
+const isEnglish = pathname.startsWith("/en");
+const isPortuguese = pathname.startsWith("/pr");
+const pregunta = isEnglish
+  ? "What do you want to do?"
+  : isPortuguese
+    ? "O que você deseja fazer?"
+    : "¿Qué deseas hacer?";
+const agendar = isEnglish
+  ? "Book a Free Consultation"
+  : isPortuguese
+    ? "Agendar Reunião Gratuita"
+    : "Agendar Reunión Gratuita";
+const pago = isEnglish
+  ? "Make Payment"
+  : isPortuguese
+    ? "Realizar Pagamento"
+    : "Realizar Pago";
+const cerrar = isEnglish ? "Close" : isPortuguese ? "Fechar" : "Cerrar";
+---
+<div
+  id="actionModal3"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70"
+>
+  <div
+    class="relative m-4 w-full max-w-md rounded-xl border border-gray-200 bg-white p-6 shadow-2xl xl:p-8 dark:border-gray-700 dark:bg-[#262626] dark:text-white"
+  >
+    <div class="relative">
+      <h2
+        class="mb-6 text-center text-2xl font-bold text-primario-black dark:text-white"
+      >
+        {pregunta}
+      </h2>
+
+      <div class="space-y-4">
+        <a
+          href="https://zcal.co/t/agendar-asesoria-llc/60min"
+          class="flex w-full justify-center rounded-lg bg-[#171717] px-4 py-3 text-center font-medium text-white shadow-md transition-colors duration-200 hover:bg-[#262626] hover:shadow-lg"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="mr-5"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            ><g fill="none"
+              ><path
+                fill="currentColor"
+                d="M2 9c0-1.886 0-2.828.586-3.414S4.114 5 6 5h12c1.886 0 2.828 0 3.414.586S22 7.114 22 9c0 .471 0 .707-.146.854C21.707 10 21.47 10 21 10H3c-.471 0-.707 0-.854-.146C2 9.707 2 9.47 2 9m0 9c0 1.886 0 2.828.586 3.414S4.114 22 6 22h12c1.886 0 2.828 0 3.414-.586S22 19.886 22 18v-5c0-.471 0-.707-.146-.854C21.707 12 21.47 12 21 12H3c-.471 0-.707 0-.854.146C2 12.293 2 12.53 2 13z"
+              ></path><path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+                d="M7 3v3m10-3v3"
+              ></path></g
+            ></svg
+          >
+          {agendar}
+        </a>
+
+        <a
+          href="https://www.cognitoforms.com/SotomayorConsultingInternational/RegistroPlanesDeIncorporaci%C3%B3n?entry=%7B%22PlanDeServicio%22:%2211-66%22%7D"
+          class="flex w-full justify-center rounded-lg bg-[#171717] px-4 py-3 text-center font-medium text-white shadow-md transition-colors duration-200 hover:bg-[#262626] hover:shadow-lg"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="mr-5"
+            width="24"
+            height="24"
+            viewBox="0 0 512 512"
+            ><path
+              fill="currentColor"
+              d="M32 376a56 56 0 0 0 56 56h336a56 56 0 0 0 56-56V222H32Zm66-76a30 30 0 0 1 30-30h48a30 30 0 0 1 30 30v20a30 30 0 0 1-30 30h-48a30 30 0 0 1-30-30ZM424 80H88a56 56 0 0 0-56 56v26h448v-26a56 56 0 0 0-56-56"
+            ></path></svg
+          >
+          {pago}
+        </a>
+      </div>
+      <button
+        id="closeModaltres"
+        class="mt-6 w-full rounded-lg bg-red-400 px-4 py-2 font-medium text-primario-black transition-colors duration-200 hover:bg-gray-300 dark:bg-gray-200"
+      >
+        {cerrar}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const openButton = document.getElementById("openModaltres");
+    const closeButton = document.getElementById("closeModaltres");
+    const modal = document.getElementById("actionModal3");
+
+    openButton?.addEventListener("click", function () {
+      modal?.classList.remove("hidden");
+      modal?.classList.add("flex");
+    });
+
+    closeButton?.addEventListener("click", function () {
+      modal?.classList.remove("flex");
+      modal?.classList.add("hidden");
+    });
+
+    modal?.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal?.classList.remove("flex");
+        modal?.classList.add("hidden");
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        modal?.classList.remove("flex");
+        modal?.classList.add("hidden");
+      }
+    });
+  });
+</script>

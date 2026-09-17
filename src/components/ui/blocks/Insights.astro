@@ -1,0 +1,54 @@
+---
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+import { Badge } from "@/components/starwind/badge";
+
+interface Props {
+  label: string;
+  title: string;
+  audiences: {
+    title: string;
+    description: string;
+  }[];
+}
+
+
+const { audiences, label, title } = Astro.props;
+---
+
+<div class="mx-auto max-w-7xl px-5 lg:px-8">
+  <div class="max-w-2xl">
+    <p class="section-kicker">{label}</p><h2 class="section-title">
+      {title}
+    </h2>
+  </div><div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      audiences.map((audiences, i) => (
+        <Card class="group hover:border-primary/60 rounded-2xl transition hover:-translate-y-1 hover:shadow-xl">
+          <CardHeader>
+            <Badge
+              tone="primary-accent"
+              appearance="soft"
+              size="lg"
+              class="size-10 justify-center p-0"
+            >
+              0{i + 1}
+            </Badge>
+            <CardTitle>
+              <h3 class="font-display text-lg font-semibold">{audiences.title}</h3>
+            </CardTitle>
+            <CardContent>
+              <CardDescription class="leading-6">{audiences.description}</CardDescription>
+            </CardContent>
+          </CardHeader>
+        </Card>
+      ))
+    }
+  </div>
+</div>

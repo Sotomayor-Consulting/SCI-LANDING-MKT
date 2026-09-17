@@ -1,0 +1,37 @@
+---
+import { Card } from "@/components/starwind/card";
+import { Button } from "@/components/starwind/button";
+
+
+interface Props {
+    label: string;
+    title: string;
+    description: string;
+    href: string;
+    descriptionBtn: string;
+}
+
+const { label, title, href, descriptionBtn, description } = Astro.props as Props;
+---
+
+<Card
+  class="bg-foreground text-background relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] px-6 py-14 text-center sm:py-16"
+>
+  <div
+    class="border-primary/20 absolute -top-24 -left-24 size-64 rounded-full border"
+  >
+  </div><div class="relative mx-auto max-w-2xl">
+    <p class="section-kicker text-primary justify-center">{label}</p><h2
+      class="font-display text-3xl font-bold sm:text-4xl"
+    >
+      {title}
+    </h2><p class="mt-4 leading-7 text-white/65">
+      {description}
+    </p><Button
+      href={href}
+      variant="primary"
+      size="lg"
+      class="mt-8 rounded-xl px-8 font-bold">{descriptionBtn}</Button
+    >
+  </div>
+</Card>

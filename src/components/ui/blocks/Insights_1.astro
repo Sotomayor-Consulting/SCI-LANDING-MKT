@@ -1,0 +1,65 @@
+---
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+  labelBtn: string;
+  href: string;
+  insights: {
+    title: string;
+    description: string;
+  }[];
+}
+
+const { insights, label, title, description, labelBtn, href } = Astro.props;
+---
+
+<div
+  class="absolute inset-0 [background-image:linear-gradient(45deg,transparent_48%,#e1b760_49%,#e1b760_51%,transparent_52%)] [background-size:48px_48px] opacity-10"
+>
+</div><div
+  class="relative mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.85fr_1.15fr] lg:px-8"
+>
+  <div>
+    <p class="section-kicker text-primary">{label}</p><h2
+      class="font-display text-3xl font-bold tracking-[-.03em] sm:text-4xl"
+    >
+      {title}
+    </h2><p class="mt-5 leading-7 text-white/65">
+      {description}
+    </p><Button
+      href={href}
+      variant="primary"
+      size="lg"
+      class="mt-8 rounded-xl font-bold">{labelBtn}</Button
+    >
+  </div><div class="grid gap-4 sm:grid-cols-3">
+    {
+      insights.map((insights) => (
+        <Card class="flex justify-center rounded-2xl border-white/10 bg-white/5 text-white shadow-none backdrop-blur transition-all delay-120 hover:-translate-y-3">
+          <CardHeader>
+            <>
+              <CardTitle class="font-display text-primary text-2xl">
+                {insights.title}
+              </CardTitle>
+            </>
+          </CardHeader>
+          <CardContent>
+            <CardDescription class="leading-6 text-white/65">
+              {insights.description}
+            </CardDescription>
+          </CardContent>
+        </Card>
+      ))
+    }
+  </div>
+</div>

@@ -1,6 +1,7 @@
 # Cloudflare Pages Deployment
 
-This project deploys as a static Astro site with a Pages Function at `POST /api/leads`.
+This project deploys as a static Astro site with Pages Functions at `POST /api/leads` and
+`POST /api/calendar-confirmation`.
 
 ## Create The Pages Project
 
@@ -32,6 +33,11 @@ After the project exists, open **Settings**, then **Variables and Secrets** and 
 | --- | --- | --- |
 | Variable | `SUPABASE_URL` | `https://vzrrjkdhqqkxjedeukml.supabase.co` |
 | Encrypted secret | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key |
+| Encrypted secret | `CALENDAR_WEBHOOK_SECRET` | Shared secret for calendar confirmations |
+| Encrypted secret | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key |
+
+Add `PUBLIC_TURNSTILE_SITE_KEY` as a build environment variable. For local development, put the site
+key in an ignored `.env` file and the matching test secret in `.dev.vars`.
 
 Configure both Production and Preview if preview deployments must submit test leads. Never commit
 the service-role key to Git or place it in a `PUBLIC_*` variable.
@@ -46,6 +52,8 @@ Redeploy the latest commit after adding or changing runtime variables.
 4. Confirm the row in Supabase **Table Editor**, table `leads`.
 5. In Cloudflare, open the deployment and select **View details**, then **Functions**, to inspect
    errors from `/api/leads`.
+6. Send a signed test request to `/api/calendar-confirmation` and confirm that the matching lead's
+   `scheduled_at` and `calendar_event_id` fields change.
 
 ## Local Pages Test
 

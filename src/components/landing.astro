@@ -1,53 +1,52 @@
 ---
-import { Image } from "astro:assets";
-import { Button } from "@/components/starwind/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/starwind/accordion";
-import { Alert, AlertDescription } from "@/components/starwind/alert";
-import { Badge } from "@/components/starwind/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/starwind/card";
-import {
-  Field,
-  FieldControl,
-  FieldError,
-  FieldLabel,
-} from "@/components/starwind/field";
-import { Form } from "@/components/starwind/form";
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/starwind/native-select";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/starwind/select";
-import { Separator } from "@/components/starwind/separator";
-import { Textarea } from "@/components/starwind/textarea";
+import Herolabels from "@components/ui/blocks/Herolabels.astro";
+import Formulario from "@components/ui/blocks/Formulario.astro";
+import Insights from "@components/ui/blocks/Insights.astro";
+import Insight_1 from "@components/ui/blocks/Insights_1.astro";
+import Insight_2 from "@components/ui/blocks/insights_2.astro";
+import Experience from "@components/ui/blocks/Experience.astro";
+import FixedBtn from "@components/ui/blocks/FixedBtn.astro";
+import Cta from "@components/ui/blocks/Cta.astro";
+import Faqs from "@components/ui/blocks/Faq.astro";
+import Marquee from "@components/ui/blocks/Marquee.astro";
+import Pricing, { type PricingPlan } from "@components/ui/blocks/Pricing.astro";
 
 const benefits = [
   "Sin visa ni residencia",
   "Sin SSN ni ITIN",
   "100% remoto y en español",
 ];
+const logos = [
+  {
+    name: "mercury",
+    size: "size-25",
+  },
+  {
+    name: "stripe",
+    size: "size-20",
+  },
+  {
+    name: "relay",
+    size: "size-15",
+  },
+];
 const audiences = [
-  ["E-commerce", "Cobra con Stripe, Amazon o pasarelas internacionales."],
-  ["Agencias", "Factura a clientes globales y recibe pagos en dólares."],
-  ["SaaS y creadores", "Opera productos digitales con una estructura clara."],
-  ["Inversionistas", "Ordena inversiones y activos en Estados Unidos."],
+  {
+    title: "E-commerce",
+    description: "Cobra con Stripe, Amazon o pasarelas internacionales.",
+  },
+  {
+    title: "Agencias",
+    description: "Factura a clientes globales y recibe pagos en dólares.",
+  },
+  {
+    title: "SaaS y creadores",
+    description: "Opera productos digitales con una estructura clara.",
+  },
+  {
+    title: "Inversionistas",
+    description: "Ordena inversiones y activos en Estados Unidos.",
+  },
 ];
 const activities = [
   "Exportación de servicios profesionales",
@@ -65,829 +64,245 @@ const adviceOptions = [
   "Me interesa, pero aún no estoy listo",
 ];
 const steps = [
-  [
-    "01",
-    "Cuéntanos tu caso",
-    "Comparte tus datos y el objetivo principal de tu proyecto.",
-  ],
-  [
-    "02",
-    "Habla con un asesor",
-    "Revisamos actividad, socios, residencia y planes de crecimiento.",
-  ],
-  [
-    "03",
-    "Recibe una ruta clara",
-    "Sales con estado recomendado, costos y próximos pasos.",
-  ],
-];
-const plans = [
-  ["Básico", "350", "Constitución, EIN y agente registrado."],
-  ["Estándar", "600", "Documentos internos y acompañamiento continuo."],
-  ["Business", "950", "Planificación legal, fiscal y apoyo bancario."],
+  {
+    titulo: "Cuéntanos tu caso",
+    descripcion: "Comparte tus datos y el objetivo principal de tu proyecto.",
+  },
+
+  {
+    titulo: "Habla con un experto.",
+    descripcion:
+      "Revisamos actividad, socios, residencia y planes de crecimiento.",
+  },
+  {
+    titulo: "Recibe una ruta clara",
+    descripcion: "Sales con estado recomendado, costos y próximos pasos.",
+  },
 ];
 const faqs = [
-  [
-    "¿La asesoría realmente es gratuita?",
-    "Sí. La reunión inicial no tiene costo ni compromiso. Primero evaluamos si una LLC encaja con tu situación.",
-  ],
-  [
-    "¿Puedo abrir una LLC sin vivir en Estados Unidos?",
-    "Sí. Una persona no residente puede constituir una LLC. La estructura y obligaciones adecuadas dependen de su actividad y país de residencia.",
-  ],
-  [
-    "¿Cuánto tarda el proceso?",
-    "El registro estatal suele tomar entre 5 y 10 días hábiles. El EIN puede tardar varias semanas, según el IRS.",
-  ],
-  [
-    "¿Qué documentos necesito?",
-    "Normalmente necesitarás pasaporte vigente y comprobante de domicilio reciente de cada socio.",
-  ],
-  [
-    "¿Qué incluye el costo?",
-    "Cada plan incluye servicios distintos. La tasa estatal se paga por separado y varía según la jurisdicción.",
-  ],
+  {
+    question: "¿La asesoría realmente es gratuita?",
+    answer:
+      "Sí. La reunión inicial no tiene costo ni compromiso. Primero evaluamos si una LLC encaja con tu situación.",
+  },
+  {
+    question: "¿Puedo abrir una LLC sin vivir en Estados Unidos?",
+    answer:
+      "Sí. Una persona no residente puede constituir una LLC. La estructura y obligaciones adecuadas dependen de su actividad y país de residencia.",
+  },
+  {
+    question: "¿Cuánto tarda el proceso de incorporación de LLC?",
+    answer:
+      "El proceso de incorporación dura aproximadamente: hasta 15 días",
+  },
+  {
+    question: "¿Qué documentos necesito?",
+    answer:
+      "Normalmente necesitarás pasaporte vigente y comprobante de domicilio reciente de cada socio.",
+  },
+  {
+    question: "¿Qué incluye el costo?",
+    answer:
+      "Cada plan incluye servicios distintos. La tasa estatal se paga por separado y varía según la jurisdicción.",
+  },
+];
+const insights = [
+  {
+    title: "USD 25.000",
+    description: "puede ser la multa por incumplimientos específicos.",
+  },
+  {
+    title: "50 estados",
+    description: "no significa que todos sean adecuados para ti.",
+  },
+  {
+    title: "1 oportunidad",
+    description: "para preparar bien una solicitud bancaria.",
+  },
+];
+
+const planes: PricingPlan[] = [
+  {
+    name: "Básico",
+    description: "Constituye tu LLC con lo esencial para operar legalmente.",
+    price: "$350",
+    period: "Una vez",
+    features: [
+      { text: "Incorporación de la LLC frente al Estado.", included: true },
+      {
+        text: "Acompañamiento para la obtención del Número de Identificación Tributaria (EIN). Tiempo aproximado 8 a 9 semanas.",
+        included: true,
+      },
+      { text: "Agente Residente por un año.", included: true },
+    ],
+    buttonText: "Agenda un cita",
+    buttonHref: "/tu-llc-en-usa/#agendar",
+  },
+  {
+    name: "Business",
+    description:
+      "Estrategia fiscal y legal para la incorporación de tú LLC. Ideal para escalar y tener bien estructurado desde el inicio.",
+    price: "$950",
+    period: "Una vez",
+    features: [
+      {
+        text: "Incluye todo del Plan Básico + Estándar",
+        included: true,
+      },
+      { text: "Planificación y diseño legal - tributario.", included: true },
+      {
+        text: "Acompañamiento bancario (Mercury o Relay + Stripe).",
+        included: true,
+      },
+
+      { text: "Acompañamiento para la obtención del Número de Identificación Tributaria en hasta 1 semana.", included: true },
+    ],
+    buttonText: "Agenda un cita",
+    buttonHref: "/tu-llc-en-usa/#agendar",
+    highlighted: true,
+    badge: "Más Popular",
+  },
+  {
+    name: "Estándar",
+    description: "Incluye soporte legal y documentos clave para operar.",
+    price: "$600",
+    period: "Una vez",
+    features: [
+      {
+        text: "Incluye todo del Plan Básico",
+        included: true,
+      },
+      { text: "Elaboración del Acuerdo de Operación.", included: true },
+      { text: "Consultas ilimitadas por un año.", included: true },
+      { text: "Acompañamiento para la solicitud de exención BE-13", included: true },
+    ],
+    buttonText: "Agenda un cita",
+    buttonHref: "/tu-llc-en-usa/#agendar",
+  },
+];
+
+const experience = [
+  {
+    title: "10+",
+    description: "años de experiencia",
+  },
+  {
+    title: "5.000+",
+    description: "empresas constituidas",
+  },
+  {
+    title: "97%",
+    description: "satisfacción",
+  },
+  {
+    title: "100%",
+    description: "atención en español",
+  },
 ];
 ---
 
-<header
-  class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl"
->
-  <div
-    class="mx-auto flex min-h-18 max-w-7xl items-center justify-between px-5 lg:px-8"
-  >
-    <a
-      href="#inicio"
-      class="flex items-center gap-3"
-      aria-label="Nexo International, inicio"
-    >
-      <Image
-        src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png"
-        alt="Nexo International"
-        class="w-35 h-auto"
-        width={62}
-        height={32}
-      />
-    </a>
-    <nav
-      class="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex"
-      aria-label="Navegación principal"
-    >
-      <a href="#proceso" class="hover:text-primary-accent">Proceso</a><a
-        href="#planes"
-        class="hover:text-primary-accent">Planes</a
-      ><a href="#preguntas" class="hover:text-primary-accent">Preguntas</a>
-    </nav>
-    <Button
-      href="#agendar"
-      variant="primary"
-      size="sm"
-      class="rounded-full px-5 font-bold">Agendar gratis</Button
-    >
-  </div>
-</header>
-
 <main id="inicio" class="overflow-hidden">
-  <section class="relative bg-muted/50 py-14 sm:py-14">
+  <section class="bg-muted/50 relative py-14 sm:py-14">
     <div
-      class="pointer-events-none absolute inset-0 opacity-60 [background-image:radial-gradient(#c9d3dc_1px,transparent_1px)] [background-size:28px_28px]"
+      class="pointer-events-none absolute inset-0 [background-image:radial-gradient(#c9d3dc_1px,transparent_1px)] [background-size:28px_28px] opacity-60"
     >
     </div>
     <div
-      class="pointer-events-none absolute -right-36 top-4 size-[32rem] rounded-full bg-[#e8c77c]/20 blur-3xl"
+      class="pointer-events-none absolute top-4 -right-36 size-[32rem] rounded-full bg-[#e8c77c]/20 blur-3xl"
     >
     </div>
     <div
       class="relative mx-auto grid max-w-7xl items-start gap-12 px-5 lg:grid-cols-[1.08fr_.78fr] lg:px-8"
     >
-      <div class="pt-2 lg:pt-8">
-        <Badge
-          tone="primary-accent"
-          appearance="frosted"
-          eyebrow
-          size="sm"
-          class="mb-6"
-        >
-          <span class="size-1.5 rounded-full bg-primary-accent"></span>
-          Firma legal, fiscal y tecnológica
-        </Badge>
-        <h1
-          class="max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-[-.04em] text-foreground sm:text-5xl lg:text-[4rem]"
-        >
-          Tu LLC en Estados Unidos, <span
-            class="relative whitespace-nowrap text-primary-accent after:absolute after:inset-x-0 after:bottom-1 after:-z-10 after:h-3 after:bg-primary/30"
-            >bien hecha</span
-          > desde el inicio.
-        </h1>
-        <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-600">
-          Una asesoría estratégica para definir si una LLC es lo que necesitas,
-          en qué estado conviene abrirla y cómo evitar errores legales, fiscales
-          y bancarios.
-        </p>
-        <div class="mt-7 grid gap-3 sm:grid-cols-3">
-          {
-            benefits.map((benefit) => (
-              <Badge
-                tone="success"
-                appearance="soft"
-                size="sm"
-                class="justify-start whitespace-normal"
-              >
-                <svg
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                >
-                  <path d="m4 10 4 4 8-8" />
-                </svg>
-                {benefit}
-              </Badge>
-            ))
-          }
-        </div>
-        <div class="mt-9 flex flex-wrap items-center gap-4">
-          <Button
-            href="#agendar"
-            variant="primary"
-            size="lg"
-            class="rounded-xl px-7 font-bold shadow-lg shadow-amber-900/10 hover:-translate-y-0.5"
-            >Agendar mi asesoría <svg
-              viewBox="0 0 24 24"
-              class="size-4"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg
-            ></Button
-          >
-          <span class="text-sm text-slate-500"
-            >30 min · por Zoom · sin compromiso</span
-          >
-        </div>
-        <Separator class="mt-10" />
-        <div
-          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground"
-        >
-          <strong class="font-display text-xl text-foreground">+5.000</strong
-          ><span>empresas incorporadas</span>
-          <Separator orientation="vertical" class="hidden h-5 sm:block" />
-          <strong class="text-primary-accent">★★★★★</strong><span
-            >4,8/5 clientes</span
-          >
-        </div>
-      </div>
+      <Herolabels
+        badge="Firma legal, fiscal y tecnológica"
+        titleLine1="Tu LLC en Estados Unidos,"
+        highlighted="bien hecha"
+        description=" Una asesoría estratégica para definir si una LLC es lo que necesitas, en qué
+    estado conviene abrirla y cómo evitar errores legales, fiscales y bancarios."
+        note="30 min · por Zoom · sin compromiso"
+        labelBtn="Agendar mi asesoría"
+        infolabels="+5.000"
+        infodescrition="empresas incorporadas"
+        infoscore="4,8/5 clientes"
+        benefits={benefits}
+      />
 
-      <Card
-        id="agendar"
-        class="scroll-mt-24 rounded-[1.75rem] border-primary-accent/40 bg-foreground text-background shadow-2xl shadow-slate-900/20 px-5"
-      >
-        <div id="form-step-1" class="flex flex-col gap-3">
-          <CardHeader>
-            <div class="flex items-center justify-between">
-              <Badge
-                tone="primary-accent"
-                appearance="outline"
-                eyebrow
-                size="sm">Asesoría gratuita</Badge
-              >
-              <Badge
-                tone="neutral"
-                appearance="text"
-                size="sm"
-                class="text-white/50">Paso 1 de 3</Badge
-              >
-            </div>
-            <CardTitle
-              ><h2 class="font-display text-2xl font-semibold text-white">
-                Cuéntanos tu caso
-              </h2></CardTitle
-            >
-            <CardDescription class="text-white/65"
-              >Responde unas preguntas y después completaremos tus datos.</CardDescription
-            >
-          </CardHeader>
-          <Form id="lead-form-1" novalidate class="flex flex-col gap-5">
-            <CardContent class="flex flex-col gap-6">
-              <div class="flex flex-col gap-2">
-                <p class="text-sm font-medium text-white/75">
-                  ¿Para qué actividad quieres crear tu LLC?
-                </p>
-                <p class="text-xs text-white/50">Selecciona tu actividad principal.</p>
-                <Select
-                  name="activity"
-                  required
-                >
-                  <SelectTrigger
-                    size="sm"
-                    class="border-white/15 bg-white/7 text-white data-placeholder:text-white/40 w-full"
-                    placeholder="Selecciona una actividad"
-                  >
-                    <SelectValue placeholder="Selecciona una actividad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {activities.map((activity) => (
-                      <SelectItem value={activity} class="max-w-full">{activity}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <p class="text-sm font-medium text-white/75">
-                  ¿Quieres una asesoría gratuita por Zoom?
-                </p>
-                <Select name="advice" required >
-                  <SelectTrigger
-                    size="sm"
-                    class="border-white/15 bg-white/7 text-white data-placeholder:text-white/40 w-full"
-                    placeholder="Selecciona una opción"
-                  >
-                    <SelectValue placeholder="Selecciona una opción" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {adviceOptions.map((option) => (
-                      <SelectItem value={option}>{option}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <p class="text-sm font-medium text-white/75">
-                  ¿Qué duda principal quieres resolver en la asesoría?
-                </p>
-                <Textarea
-                  id="question"
-                  name="question"
-                  rows={4}
-                  placeholder="Cuéntanos tu duda principal..."
-                  class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
-                />
-              </div>
-
-              <Alert
-                id="form-error-1"
-                variant="error"
-                class="hidden py-3 text-red-100"
-                ><AlertDescription class="text-xs"
-                  >Revisa los campos indicados antes de continuar.</AlertDescription
-                ></Alert
-              >
-            </CardContent>
-            <CardFooter class="flex-col gap-4 border-white/10 bg-transparent">
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                class="w-full rounded-xl font-bold">Continuar</Button
-              >
-            </CardFooter>
-          </Form>
-        </div>
-        <div id="form-step-2" class="hidden flex-col gap-3">
-          <CardHeader>
-            <div class="flex items-center justify-between">
-              <Badge
-                tone="primary-accent"
-                appearance="outline"
-                eyebrow
-                size="sm">Asesoría gratuita</Badge
-              >
-              <Badge
-                tone="neutral"
-                appearance="text"
-                size="sm"
-                class="text-white/50">Paso 2 de 3</Badge
-              >
-            </div>
-            <CardTitle
-              ><h2
-                id="contact-title"
-                tabindex="-1"
-                class="font-display text-2xl font-semibold text-white outline-none"
-              >
-                Datos de contacto
-              </h2></CardTitle
-            >
-            <CardDescription class="text-white/65"
-              >Completa tus datos para reservar tu asesoría.</CardDescription
-            >
-          </CardHeader>
-          <Form id="lead-form-2" novalidate class="flex flex-col gap-5">
-            <CardContent class="flex flex-col gap-4">
-              <Field name="name" class="gap-1.5">
-                <FieldLabel for="name" class="text-white/75"
-                  >Nombre completo</FieldLabel
-                >
-                <FieldControl
-                  size="sm"
-                  id="name"
-                  name="name"
-                  type="text"
-                  autocomplete="name"
-                  required
-                  minlength="2"
-                  placeholder="Tu nombre y apellido"
-                  class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
-                />
-                <FieldError match="valueMissing"
-                  >Escribe tu nombre completo.</FieldError
-                >
-                <FieldError match="tooShort"
-                  >Escribe al menos dos caracteres.</FieldError
-                >
-              </Field>
-              <Field name="email" class="gap-1.5">
-                <FieldLabel for="email" class="text-white/75"
-                  >Correo electrónico</FieldLabel
-                >
-                <FieldControl
-                  size="sm"
-                  id="email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  required
-                  placeholder="nombre@empresa.com"
-                  class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
-                />
-                <FieldError match="valueMissing">Escribe tu correo.</FieldError>
-                <FieldError match="typeMismatch"
-                  >Escribe un correo válido.</FieldError
-                >
-              </Field>
-              <div class="grid grid-cols-[7.5rem_1fr] gap-2">
-                <Field class="gap-1.5">
-                  <FieldLabel for="country" class="text-white/75"
-                    >País</FieldLabel
-                  >
-                  <NativeSelect
-                    id="country"
-                    size="sm"
-                    name="country"
-                    class="border-white/15 bg-white/7 text-white"
-                  >
-                    <NativeSelectOption value="+593">EC +593</NativeSelectOption
-                    ><NativeSelectOption value="+57">CO +57</NativeSelectOption
-                    ><NativeSelectOption value="+52">MX +52</NativeSelectOption
-                    ><NativeSelectOption value="+51">PE +51</NativeSelectOption
-                    ><NativeSelectOption value="+1">US +1</NativeSelectOption
-                    ><NativeSelectOption value="+34">ES +34</NativeSelectOption>
-                  </NativeSelect>
-                </Field>
-                <Field name="phone" class="gap-1.5">
-                  <FieldLabel for="phone" class="text-white/75"
-                    >Teléfono / WhatsApp</FieldLabel
-                  >
-                  <FieldControl
-                    size="sm"
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    inputmode="tel"
-                    autocomplete="tel"
-                    required
-                    pattern="[0-9+\-().\s]+"
-                    minlength="7"
-                    maxlength="15"
-                    placeholder="099 123 4567"
-                    class="border-white/15 bg-white/7 text-white placeholder:text-white/35"
-                  />
-                  <FieldError match="valueMissing"
-                    >Escribe tu número.</FieldError
-                  >
-                  <FieldError match="tooShort"
-                    >Escribe un número de teléfono válido.</FieldError
-                  >
-                  <FieldError match="patternMismatch"
-                    >Solo se permiten números, espacios o guiones.</FieldError
-                  >
-                </Field>
-              </div>
-
-              <div class="absolute -left-[9999px]" aria-hidden="true">
-                <label for="website">Sitio web</label>
-                <input
-                  id="website"
-                  name="website"
-                  type="text"
-                  tabindex="-1"
-                  autocomplete="off"
-                />
-              </div>
-
-              <Alert
-                id="form-error-2"
-                variant="error"
-                class="hidden py-3 text-red-100"
-                ><AlertDescription id="form-error-2-description" class="text-xs"
-                   >Revisa los campos indicados antes de continuar.</AlertDescription
-                 ></Alert
-              >
-            </CardContent>
-            <CardFooter class="flex-col gap-4 border-white/10 bg-transparent">
-              <div class="grid w-full grid-cols-2 gap-2">
-                <Button
-                  id="back-btn"
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  class="rounded-xl bg-background font-bold text-foreground"
-                  >Volver</Button
-                >
-                <Button
-                  id="lead-submit"
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  class="rounded-xl font-bold">Elegir horario</Button
-                >
-              </div>
-              <p class="text-center text-[.7rem] leading-5 text-white/45">
-                Tus datos se utilizan únicamente para gestionar esta asesoría.
-              </p>
-            </CardFooter>
-          </Form>
-        </div>
-        <div id="calendar-step" class="hidden gap-5">
-          <CardHeader
-            ><Badge
-              tone="primary-accent"
-              appearance="outline"
-              eyebrow
-              size="sm"
-              class="w-fit">Paso 3 de 3</Badge
-            ><CardTitle
-              ><h2
-                id="calendar-title"
-                tabindex="-1"
-                class="font-display text-2xl font-semibold text-white outline-none"
-              >
-                Elige tu horario
-              </h2></CardTitle
-            ><CardDescription
-              id="calendar-greeting"
-              aria-live="polite"
-              class="text-white/65"
-            /></CardHeader
-          >
-          <CardContent
-            ><div
-              class="w-[calc(100%+5rem)] -mx-10 overflow-hidden bg-background mt-5 rounded-b-xl"
-            >
-              <iframe
-                id="calendar-frame"
-                title="Calendario de reservas"
-                class="h-[540px] w-full border-0"></iframe>
-            </div></CardContent
-          >
-        </div>
-      </Card>
+      <Formulario adviceOptions={adviceOptions} activities={activities} />
     </div>
   </section>
 
   <section class="border-y border-slate-200 bg-white py-7">
-    <div
-      class="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-12 gap-y-5 px-5 text-center lg:px-8"
-    >
-      <Badge tone="neutral" appearance="text" eyebrow size="sm"
-        >Acompañamiento para</Badge
-      >{
-        ["Mercury", "Relay", "Stripe", "IRS"].map((name) => (
-          <Badge
-            tone="neutral"
-            appearance="outline"
-            size="lg"
-            class="font-display font-bold"
-          >
-            {name}
-          </Badge>
-        ))
-      }
-    </div>
+    <Marquee logos={logos} />
   </section>
 
   <section class="py-20 sm:py-24">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="max-w-2xl">
-        <p class="section-kicker">Para quién es</p><h2 class="section-title">
-          Una estructura internacional para negocios que ya piensan global.
-        </h2>
-      </div><div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          audiences.map(([title, text], i) => (
-            <Card class="group rounded-2xl transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-xl">
-              <CardHeader>
-                <Badge
-                  tone="primary-accent"
-                  appearance="soft"
-                  size="lg"
-                  class="size-10 justify-center p-0"
-                >
-                  0{i + 1}
-                </Badge>
-                <CardTitle>
-                  <h3 class="font-display text-lg font-semibold">{title}</h3>
-                </CardTitle>
-                <CardContent>
-                  <CardDescription class="leading-6">{text}</CardDescription>
-                </CardContent>
-              </CardHeader>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+    <Insights
+      label="Para quién es"
+      title="Una estructura internacional para negocios que ya piensan global."
+      audiences={audiences}
+    />
   </section>
 
-  <section class="relative bg-foreground py-20 text-background sm:py-24">
-    <div
-      class="absolute inset-0 opacity-10 [background-image:linear-gradient(45deg,transparent_48%,#e1b760_49%,#e1b760_51%,transparent_52%)] [background-size:48px_48px]"
-    >
-    </div><div
-      class="relative mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.85fr_1.15fr] lg:px-8"
-    >
-      <div>
-        <p class="section-kicker text-primary">Primero, estrategia</p><h2
-          class="font-display text-3xl font-bold tracking-[-.03em] sm:text-4xl"
-        >
-          Abrir es fácil. Abrir bien es otra historia.
-        </h2><p class="mt-5 leading-7 text-white/65">
-          Una mala decisión puede sumar costos, obligaciones innecesarias o
-          retrasos bancarios. Por eso no empezamos vendiéndote un paquete.
-        </p><Button
-          href="#agendar"
-          variant="primary"
-          size="lg"
-          class="mt-8 rounded-xl font-bold">Revisar mi caso gratis</Button
-        >
-      </div><div class="grid gap-4 sm:grid-cols-3">
-        {
-          [
-            [
-              "USD 25.000",
-              "puede ser la multa por incumplimientos específicos.",
-            ],
-            ["50 estados", "no significa que todos sean adecuados para ti."],
-            ["1 oportunidad", "para preparar bien una solicitud bancaria."],
-          ].map(([n, t]) => (
-            <Card class="rounded-2xl border-white/10 bg-white/5 text-white shadow-none backdrop-blur flex justify-center">
-              <CardHeader>
-                <>
-                  <CardTitle class="font-display text-2xl text-primary">
-                    {n}
-                  </CardTitle>
-                </>
-              </CardHeader>
-              <CardContent>
-                <CardDescription class="leading-6 text-white/65">
-                  {t}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+  <section class="bg-foreground text-background relative py-20 sm:py-24">
+    <Insight_1
+      label="Primero, estrategia"
+      title="Abrir es fácil. Abrir bien es otra historia."
+      description="Una mala decisión puede sumar costos, obligaciones innecesarias o retrasos
+      bancarios. Por eso no empezamos vendiéndote un paquete."
+      labelBtn="Revisar mi caso gratis"
+      href="#agendar"
+      insights={insights}
+    />
   </section>
 
-  <section id="proceso" class="scroll-mt-24 bg-muted py-20 sm:py-24">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="section-kicker justify-center">Cómo funciona</p><h2
-          class="section-title"
-        >
-          De la duda a un plan concreto en tres pasos.
-        </h2>
-      </div><div class="relative mt-14 grid gap-5 lg:grid-cols-3">
-        <div
-          class="absolute left-[16%] right-[16%] top-8 hidden h-px bg-primary/40 lg:block"
-        >
-        </div>{
-          steps.map(([n, t, d]) => (
-            <Card class="relative rounded-2xl">
-              <CardHeader>
-                <Badge
-                  tone="primary-accent"
-                  appearance="outline"
-                  size="lg"
-                  class="relative z-10 size-16 justify-center rounded-2xl p-0 font-display text-lg"
-                >
-                  {n}
-                </Badge>
-                <CardTitle>
-                  <h3 class="font-display text-xl font-semibold">{t}</h3>
-                </CardTitle>
-                <CardDescription class="leading-6">{d}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+  <section id="proceso" class="bg-muted scroll-mt-24 py-20 sm:py-24">
+    <Insight_2
+      label="Cómo funciona"
+      title="De la duda a un plan concreto en tres pasos."
+      steps={steps}
+    />
   </section>
 
   <section id="planes" class="scroll-mt-24 py-20 sm:py-24">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-        <div class="max-w-2xl">
-          <p class="section-kicker">Planes orientativos</p><h2
-            class="section-title"
-          >
-            Acompañamiento para cada etapa.
-          </h2>
-        </div><p class="max-w-sm text-sm leading-6 text-slate-500">
-          Valores anuales sin tasa estatal. El plan correcto se define en la
-          asesoría.
-        </p>
-      </div><div class="mt-12 grid gap-5 lg:grid-cols-3">
-        {
-          plans.map(([name, price, desc], i) => (
-            <Card
-              class:list={[
-                "relative rounded-3xl",
-                i === 2
-                  ? "border-primary bg-foreground text-background shadow-2xl"
-                  : "",
-              ]}
-            >
-              {i === 2 && (
-                <Badge
-                  tone="primary"
-                  appearance="solid"
-                  eyebrow
-                  size="sm"
-                  class="absolute right-6 top-6"
-                >
-                  MÁS ELEGIDO
-                </Badge>
-              )}
-              <CardHeader>
-                <CardTitle>
-                  <h3
-                    class:list={[
-                      "font-display text-lg font-semibold",
-                      i === 2 && "text-white",
-                    ]}
-                  >
-                    {name}
-                  </h3>
-                </CardTitle>
-                <p class="mt-7">
-                  <span class="font-display text-4xl font-bold">${price}</span>
-                  <span class="ml-2 text-sm opacity-50">USD / año</span>
-                </p>
-                <CardDescription
-                  class:list={[
-                    "min-h-12 leading-6",
-                    i === 2 && "text-white/70",
-                  ]}
-                >
-                  {desc}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Button
-                  href="#agendar"
-                  variant={i === 2 ? "primary" : "outline"}
-                  class="w-full rounded-xl font-bold"
-                >
-                  Consultar este plan
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+    <Pricing
+      heading="Valores anuales sin considerar pagos gubernamentales."
+      description="El plan ideal según tu caso lo definimos en la primera asesoría."
+      plans={planes}
+    />
   </section>
 
   <section class="bg-muted py-20 sm:py-24">
-    <div
-      class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[.7fr_1.3fr] lg:items-center lg:px-8"
-    >
-      <div>
-        <p class="section-kicker">Experiencia comprobada</p><h2
-          class="section-title"
-        >
-          Confianza que se construye caso por caso.
-        </h2><p class="mt-5 leading-7 text-slate-600">
-          Un equipo multidisciplinario acompaña cada estructura desde la
-          constitución hasta su mantenimiento.
-        </p>
-      </div><div class="grid grid-cols-2 gap-4">
-        {
-          [
-            ["10+", "años de experiencia"],
-            ["5.000+", "empresas constituidas"],
-            ["97%", "satisfacción"],
-            ["100%", "atención en español"],
-          ].map(([n, l]) => (
-            <Card class="rounded-2xl">
-              <CardHeader>
-                <>
-                  <CardTitle class="font-display text-3xl">{n}</CardTitle>
-                  <CardDescription>{l}</CardDescription>
-                </>
-              </CardHeader>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+    <Experience
+      label="Experiencia comprobada"
+      title="Confianza que se construye caso por caso."
+      description="Un equipo multidisciplinario acompaña cada estructura desde la
+      constitución hasta su mantenimiento."
+      experience={experience}
+    />
   </section>
 
   <section id="preguntas" class="scroll-mt-24 py-20 sm:py-24">
-    <div
-      class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[.65fr_1.35fr] lg:px-8"
-    >
-      <div>
-        <p class="section-kicker">Preguntas frecuentes</p><h2
-          class="section-title"
-        >
-          Lo que debes saber antes de empezar.
-        </h2><p class="mt-5 text-sm leading-6 text-slate-500">
-          Si tu duda no aparece, la resolvemos durante la asesoría.
-        </p>
-      </div><Card class="rounded-2xl"
-        ><CardContent
-          ><Accordion defaultValue="faq-1"
-            >{
-              faqs.map(([q, a], i) => (
-                <AccordionItem value={`faq-${i + 1}`} class="border-slate-200">
-                  <>
-                    <AccordionTrigger class="py-5 text-left font-display font-bold text-foreground hover:no-underline">
-                      {q}
-                    </AccordionTrigger>
-                    <AccordionContent class="pb-5 text-sm leading-6 text-slate-600">
-                      {a}
-                    </AccordionContent>
-                  </>
-                </AccordionItem>
-              ))
-            }</Accordion
-          ></CardContent
-        ></Card
-      >
-    </div>
+    <Faqs
+      label="Preguntas frecuentes"
+      title="Lo que debes saber antes de empezar."
+      description="Si tu duda no aparece, la resolvemos durante la asesoría."
+      faqs={faqs}
+    />
   </section>
 
   <section class="px-5 pb-20 lg:px-8">
-    <Card
-      class="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-foreground px-6 py-14 text-center text-background sm:py-16"
-    >
-      <div
-        class="absolute -left-24 -top-24 size-64 rounded-full border border-primary/20"
-      >
-      </div><div class="relative mx-auto max-w-2xl">
-        <p class="section-kicker justify-center text-primary">
-          Tu primer paso
-        </p><h2 class="font-display text-3xl font-bold sm:text-4xl">
-          Decide con claridad antes de invertir.
-        </h2><p class="mt-4 leading-7 text-white/65">
-          Descubre qué estructura necesita realmente tu proyecto.
-        </p><Button
-          href="#agendar"
-          variant="primary"
-          size="lg"
-          class="mt-8 rounded-xl px-8 font-bold"
-          >Agendar asesoría gratuita</Button
-        >
-      </div>
-    </Card>
+    <Cta
+      label="Tu primer paso"
+      title="Decide con claridad antes de invertir."
+      description="Descubre qué estructura necesita realmente tu proyecto."
+      href="#agendar"
+      descriptionBtn="Agendar asesoría gratuita"
+    />
   </section>
 </main>
 
-<footer class="border-t border-slate-200 bg-white py-10">
-  <div
-    class="mx-auto flex max-w-7xl flex-col gap-6 px-5 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8"
-  >
-    <div class="font-display font-bold tracking-[.14em] text-foreground">
-      <Image
-        src="https://www.sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png"
-        alt="Nexo International"
-        class="w-35 h-auto"
-        width={62}
-        height={32}
-      />
-    </div><p class="max-w-xl text-xs leading-5">
-      Consultoría legal, fiscal y tecnológica. No somos una entidad bancaria ni
-      prestamos servicios de crédito.
-    </p><div class="flex gap-5 text-xs">
-      <a href="#">Privacidad</a><a href="#">Términos</a>
-    </div>
-  </div>
-</footer>
-<div
-  class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.1)] backdrop-blur md:hidden"
->
-  <Button
-    href="#agendar"
-    variant="primary"
-    size="lg"
-    class="w-full rounded-xl font-bold">Agendar gratis</Button
-  >
-</div>
+<FixedBtn />
 
 <script>
   const form1 = document.querySelector<HTMLFormElement>("#lead-form-1");
@@ -895,6 +310,7 @@ const faqs = [
   const formStep1 = document.querySelector<HTMLElement>("#form-step-1");
   const formStep2 = document.querySelector<HTMLElement>("#form-step-2");
   const calendarStep = document.querySelector<HTMLElement>("#calendar-step");
+  const formCard = document.querySelector<HTMLElement>("#agendar");
   const contactTitle = document.querySelector<HTMLElement>("#contact-title");
   const backBtn = document.querySelector<HTMLButtonElement>("#back-btn");
   const frame = document.querySelector<HTMLIFrameElement>("#calendar-frame");
@@ -903,10 +319,12 @@ const faqs = [
   const error1 = document.querySelector<HTMLElement>("#form-error-1");
   const error2 = document.querySelector<HTMLElement>("#form-error-2");
   const error2Description = document.querySelector<HTMLElement>(
-    "#form-error-2-description"
+    "#form-error-2-description",
   );
   const phoneInput = document.querySelector<HTMLInputElement>("#phone");
-  const submitButton = document.querySelector<HTMLButtonElement>("#lead-submit");
+  const submitButton =
+    document.querySelector<HTMLButtonElement>("#lead-submit");
+
   const submissionId = crypto.randomUUID();
   let isSubmitting = false;
 
@@ -924,8 +342,14 @@ const faqs = [
     else submitButton.removeAttribute("aria-busy");
   }
 
-  function showStep(step: HTMLElement | null | undefined) {
-    [formStep1, formStep2, calendarStep].forEach((s) => s?.classList.add("hidden"));
+  function showStep(
+    step: HTMLElement | null | undefined,
+    direction: "forward" | "backward" = "forward",
+  ) {
+    if (formCard) formCard.dataset.stepDirection = direction;
+    [formStep1, formStep2, calendarStep].forEach((s) =>
+      s?.classList.add("hidden"),
+    );
     step?.classList.remove("hidden");
   }
 
@@ -945,7 +369,7 @@ const faqs = [
   });
 
   backBtn?.addEventListener("click", () => {
-    showStep(formStep1);
+    showStep(formStep1, "backward");
     document
       .querySelector("#agendar")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -962,7 +386,7 @@ const faqs = [
     const phoneDigits = String(phoneInput?.value || "").replace(/\D/g, "");
     if (phoneInput?.value && phoneDigits.length < 7) {
       phoneInput.setCustomValidity(
-        "Escribe un número de teléfono válido (al menos 7 dígitos)."
+        "Escribe un número de teléfono válido (al menos 7 dígitos).",
       );
     }
     if (!form2.checkValidity()) {
@@ -974,7 +398,9 @@ const faqs = [
     const data2 = new FormData(form2);
     const data1 = form1 ? new FormData(form1) : new FormData();
     const name = String(data2.get("name") || "");
-    const phone = `${data2.get("country") || ""}${String(data2.get("phone") || "")
+    const phone = `${data2.get("country") || ""}${String(
+      data2.get("phone") || "",
+    )
       .replace(/\D/g, "")
       .replace(/^0+/, "")}`;
 
@@ -1001,16 +427,29 @@ const faqs = [
         setForm2Error("No pudimos guardar tus datos. Inténtalo nuevamente.");
         return;
       }
+
+      const trackingWindow = window as Window & {
+        dataLayer?: Array<Record<string, unknown>>;
+      };
+      trackingWindow.dataLayer = trackingWindow.dataLayer || [];
+      trackingWindow.dataLayer.push({
+        event: "lead_datos_completados",
+      });
+      try {
+        localStorage.setItem("llcLeadSubmissionId", submissionId);
+      } catch {
+        // The lead flow must continue when browser storage is unavailable.
+      }
     } catch {
       setForm2Error(
-        "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente."
+        "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente.",
       );
       return;
     } finally {
       setSubmitting(false);
     }
 
-    const url = new URL("https://zcal.co/t/agendar-asesoria-llc/60min");
+    const url = new URL("https://zcal.co/t/agendar-asesoria-llc/60-USA");
     url.searchParams.set("name", name);
     url.searchParams.set("email", String(data2.get("email") || ""));
     url.searchParams.set("smsPhone", phone);

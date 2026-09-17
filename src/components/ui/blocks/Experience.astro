@@ -1,0 +1,47 @@
+---
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+interface Props {
+    label: string;
+    title: string;
+    description: string;
+    experience: {
+        title: string;
+        description: string;
+    }[];
+}
+
+const { experience, label, title, description } = Astro.props as Props
+---
+
+<div
+  class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[.7fr_1.3fr] lg:items-center lg:px-8"
+>
+  <div>
+    <p class="section-kicker">{label}</p><h2
+      class="section-title"
+    >
+      {title}
+    </h2><p class="mt-5 leading-7 text-slate-600">
+      {description}
+    </p>
+  </div><div class="grid grid-cols-2 gap-4">
+    {
+      experience.map((exp) => (
+        <Card class="rounded-2xl">
+          <CardHeader>
+            <>
+              <CardTitle class="font-display text-3xl">{exp.title}</CardTitle>
+              <CardDescription>{exp.description}</CardDescription>
+            </>
+          </CardHeader>
+        </Card>
+      ))
+    }
+  </div>
+</div>

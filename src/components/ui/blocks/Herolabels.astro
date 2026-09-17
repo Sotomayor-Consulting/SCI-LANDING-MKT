@@ -1,0 +1,94 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import { Separator } from "@/components/starwind/separator";
+
+interface Props {
+  benefits: string[];
+  badge: string;
+  titleLine1: string;
+  highlighted: string;
+  description: string;
+  note: string;
+  labelBtn: string;
+  infolabels: string;
+  infodescrition: string;
+  infoscore: string;
+}
+const { benefits, badge, titleLine1, highlighted, description, note, labelBtn, infolabels, infodescrition, infoscore } =
+  Astro.props;
+---
+
+<div class="pt-2 lg:pt-8">
+  <Badge
+    tone="primary-accent"
+    appearance="frosted"
+    eyebrow
+    size="sm"
+    class="mb-6"
+  >
+    <span class="bg-primary-accent size-1.5 rounded-full"></span>
+    {badge}
+  </Badge>
+  <h1
+    class="font-display text-foreground max-w-3xl text-4xl leading-[1.08] font-bold tracking-[-.04em] sm:text-5xl lg:text-[4rem]"
+  >
+    {titleLine1}
+    <span
+      class="text-primary-accent after:bg-primary/30 relative whitespace-nowrap after:absolute after:inset-x-0 after:bottom-1 after:-z-10 after:h-3"
+      >{highlighted}</span
+    >
+  </h1>
+  <p class="mt-7 max-w-2xl text-lg leading-8 text-slate-600">
+    {description}
+  </p>
+  <div class="mt-7 grid gap-3 sm:grid-cols-3">
+    {
+      benefits.map((benefit) => (
+        <Badge
+          tone="success"
+          appearance="soft"
+          size="sm"
+          class="justify-start whitespace-normal"
+        >
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="m4 10 4 4 8-8" />
+          </svg>
+          {benefit}
+        </Badge>
+      ))
+    }
+  </div>
+  <div class="mt-9 flex flex-wrap items-center gap-4">
+    <Button
+      href="#agendar"
+      variant="primary"
+      size="lg"
+      class="rounded-xl px-7 font-bold shadow-lg shadow-amber-900/10 hover:-translate-y-0.5"
+      >{labelBtn}<svg
+        viewBox="0 0 24 24"
+        class="size-4"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg
+      ></Button
+    >
+    <span class="text-sm text-slate-500">{note}</span>
+  </div>
+  <Separator class="mt-10" />
+  <div
+    class="text-muted-foreground mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm"
+  >
+    <strong class="font-display text-foreground text-xl">{infolabels}</strong><span
+      >{infodescrition}</span
+    >
+    <Separator orientation="vertical" class="hidden h-5 sm:block" />
+    <strong class="text-primary-accent">★★★★★</strong><span>{infoscore}</span
+    >
+  </div>
+</div>
