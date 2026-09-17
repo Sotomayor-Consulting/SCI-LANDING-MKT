@@ -2,3 +2,15 @@ SUPABASE_URL="https://vzrrjkdhqqkxjedeukml.supabase.co"
 SUPABASE_SERVICE_ROLE_KEY="replace-with-your-service-role-key"
 CALENDAR_WEBHOOK_SECRET="replace-with-a-long-random-secret"
 TURNSTILE_SECRET_KEY="replace-with-your-turnstile-secret-key"
+
+# Conversiones (CAPI) — TikTok Events API. El proveedor se activa solo si ambos están presentes.
+TIKTOK_ACCESS_TOKEN="replace-with-your-tiktok-events-api-token"
+TIKTOK_PIXEL_ID="replace-with-your-tiktok-pixel-id"
+# Código de pruebas para ver eventos en TikTok Events Manager → Test Events (opcional).
+TIKTOK_TEST_EVENT_CODE=""
+
+# Conversiones (CAPI) — Meta Conversions API. Descomenta para activar Meta.
+# META_ACCESS_TOKEN="replace-with-your-meta-capi-token"
+# META_PIXEL_ID="replace-with-your-meta-pixel-id"
+# META_API_VERSION="v21.0"
+# META_TEST_EVENT_CODE=""

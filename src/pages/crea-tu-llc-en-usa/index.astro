@@ -12,7 +12,6 @@ import GtmHead from "@/components/ui/blocks/GtmHead.astro";
 import SiteHeader from "@/components/ui/blocks/SiteHeader.astro";
 import ThankYouHero from "@/components/ui/blocks/ThankYouHero.astro";
 import ScheduleGate from "@/components/ui/blocks/ScheduleGate.astro";
-import { FACTURACION_OPTIONS } from "@/actions";
 import PartnersBanner from "@/components/ui/blocks/PartnersBanner.astro";
 import IconFeatureCards from "@/components/ui/blocks/IconFeatureCards.astro";
 import MeetingChecklist from "@/components/ui/blocks/MeetingChecklist.astro";
@@ -31,6 +30,18 @@ const ZCAL_OPEN_URL = "https://zcal.co/t/agendar-asesoria-llc/60min";
 const TRUSTPILOT_URL = "https://www.trustpilot.com/review/sotomayorconsulting.com";
 
 const heroObjectives = ["Gratuita", "Enfocada en tu caso", "Por Zoom", "En español"];
+
+const facturationOptions = [
+  "Aún no factura",
+  "Menos de 10.000",
+  "Entre 10.000 y 50.000",
+  "Entre 50.000 y 100.000",
+  "Entre 100.000 y 500.000",
+  "Entre 500.000 y 1.000.000",
+  "Más de 1.000.000",
+] as const;
+
+
 
 const partnerLogos = [
   { name: "mercury", class: "h-6 w-auto" },
@@ -211,7 +222,7 @@ const BRAND = "Sotomayor Consulting International";
         calDescription="Elige el día y la hora. Confirmamos por Zoom y te enviamos el recordatorio."
         link={ZCAL_OPEN_URL}
         openUrl={ZCAL_OPEN_URL}
-        facturacionOptions={FACTURACION_OPTIONS}
+        facturacionOptions={facturationOptions}
       />
     </ThankYouHero>
 

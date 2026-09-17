@@ -1,14 +1,15 @@
-import { actions } from "astro:actions";
-
 // ============================================================================
 // Interactividad de la página de gracias (todo sin recargar la página):
 //  · Prefill del calendario Zcal con datos que llegan por la URL.
 //  · Scroll suave al calendario desde cada CTA.
 //  · Barra sticky móvil + CTA del header según visibilidad del calendario.
-//  · Tracking (ViewContent / Contact / CompleteRegistration) enviado vía
-//    Astro Action `actions.tracking` (SSR). Fallback: fetch a la Pages
-//    Function /api/tiktok-capi si la acción no estuviera disponible.
+//  · Validación del lead (POST /api/validate-lead) y tracking CAPI
+//    (POST /api/tiktok-capi) — Pages Functions de Cloudflare. Sitio estático.
+//    Fire-and-forget: nunca bloquea ni recarga.
 // ============================================================================
+
+const VALIDATE_ENDPOINT = "/api/validate-lead";
+const CAPI_ENDPOINT = "/api/tiktok-capi";
 
 type TrackingPayload = {
   event_name: "ViewContent" | "Contact" | "CompleteRegistration" | "Schedule";
@@ -20,6 +21,11 @@ type TrackingPayload = {
   content_name?: string;
   content_category?: string;
   lead_id?: string;
+  // Matching avanzado (el servidor hashea antes de enviar a CAPI).
+  email?: string;
+  phone?: string;
+  fbp?: string;
+  fbc?: string;
 };
 
 const ZCAL_EMBED_SCRIPT = "https://static.zcal.co/embed/v1/embed.js";
@@ -40,25 +46,19 @@ function newEventId(name: string): string {
 }
 
 /**
- * Camino principal: Astro Action `tracking` (SSR). Si la RPC fallara, cae al
- * Pages Function /api/tiktok-capi. Fire-and-forget: nunca bloquea ni recarga.
+ * Envía el evento a la Pages Function de CAPI (TikTok/Meta server-side).
+ * Fire-and-forget: si algo falla, el flujo del lead continúa igual.
  */
 async function sendTracking(payload: TrackingPayload): Promise<void> {
   try {
-    const { error } = await actions.tracking(payload);
-    if (!error) return;
-  } catch {
-    /* la acción no respondió — usa el fallback */
-  }
-  try {
-    await fetch("/api/tiktok-capi", {
+    await fetch(CAPI_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
       keepalive: true,
     });
   } catch {
-    /* el flujo del lead continúa aunque el tracking falle */
+    /* el tracking es best-effort; nunca interrumpe la navegación */
   }
 }
 
@@ -171,15 +171,15 @@ function initScheduleGate(): void {
     setSubmitting(true);
     let verdict: { ok: boolean; reason: string; submissionId: string } | undefined;
     try {
-      const { data: result, error } = await actions.validateLead({
-        name,
-        email,
-        phone,
-        facturacion,
-        tema,
-        website,
+      const response = await fetch(VALIDATE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, facturacion, tema, website }),
       });
-      if (error || !result) {
+      const result = (await response.json().catch(() => null)) as
+        | { ok: boolean; reason: string; submissionId: string }
+        | null;
+      if (!response.ok || !result || typeof result.ok !== "boolean") {
         showError("No pudimos validar tus datos. Inténtalo nuevamente.");
         setSubmitting(false);
         return;
@@ -228,7 +228,12 @@ function initScheduleGate(): void {
     mountEmbed();
     track(
       "Contact",
-      { content_name: "Lead validado — abrir agenda" },
+      {
+        content_name: "Lead validado — abrir agenda",
+        email,
+        phone,
+        external_id: verdict.submissionId || undefined,
+      },
       "soto_event_fired_Contact_validated",
     );
     document.getElementById("agendar")?.scrollIntoView({
