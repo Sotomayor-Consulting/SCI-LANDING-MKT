@@ -1,0 +1,81 @@
+---
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Separator } from "@/components/starwind/separator";
+
+interface Props {
+  kicker: string;
+  title: string;
+  items: string[];
+  detailsTitle: string;
+  details: { label: string; value: string }[];
+  ctaHref: string;
+  ctaLabel: string;
+  ctaNote?: string;
+}
+const {
+  kicker,
+  title,
+  items,
+  detailsTitle,
+  details,
+  ctaHref,
+  ctaLabel,
+  ctaNote,
+} = Astro.props;
+---
+
+<section class="py-20 sm:py-24">
+  <div class="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-2 lg:gap-12 lg:px-8">
+    <div>
+      <p class="section-kicker">{kicker}</p>
+      <h2 class="section-title">{title}</h2>
+      <ul class="mt-5 grid gap-3">
+        {
+          items.map((item, index) => (
+            <li class="grid grid-cols-[1.75rem_1fr] gap-3 leading-6 text-slate-600">
+              <b class="grid size-7 place-items-center rounded-lg border border-[#e8c77c] bg-[#faf3e4] font-display text-sm font-bold text-[#0d2638]">
+                {index + 1}
+              </b>
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <Card class="bg-muted rounded-2xl">
+      <CardHeader>
+        <CardTitle class="text-lg">{detailsTitle}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <dl>
+          {
+            details.map((row, index) => (
+              <>
+                <div class="grid grid-cols-[auto_1fr] gap-3 py-2.5 text-sm">
+                  <dt class="font-display font-semibold text-[#0d2638]">{row.label}</dt>
+                  <dd class="text-slate-600">{row.value}</dd>
+                </div>
+                {index < details.length - 1 && <Separator class="bg-slate-200" />}
+              </>
+            ))
+          }
+        </dl>
+        <Button
+          href={ctaHref}
+          variant="primary"
+          size="lg"
+          data-scroll-calendar
+          data-cta="meeting"
+          class="mt-4 w-full rounded-xl font-bold">{ctaLabel}</Button
+        >
+        {ctaNote && <p class="mt-2 text-center text-xs text-slate-500">{ctaNote}</p>}
+      </CardContent>
+    </Card>
+  </div>
+</section>

@@ -1,0 +1,47 @@
+---
+import { Card, CardContent } from "@/components/starwind/card";
+import Experience from "@/components/ui/blocks/Experience.astro";
+
+export interface Review {
+  quote: string;
+  cite: string;
+  flag: string;
+}
+
+interface Props {
+  label: string;
+  title: string;
+  description: string;
+  experience: { title: string; description: string }[];
+  reviews: Review[];
+  reviewsHref: string;
+}
+const { label, title, description, experience, reviews, reviewsHref } = Astro.props;
+---
+
+<section class="bg-muted py-20 sm:py-24">
+  <Experience label={label} title={title} description={description} experience={experience} />
+  <div class="mx-auto mt-10 max-w-7xl px-5 lg:px-8">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        reviews.map((review) => (
+          <Card class="rounded-2xl">
+            <CardContent class="pt-6">
+              <blockquote class="leading-6 text-[#243746]">
+                <span class="mr-1 font-display text-xl font-bold text-[#a66e1c]">“</span>
+                {review.quote}
+              </blockquote>
+              <cite class="mt-3 block text-xs text-slate-500 not-italic">
+                <span class="mr-1.5">{review.flag}</span>
+                {review.cite} —{" "}
+                <a href={reviewsHref} target="_blank" rel="noopener" class="text-[#2a5580]">
+                  Leer ↗
+                </a>
+              </cite>
+            </CardContent>
+          </Card>
+        ))
+      }
+    </div>
+  </div>
+</section>

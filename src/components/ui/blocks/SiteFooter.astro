@@ -1,0 +1,27 @@
+---
+interface Props {
+  logoSrc: string;
+  logoAlt: string;
+  disclaimer: string;
+  links: { label: string; href: string }[];
+  copyright: string;
+}
+const { logoSrc, logoAlt, disclaimer, links, copyright } = Astro.props;
+---
+
+<footer class="bg-[#0a1a2a] py-12 text-sm leading-6 text-white/70">
+  <div class="mx-auto grid max-w-7xl gap-4 px-5 lg:px-8">
+    <img src={logoSrc} alt={logoAlt} width="180" height="34" class="h-8 w-auto" />
+    <p class="max-w-3xl text-xs text-white/45">{disclaimer}</p>
+    <div class="flex flex-wrap gap-4">
+      {
+        links.map((link) => (
+          <a href={link.href} target="_blank" rel="noopener" class="hover:text-white">
+            {link.label}
+          </a>
+        ))
+      }
+      <span>{copyright}</span>
+    </div>
+  </div>
+</footer>

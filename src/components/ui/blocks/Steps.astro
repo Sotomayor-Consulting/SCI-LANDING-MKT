@@ -1,0 +1,46 @@
+---
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+export interface Step {
+  title: string;
+  description: string;
+  meta?: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  steps: Step[];
+}
+const { kicker, title, steps } = Astro.props;
+---
+
+<section class="bg-muted py-20 sm:py-24">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="max-w-2xl">
+      <p class="section-kicker">{kicker}</p>
+      <h2 class="section-title">{title}</h2>
+    </div>
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      {
+        steps.map((step, index) => (
+          <Card class="rounded-2xl">
+            <CardHeader>
+              <span class="mb-3 grid size-8 place-items-center rounded-lg border border-[#e8c77c] bg-[#faf3e4] font-display text-sm font-bold text-[#0d2638]">
+                {index + 1}
+              </span>
+              <CardTitle class="text-lg">{step.title}</CardTitle>
+              <CardDescription>{step.description}</CardDescription>
+              {step.meta && <p class="mt-2 text-xs text-slate-500">{step.meta}</p>}
+            </CardHeader>
+          </Card>
+        ))
+      }
+    </div>
+  </div>
+</section>
