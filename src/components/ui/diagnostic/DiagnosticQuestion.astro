@@ -1,0 +1,83 @@
+---
+import { Button } from "@/components/starwind/button";
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Label } from "@/components/starwind/label";
+import { RadioGroup, RadioGroupItem } from "@/components/starwind/radio-group";
+import type { DiagnosticQuestion } from "./types";
+
+interface Props {
+  question: DiagnosticQuestion;
+  step: number;
+  questionNumber: number;
+  showBack?: boolean;
+}
+
+const { question, step, questionNumber, showBack = true } = Astro.props as Props;
+---
+
+<section class="diagnostic-step hidden" data-step={step} data-question={question.id}>
+  <CardHeader class="text-center">
+    <p class="text-primary-accent text-xs font-bold tracking-[.14em] uppercase">
+      Pregunta {questionNumber} de 6
+    </p>
+    <CardTitle>
+      <h2 tabindex="-1" class="font-display text-2xl leading-tight font-bold outline-none sm:text-3xl">
+        {question.title}
+      </h2>
+    </CardTitle>
+    <CardDescription class="text-sm leading-6 sm:text-base">{question.description}</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <RadioGroup
+      name={question.id}
+      legend={question.title}
+      required
+      class="diagnostic-options gap-0"
+      data-question-group={question.id}
+    >
+      {
+        question.options.map((option, index) => {
+          const id = `${question.id}-${index}`;
+          return (
+            <Label
+              for={id}
+              class="diagnostic-option hover:bg-muted data-[selected=true]:bg-muted flex cursor-pointer items-start gap-4 border-b px-3 py-5 text-left text-sm leading-6 last:border-b-0 sm:text-base"
+              data-answer={option.value}
+              data-label={option.label}
+            >
+              <RadioGroupItem
+                id={id}
+                value={option.value}
+                nativeButton
+                variant="primary"
+                aria-label={option.label}
+                class="mt-0.5"
+              />
+              <span>{option.label}</span>
+            </Label>
+          );
+        })
+      }
+    </RadioGroup>
+  </CardContent>
+  <CardFooter class="grid grid-cols-[auto_1fr] gap-3">
+    {
+      showBack ? (
+        <Button type="button" variant="outline" size="lg" class="diagnostic-back rounded-xl" aria-label="Atrás">
+          ←
+        </Button>
+      ) : (
+        <span />
+      )
+    }
+    <Button type="button" size="lg" class="diagnostic-next rounded-xl font-bold" disabled>
+      Continuar
+    </Button>
+  </CardFooter>
+</section>
