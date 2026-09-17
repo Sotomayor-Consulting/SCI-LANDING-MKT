@@ -1,0 +1,34 @@
+---
+import { Button } from "@/components/starwind/button";
+
+interface Props {
+  logoSrc: string;
+  logoAlt: string;
+  brandHref: string;
+  ctaHref: string;
+  ctaLabel: string;
+}
+const { logoSrc, logoAlt, brandHref, ctaHref, ctaLabel } = Astro.props;
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md backdrop-saturate-150"
+>
+  <div
+    class="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-5 lg:px-8"
+  >
+    <a href={brandHref} aria-label={logoAlt}>
+      <img src={logoSrc} alt={logoAlt} width="200" height="40" class="h-9 w-auto" />
+    </a>
+    <Button
+      id="header-cta"
+      href={ctaHref}
+      variant="primary"
+      size="sm"
+      data-scroll-calendar
+      data-cta="header"
+      class="rounded-xl font-bold opacity-0 transition-opacity duration-200 data-[cta-on]:opacity-100"
+      >{ctaLabel}</Button
+    >
+  </div>
+</header>

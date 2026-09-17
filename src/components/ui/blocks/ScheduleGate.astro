@@ -1,0 +1,279 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Form } from "@/components/starwind/form";
+import {
+  Field,
+  FieldControl,
+  FieldError,
+  FieldLabel,
+} from "@/components/starwind/field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/starwind/select";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/starwind/native-select";
+import { Textarea } from "@/components/starwind/textarea";
+import { Alert, AlertDescription } from "@/components/starwind/alert";
+
+interface Props {
+  badge: string;
+  formTitle: string;
+  formDescription: string;
+  calTitle: string;
+  calDescription: string;
+  /** URL base de la invitación Zcal (sin params; el cliente añade el prefill). */
+  link: string;
+  openUrl: string;
+  facturacionOptions: readonly string[];
+  countries?: { value: string; label: string }[];
+}
+
+const {
+  badge,
+  formTitle,
+  formDescription,
+  calTitle,
+  calDescription,
+  link,
+  openUrl,
+  facturacionOptions,
+  countries = [
+    { value: "+593", label: "EC +593" },
+    { value: "+57", label: "CO +57" },
+    { value: "+52", label: "MX +52" },
+    { value: "+51", label: "PE +51" },
+    { value: "+1", label: "US +1" },
+    { value: "+34", label: "ES +34" },
+    { value: "+54", label: "AR +54" },
+  ],
+} = Astro.props;
+
+const cardClass =
+  "bg-foreground text-background relative scroll-mt-20 overflow-hidden rounded-3xl border-0 shadow-2xl shadow-slate-900/25";
+const inputDark =
+  "border-white/15 bg-white/7 text-white placeholder:text-white/35";
+---
+
+<div id="agendar" class="scroll-mt-20">
+  <!-- ===================== PASO 1 · Formulario ===================== -->
+  <Card id="lead-step" class={cardClass}>
+    <CardHeader>
+      <CardTitle
+        ><h2 class="font-display text-xl font-semibold text-white">
+          {formTitle}
+        </h2></CardTitle
+      >
+      <CardDescription class="text-white/70">{formDescription}</CardDescription>
+    </CardHeader>
+
+    <Form id="lead-form" novalidate class="flex flex-col gap-5">
+      <CardContent class="flex flex-col gap-5">
+        <Field name="name" class="gap-1.5">
+          <FieldLabel for="lf-name" class="text-sm text-white/75"
+            >Nombre completo</FieldLabel
+          >
+          <FieldControl
+            size="sm"
+            id="lf-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            minlength="2"
+            placeholder="Tu nombre y apellido"
+            class={inputDark}
+          />
+          <FieldError match="valueMissing"
+            >Escribe tu nombre completo.</FieldError
+          >
+          <FieldError match="tooShort"
+            >Escribe al menos dos caracteres.</FieldError
+          >
+        </Field>
+
+        <Field name="email" class="gap-1.5">
+          <FieldLabel for="lf-email" class="text-sm text-white/75"
+            >Correo electrónico</FieldLabel
+          >
+          <FieldControl
+            size="sm"
+            id="lf-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="nombre@empresa.com"
+            class={inputDark}
+          />
+          <FieldError match="valueMissing">Escribe tu correo.</FieldError>
+          <FieldError match="typeMismatch">Escribe un correo válido.</FieldError
+          >
+        </Field>
+
+        <div class="grid grid-cols-[7.5rem_1fr] gap-2">
+          <Field class="gap-1.5">
+            <FieldLabel for="country" class="text-sm text-white/75"
+              >País</FieldLabel
+            >
+            <NativeSelect
+              id="country"
+              size="sm"
+              name="country"
+              class={inputDark}
+            >
+              {
+                countries.map((c) => (
+                  <NativeSelectOption value={c.value}>
+                    {c.label}
+                  </NativeSelectOption>
+                ))
+              }
+            </NativeSelect>
+          </Field>
+          <Field name="phone" class="gap-1.5">
+            <FieldLabel for="lf-phone" class="text-sm text-white/75"
+              >Teléfono / WhatsApp</FieldLabel
+            >
+            <FieldControl
+              size="sm"
+              id="lf-phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              required
+              pattern="[0-9+\-().\s]+"
+              minlength="7"
+              maxlength="15"
+              placeholder="099 123 4567"
+              class={inputDark}
+            />
+            <FieldError match="valueMissing">Escribe tu número.</FieldError>
+            <FieldError match="tooShort">Escribe un número válido.</FieldError>
+            <FieldError match="patternMismatch"
+              >Solo números, espacios o guiones.</FieldError
+            >
+          </Field>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-white/75">
+            ¿Cuál es el rango aproximado de facturación de su negocio?
+          </p>
+          <Select name="facturacion" required>
+            <SelectTrigger
+              size="sm"
+              class="w-full border-white/15 bg-white/7 text-white data-placeholder:text-white/40"
+              placeholder="Selecciona un rango"
+              aria-label="Rango de facturación"
+            >
+              <SelectValue placeholder="Selecciona un rango" />
+            </SelectTrigger>
+            <SelectContent>
+              {
+                facturacionOptions.map((option) => (
+                  <SelectItem value={option}>{option}</SelectItem>
+                ))
+              }
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-white/75">
+            ¿Qué tema principal le gustaría conversar con nosotros en la
+            reunión?
+          </p>
+          <Textarea
+            id="lf-tema"
+            name="tema"
+            rows={4}
+            placeholder="Cuéntanos el tema principal..."
+            class={inputDark}
+          />
+        </div>
+
+        <!-- honeypot anti-bot -->
+        <div class="absolute -left-[9999px]" aria-hidden="true">
+          <label for="lf-website">Sitio web</label>
+          <input
+            id="lf-website"
+            name="website"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <Alert id="lead-error" variant="error" class="hidden py-3 text-red-100">
+          <AlertDescription id="lead-error-msg" class="text-xs"
+            >Revisa los campos indicados antes de continuar.</AlertDescription
+          >
+        </Alert>
+        <Alert id="lead-scheduled" variant="default" class="hidden py-3">
+          <AlertDescription class="text-xs text-white/80">
+            Ya tienes una asesoría agendada con este contacto. Revisa tu correo
+            o escríbenos por WhatsApp si necesitas reprogramarla.
+          </AlertDescription>
+        </Alert>
+      </CardContent>
+
+      <CardFooter class="flex-col gap-3 border-white/10 bg-transparent">
+        <Button
+          id="lead-submit"
+          type="submit"
+          variant="primary"
+          size="lg"
+          class="w-full rounded-xl font-bold">Elegir horario</Button
+        >
+        <p class="text-center text-[.7rem] leading-5 text-white/45">
+          Tus datos se usan únicamente para validar tu registro y gestionar esta
+          asesoría.
+        </p>
+      </CardFooter>
+    </Form>
+  </Card>
+
+  <!-- ===================== PASO 2 · Calendario ===================== -->
+  <Card id="booking-step" hidden class={cardClass}>
+    <CardHeader>
+      <CardTitle
+        ><h2 class="font-display text-xl font-semibold text-white">
+          {calTitle}
+        </h2></CardTitle
+      >
+      <CardDescription class="text-white/70">{formDescription}</CardDescription>
+    </CardHeader>
+    <div class="bg-background overflow-hidden">
+      <div class="zcal-inline-widget">
+        <a id="zcal-link" href={link}>Agenda tu asesoría</a>
+      </div>
+    </div>
+    <p class="text-center text-xs text-white/60">
+      ¿No carga? <a
+        id="zcal-open"
+        href={openUrl}
+        target="_blank"
+        rel="noopener"
+        data-track-schedule
+        class="font-semibold text-[#e4c078]"
+        >Abre el calendario en una pestaña nueva</a
+      >.
+    </p>
+  </Card>
+</div>
