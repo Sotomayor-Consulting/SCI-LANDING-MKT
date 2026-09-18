@@ -8,7 +8,12 @@ This project deploys as a **static Astro site** (no adapter, `output: 'static'`)
 | `POST /api/leads` | Store a lead in Supabase (Turnstile-protected). |
 | `POST /api/calendar-confirmation` | Webhook that records `scheduled_at` / `calendar_event_id`. |
 | `POST /api/validate-lead` | Validate a lead before showing the calendar (blacklist / existing appointment). |
+| `POST /api/create-lead` | Create the `crm.lead` in Odoo when the form is completed (idempotent). |
 | `POST /api/tiktok-capi` | Server-side conversions (CAPI) to TikTok/Meta. |
+
+Shared server-side infrastructure lives in `functions/_infrastructure/` (e.g. the shared axios
+instance in `http.ts` and the Odoo JSON-RPC client in `odoo/`). Files/dirs prefixed with `_` are
+importable helpers, not routes.
 
 > Astro Actions are **not** used: they require on-demand rendering, and `@astrojs/cloudflare`
 > only targets Cloudflare Workers. A static Pages deploy uses Pages Functions instead, which read
@@ -54,6 +59,12 @@ Meta Conversions API is supported by `/api/tiktok-capi` too; add these only when
 `META_ACCESS_TOKEN` (secret), `META_PIXEL_ID`, `META_API_VERSION` (default `v21.0`),
 `META_TEST_EVENT_CODE`. Each provider stays inactive until its credentials are present, so events
 are simply skipped (no-op) when a platform is not configured.
+
+Odoo lead creation (`/api/create-lead`) needs all four: `ODOO_URL` (variable),
+`ODOO_DB` (variable), `ODOO_USERNAME` (variable) and `ODOO_API_KEY` (encrypted secret). When any is
+missing the function responds `{ok:true, created:false, skipped:true}` and the booking flow
+continues. The `crm.lead` model must have a unique technical field `x_submission_id` (see
+`docs/leads/integration.md`) for idempotency.
 
 Add `PUBLIC_TURNSTILE_SITE_KEY` as a build environment variable. For local development, put the site
 key in an ignored `.env` file and the matching test secret in `.dev.vars` (see `.dev.vars.example`).
