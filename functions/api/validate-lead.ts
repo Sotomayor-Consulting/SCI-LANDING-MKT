@@ -1,18 +1,20 @@
 // POST /api/validate-lead — valida el lead antes de mostrar el calendario.
 //
-// STUB: la validación real (lista negra en Odoo vía axios/JSON-RPC + cita
-// existente en Google Calendar / Zcal) la implementa el equipo de datos, que
-// leerá sus credenciales desde context.env. Mientras tanto, veredicto de prueba
-// según el email:
-//   · contiene "blacklist" o "spam"     → blacklisted
-//   · contiene "agendado" o "scheduled" → already_scheduled
-//   · resto                              → ok
+// SEAM: la validación real la implementa el equipo de datos con un cliente Odoo
+// (axios + JSON-RPC) que devuelve estados BLACKLISTED / EXISTED. La comprobación
+// "tiene agenda" (hasAgenda) se resuelve contra la tabla Supabase `meetings`
+// (esquema aún pendiente). Mientras tanto, veredicto de prueba por email.
+//
+// Contrato de salida:
+//   { ok, status: "OK" | "BLACKLISTED" | "EXISTED", hasAgenda: boolean, submissionId }
+//   ok = puede continuar a la agenda = status !== "BLACKLISTED" && !hasAgenda
 
 interface Env {
-  // Reservado para credenciales de la validación real (Odoo / Google Calendar).
+  // Reservado para el cliente Odoo (validación) y la consulta a `meetings`.
   ODOO_URL?: string;
   ODOO_DB?: string;
   ODOO_API_KEY?: string;
+  DATABASE_URL?: string;
 }
 
 interface FunctionContext {
@@ -20,7 +22,7 @@ interface FunctionContext {
   env: Env;
 }
 
-type LeadVerdict = "ok" | "blacklisted" | "already_scheduled";
+type LeadStatus = "OK" | "BLACKLISTED" | "EXISTED";
 
 const MAX_BODY_SIZE = 4_096;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,14 +36,30 @@ function str(value: Record<string, unknown>, key: string): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-function mockValidate(email: string): LeadVerdict {
+/**
+ * STUB de validación Odoo. Reemplazar por el cliente axios/JSON-RPC del equipo de
+ * datos, que devolverá BLACKLISTED / EXISTED / OK a partir de email + teléfono.
+ */
+function mockOdooStatus(email: string): LeadStatus {
   const e = email.toLowerCase();
-  if (e.includes("blacklist") || e.includes("spam")) return "blacklisted";
-  if (e.includes("agendado") || e.includes("scheduled")) return "already_scheduled";
-  return "ok";
+  if (e.includes("blacklist") || e.includes("spam")) return "BLACKLISTED";
+  if (e.includes("existe") || e.includes("existed") || e.includes("agendado") || e.includes("scheduled")) {
+    return "EXISTED";
+  }
+  return "OK";
 }
 
-export async function onRequestPost({ request, env: _env }: FunctionContext): Promise<Response> {
+/**
+ * SEAM "tiene agenda": debe consultar la tabla Supabase `meetings` por
+ * submission_id/email (con `pg`, ver functions/_infrastructure/db). El esquema de
+ * `meetings` lo define otro equipo; hasta entonces se deriva del email de prueba.
+ */
+async function hasMeeting(email: string, _env: Env): Promise<boolean> {
+  // TODO(meetings): SELECT 1 FROM public.meetings WHERE email = $1 (o submission_id) LIMIT 1.
+  return email.toLowerCase().includes("agendado") || email.toLowerCase().includes("scheduled");
+}
+
+export async function onRequestPost({ request, env }: FunctionContext): Promise<Response> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
     return json({ ok: false, error: "unsupported_media_type" }, 415);
   }
@@ -64,7 +82,7 @@ export async function onRequestPost({ request, env: _env }: FunctionContext): Pr
 
   // Honeypot: si viene relleno, cortamos en silencio (probable bot).
   if (str(body, "website")) {
-    return json({ ok: false, reason: "blacklisted" as LeadVerdict, submissionId: "" });
+    return json({ ok: false, status: "BLACKLISTED" as LeadStatus, hasAgenda: false, submissionId: "" });
   }
 
   const name = str(body, "name");
@@ -79,9 +97,11 @@ export async function onRequestPost({ request, env: _env }: FunctionContext): Pr
     return json({ ok: false, error: "validation_failed", fields: errors }, 422);
   }
 
-  // TODO(equipo datos): sustituir por Odoo (lista negra por email+phone) y
-  // Google Calendar / Zcal (cita existente), usando _env para las credenciales.
-  const reason = mockValidate(email);
+  // TODO(equipo datos): sustituir mockOdooStatus por el cliente Odoo (axios/JSON-RPC).
+  const status = mockOdooStatus(email);
+  const hasAgenda = status === "BLACKLISTED" ? false : await hasMeeting(email, env);
   const submissionId = crypto.randomUUID();
-  return json({ ok: reason === "ok", reason, submissionId });
+  const ok = status !== "BLACKLISTED" && !hasAgenda;
+
+  return json({ ok, status, hasAgenda, submissionId });
 }

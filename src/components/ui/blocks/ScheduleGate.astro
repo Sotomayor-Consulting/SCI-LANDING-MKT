@@ -13,7 +13,6 @@ import { Form } from "@/components/starwind/form";
 import {
   Field,
   FieldControl,
-  FieldError,
   FieldLabel,
 } from "@/components/starwind/field";
 import {
@@ -34,24 +33,24 @@ interface Props {
   badge: string;
   formTitle: string;
   formDescription: string;
-  calTitle: string;
-  calDescription: string;
   /** URL base de la invitación Zcal (sin params; el cliente añade el prefill). */
   link: string;
   openUrl: string;
   facturacionOptions: readonly string[];
   countries?: { value: string; label: string }[];
+  meetingTitle: string;
+  meetingDescription: string;
 }
 
 const {
   badge,
   formTitle,
   formDescription,
-  calTitle,
-  calDescription,
   link,
   openUrl,
   facturacionOptions,
+  meetingTitle,
+  meetingDescription,
   countries = [
     { value: "+593", label: "EC +593" },
     { value: "+57", label: "CO +57" },
@@ -70,7 +69,6 @@ const inputDark =
 ---
 
 <div id="agendar" class="scroll-mt-20">
-  <!-- ===================== PASO 1 · Formulario ===================== -->
   <Card id="lead-step" class={cardClass}>
     <CardHeader>
       <CardTitle
@@ -93,17 +91,10 @@ const inputDark =
             name="name"
             type="text"
             autocomplete="name"
-            required
-            minlength="2"
             placeholder="Tu nombre y apellido"
             class={inputDark}
           />
-          <FieldError match="valueMissing"
-            >Escribe tu nombre completo.</FieldError
-          >
-          <FieldError match="tooShort"
-            >Escribe al menos dos caracteres.</FieldError
-          >
+          <p id="err-name" class="field-error" role="alert" hidden></p>
         </Field>
 
         <Field name="email" class="gap-1.5">
@@ -116,13 +107,10 @@ const inputDark =
             name="email"
             type="email"
             autocomplete="email"
-            required
             placeholder="nombre@empresa.com"
             class={inputDark}
           />
-          <FieldError match="valueMissing">Escribe tu correo.</FieldError>
-          <FieldError match="typeMismatch">Escribe un correo válido.</FieldError
-          >
+          <p id="err-email" class="field-error" role="alert" hidden></p>
         </Field>
 
         <div class="grid grid-cols-[7.5rem_1fr] gap-2">
@@ -156,18 +144,10 @@ const inputDark =
               type="tel"
               inputmode="tel"
               autocomplete="tel"
-              required
-              pattern="[0-9+\-().\s]+"
-              minlength="7"
-              maxlength="15"
               placeholder="099 123 4567"
               class={inputDark}
             />
-            <FieldError match="valueMissing">Escribe tu número.</FieldError>
-            <FieldError match="tooShort">Escribe un número válido.</FieldError>
-            <FieldError match="patternMismatch"
-              >Solo números, espacios o guiones.</FieldError
-            >
+            <p id="err-phone" class="field-error" role="alert" hidden></p>
           </Field>
         </div>
 
@@ -175,8 +155,9 @@ const inputDark =
           <p class="text-sm font-medium text-white/75">
             ¿Cuál es el rango aproximado de facturación de su negocio?
           </p>
-          <Select name="facturacion" required>
+          <Select name="facturacion">
             <SelectTrigger
+              id="lf-facturacion"
               size="sm"
               class="w-full border-white/15 bg-white/7 text-white data-placeholder:text-white/40"
               placeholder="Selecciona un rango"
@@ -192,6 +173,7 @@ const inputDark =
               }
             </SelectContent>
           </Select>
+          <p id="err-facturacion" class="field-error" role="alert" hidden></p>
         </div>
 
         <div class="flex flex-col gap-2">
@@ -249,17 +231,20 @@ const inputDark =
     </Form>
   </Card>
 
-  <!-- ===================== PASO 2 · Calendario ===================== -->
   <Card id="booking-step" hidden class={cardClass}>
     <CardHeader>
       <CardTitle
         ><h2 class="font-display text-xl font-semibold text-white">
-          {calTitle}
+          {meetingTitle}
         </h2></CardTitle
       >
-      <CardDescription class="text-white/70">{formDescription}</CardDescription>
+      <CardDescription class="text-white/70">{meetingDescription}</CardDescription>
     </CardHeader>
-    <div class="bg-background overflow-hidden">
+    <div id="zcal-frame" class="zcal-frame">
+      <div id="zcal-loading" class="zcal-loading" role="status" aria-live="polite">
+        <span class="zcal-loading-bar"><span class="zcal-loading-bar-fill"></span></span>
+        <span class="text-xs text-slate-500">Cargando calendario…</span>
+      </div>
       <div class="zcal-inline-widget">
         <a id="zcal-link" href={link}>Agenda tu asesoría</a>
       </div>
@@ -269,7 +254,6 @@ const inputDark =
         id="zcal-open"
         href={openUrl}
         target="_blank"
-        rel="noopener"
         data-track-schedule
         class="font-semibold text-[#e4c078]"
         >Abre el calendario en una pestaña nueva</a
@@ -277,3 +261,108 @@ const inputDark =
     </p>
   </Card>
 </div>
+
+<style>
+  /* Contenedor del calendario de Zcal.
+     El alto se controla con --zcal-height: ajústalo aquí al tamaño que
+     necesites. El iframe llena ese alto (no queda encerrado por el padding
+     del contenedor) y desplaza su propio contenido internamente, de modo que
+     nunca se recortan fechas ni bloques de agenda. */
+  .zcal-frame {
+    position: relative;
+    background: var(--color-background, #fff);
+  }
+  .zcal-frame .zcal-inline-widget {
+    width: 100%;
+    height: 100%;
+  }
+  /* El iframe entra con un fade + leve elevación cuando termina de cargar. */
+  .zcal-frame :global(iframe) {
+    width: 100%;
+    border: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
+  }
+  .zcal-frame[data-loaded="true"] :global(iframe) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* La tarjeta del calendario aparece con un deslizamiento suave. */
+  :global(#booking-step:not([hidden])) {
+    animation: zcal-card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes zcal-card-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.99);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Overlay con barra de carga indeterminada, visible hasta que el iframe carga. */
+  .zcal-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: var(--color-background, #fff);
+    transition: opacity 0.3s ease;
+  }
+  .zcal-frame[data-loaded="true"] .zcal-loading {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .zcal-loading-bar {
+    position: relative;
+    display: block;
+    width: min(240px, 60%);
+    height: 4px;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 0.08);
+  }
+  .zcal-loading-bar-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    border-radius: inherit;
+    background: #e4c078;
+    animation: zcal-indeterminate 1.2s ease-in-out infinite;
+  }
+  @keyframes zcal-indeterminate {
+    0% {
+      left: -40%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .zcal-loading-bar-fill {
+      animation: none;
+      width: 100%;
+      left: 0;
+    }
+    :global(#booking-step:not([hidden])) {
+      animation: none;
+    }
+    .zcal-frame :global(iframe) {
+      transition: opacity 0.2s ease;
+      transform: none;
+    }
+    .zcal-frame[data-loaded="true"] :global(iframe) {
+      transform: none;
+    }
+  }
+</style>

@@ -29,8 +29,6 @@ const WHATSAPP_URL = "https://wa.link/jx59a9";
 const ZCAL_OPEN_URL = "https://zcal.co/t/agendar-asesoria-llc/60min";
 const TRUSTPILOT_URL = "https://www.trustpilot.com/review/sotomayorconsulting.com";
 
-const heroObjectives = ["Gratuita", "Enfocada en tu caso", "Por Zoom", "En español"];
-
 const facturationOptions = [
   "Aún no factura",
   "Menos de 10.000",
@@ -41,12 +39,11 @@ const facturationOptions = [
   "Más de 1.000.000",
 ] as const;
 
-
-
 const partnerLogos = [
   { name: "mercury", class: "h-6 w-auto" },
   { name: "relay", class: "h-7 w-auto" },
 ];
+
 const partnerPoints = [
   "Preparamos tu solicitud con los criterios que estas fintech aprueban — antes de aplicar.",
   "Acompañamiento directo en la apertura, accesos del equipo y orden de cuentas.",
@@ -161,7 +158,6 @@ const BRAND = "Sotomayor Consulting International";
 <Layout
   title="Agenda tu asesoría | Sotomayor Consulting International"
   description="Tu registro fue recibido. Elige fecha y hora para tu asesoría gratuita por Zoom: revisamos tu caso y sales con un plan claro. Firma boutique, 10 años, partner de Mercury y Relay."
-  noindex
 >
   <GtmHead
     slot="head"
@@ -197,7 +193,7 @@ const BRAND = "Sotomayor Consulting International";
       titleTrail="."
       ctaHref="#agendar"
       ctaLabel="Elegir mi horario →"
-      objectives={heroObjectives}
+      objectives={["Gratuita", "En español"]}
     >
       Solo falta un paso. Elige un horario y confirma tus datos de contacto para
       recibir el enlace de Zoom. Asesoría <strong>gratuita</strong> para <strong
@@ -205,9 +201,8 @@ const BRAND = "Sotomayor Consulting International";
       >, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong
       > e <strong>inversionistas</strong>.
       <Fragment slot="trust">
-        <b class="font-display font-semibold text-[#0d2638]">+5.000 empresas</b>
-        incorporadas · <b class="font-display font-semibold text-[#0d2638]">10 años</b>
-        · <b class="font-display font-semibold text-[#0d2638]"
+        <b class="font-display font-semibold text-[#0d2638]">+5.000 empresas</b> incorporadas | <b class="font-display font-semibold text-[#0d2638]">
+          10 años</b> | <b class="font-display font-semibold text-[#0d2638]"
           >Partner de Mercury &amp; Relay</b
         ><br />
         <span class="tracking-widest text-[#c0872e]" aria-hidden="true">★★★★☆</span>
@@ -218,11 +213,11 @@ const BRAND = "Sotomayor Consulting International";
         badge="Asesoría gratuita · por Zoom"
         formTitle="Completa tus datos"
         formDescription="Validamos tu registro y, si todo está en orden, eliges tu horario en el acto."
-        calTitle="Elige tu horario"
-        calDescription="Elige el día y la hora. Confirmamos por Zoom y te enviamos el recordatorio."
         link={ZCAL_OPEN_URL}
         openUrl={ZCAL_OPEN_URL}
         facturacionOptions={facturationOptions}
+        meetingTitle="Elige tu horario"
+        meetingDescription="Reserva el día y la hora que mejor te convengan para tu asesoría."
       />
     </ThankYouHero>
 

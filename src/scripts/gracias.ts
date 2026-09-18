@@ -8,11 +8,22 @@
 //    Fire-and-forget: nunca bloquea ni recarga.
 // ============================================================================
 
+import {
+  validateLeadForm,
+  bindLeadErrorClearing,
+} from "./services/lead-validation";
+
 const VALIDATE_ENDPOINT = "/api/validate-lead";
+const CREATE_LEAD_ENDPOINT = "/api/create-lead";
 const CAPI_ENDPOINT = "/api/tiktok-capi";
 
 type TrackingPayload = {
-  event_name: "ViewContent" | "Contact" | "CompleteRegistration" | "Schedule";
+  event_name:
+    | "ViewContent"
+    | "ClickButton"
+    | "CompleteRegistration"
+    | "Schedule"
+    | "Lead";
   event_id: string;
   page_url?: string;
   referrer?: string;
@@ -24,9 +35,30 @@ type TrackingPayload = {
   // Matching avanzado (el servidor hashea antes de enviar a CAPI).
   email?: string;
   phone?: string;
+  ttclid?: string;
+  ttp?: string;
   fbp?: string;
   fbc?: string;
 };
+
+function readCookie(name: string): string {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : "";
+}
+
+/** Señales de TikTok: ttclid (de la URL, persistido) y ttp (cookie _ttp). */
+function tiktokIds(): { ttclid?: string; ttp?: string } {
+  const fromUrl = new URLSearchParams(window.location.search).get("ttclid") || "";
+  let ttclid = fromUrl.trim();
+  try {
+    if (ttclid) localStorage.setItem("soto_ttclid", ttclid);
+    else ttclid = localStorage.getItem("soto_ttclid") || "";
+  } catch {
+    /* localStorage no disponible */
+  }
+  const ttp = readCookie("_ttp") || readCookie("ttp");
+  return { ttclid: ttclid || undefined, ttp: ttp || undefined };
+}
 
 const ZCAL_EMBED_SCRIPT = "https://static.zcal.co/embed/v1/embed.js";
 // Índices de respuesta del evento Zcal (ajustar si cambia el orden de preguntas).
@@ -77,6 +109,7 @@ function track(
     content_id: "asesoria-llc-post-registro",
     content_name: "Gracias por tu registro - Asesoria LLC",
     content_category: "LLC USA",
+    ...tiktokIds(),
     ...extra,
   };
   dataLayer.push({ event: name, event_source: "thank_you_astro", ...payload });
@@ -94,10 +127,36 @@ let embedMounted = false;
 function mountEmbed(): void {
   if (embedMounted) return;
   embedMounted = true;
+  watchZcalFrame();
   const script = document.createElement("script");
   script.src = ZCAL_EMBED_SCRIPT;
   script.async = true;
   document.body.appendChild(script);
+}
+
+// Oculta la barra de carga cuando Zcal inyecta y termina de cargar su iframe.
+function watchZcalFrame(): void {
+  const frame = document.getElementById("zcal-frame");
+  if (!frame) return;
+  const markLoaded = () => frame.setAttribute("data-loaded", "true");
+  const attach = (iframe: HTMLIFrameElement) => {
+    iframe.addEventListener("load", markLoaded, { once: true });
+    // Fallback: si el iframe ya estaba cargado o el evento no dispara.
+    setTimeout(markLoaded, 8000);
+  };
+  const existing = frame.querySelector("iframe");
+  if (existing) {
+    attach(existing);
+    return;
+  }
+  const observer = new MutationObserver(() => {
+    const iframe = frame.querySelector("iframe");
+    if (iframe) {
+      observer.disconnect();
+      attach(iframe);
+    }
+  });
+  observer.observe(frame, { childList: true, subtree: true });
 }
 
 function setText(id: string, value: string): void {
@@ -134,6 +193,15 @@ function initScheduleGate(): void {
   prefill("lf-email", (q.get("email") || "").trim());
   prefill("lf-phone", (q.get("phone") || q.get("whatsapp") || "").trim());
 
+  // Modo previsualización: ?preview=calendar muestra el calendario directo
+  // (sin validar el formulario) para poder ajustar su estilo manualmente.
+  if (q.get("preview") === "calendar") {
+    leadStep.setAttribute("hidden", "");
+    bookingStep.removeAttribute("hidden");
+    mountEmbed();
+    return;
+  }
+
   let submitting = false;
   const setSubmitting = (value: boolean) => {
     submitting = value;
@@ -146,38 +214,36 @@ function initScheduleGate(): void {
     errorAlert?.classList.remove("hidden");
   };
 
+  // Limpia el error de cada campo en cuanto el usuario lo corrige.
+  bindLeadErrorClearing();
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submitting) return;
     errorAlert?.classList.add("hidden");
     scheduledAlert?.classList.add("hidden");
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
 
-    const data = new FormData(form);
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const country = String(data.get("country") || "").trim();
-    const localPhone = String(data.get("phone") || "")
-      .replace(/\D/g, "")
-      .replace(/^0+/, "");
+    // Validación con Zod (servicio): pinta errores por campo y enfoca el primero.
+    const result = validateLeadForm(form);
+    if (!result.ok) return;
+
+    const { name, email, country, phone: localPhone, facturacion, tema } = result.data;
     const phone = `${country}${localPhone}`;
-    const facturacion = String(data.get("facturacion") || "");
-    const tema = String(data.get("tema") || "").trim();
-    const website = String(data.get("website") || "");
 
     setSubmitting(true);
-    let verdict: { ok: boolean; reason: string; submissionId: string } | undefined;
+
+    // 1) Validación (Odoo): BLACKLISTED / EXISTED (+ hasAgenda contra `meetings`).
+    let verdict:
+      | { ok: boolean; status: string; hasAgenda: boolean; submissionId: string }
+      | undefined;
     try {
       const response = await fetch(VALIDATE_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, facturacion, tema, website }),
+        body: JSON.stringify({ name, email, phone, facturacion, tema, website: "" }),
       });
       const result = (await response.json().catch(() => null)) as
-        | { ok: boolean; reason: string; submissionId: string }
+        | { ok: boolean; status: string; hasAgenda: boolean; submissionId: string }
         | null;
       if (!response.ok || !result || typeof result.ok !== "boolean") {
         showError("No pudimos validar tus datos. Inténtalo nuevamente.");
@@ -192,13 +258,40 @@ function initScheduleGate(): void {
     }
 
     if (!verdict.ok) {
-      if (verdict.reason === "already_scheduled") {
-        scheduledAlert?.classList.remove("hidden");
+      if (verdict.status === "BLACKLISTED") {
+        showError("Por ahora no podemos continuar con tu registro. Inténtalo de nuevo más tarde.");
+      } else if (verdict.hasAgenda) {
+        scheduledAlert?.classList.remove("hidden"); // "Ya estás registrado…"
       } else {
-        showError(
-          "Este contacto no puede agendar en este momento. Escríbenos por WhatsApp si crees que es un error.",
-        );
+        showError("No pudimos validar tus datos. Inténtalo nuevamente.");
       }
+      setSubmitting(false);
+      return;
+    }
+
+    // 2) Registro en Supabase (parte del gate: si falla, no mostramos la agenda).
+    try {
+      const created = await fetch(CREATE_LEAD_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          countryCode: country,
+          phone: localPhone,
+          facturacion,
+          tema,
+          submissionId: verdict.submissionId,
+        }),
+      });
+      const createdBody = (await created.json().catch(() => null)) as { ok?: boolean } | null;
+      if (!created.ok || !createdBody?.ok) {
+        showError("No pudimos completar tu registro. Inténtalo nuevamente.");
+        setSubmitting(false);
+        return;
+      }
+    } catch {
+      showError("No pudimos conectar con el servidor. Revisa tu conexión.");
       setSubmitting(false);
       return;
     }
@@ -226,15 +319,16 @@ function initScheduleGate(): void {
     leadStep.setAttribute("hidden", "");
     bookingStep.removeAttribute("hidden");
     mountEmbed();
+    // 3) CAPI registered (CompleteRegistration).
     track(
-      "Contact",
+      "CompleteRegistration",
       {
-        content_name: "Lead validado — abrir agenda",
+        content_name: "Registro completado",
         email,
         phone,
         external_id: verdict.submissionId || undefined,
       },
-      "soto_event_fired_Contact_validated",
+      "soto_event_fired_CompleteRegistration",
     );
     document.getElementById("agendar")?.scrollIntoView({
       behavior: reduceMotion ? "auto" : "smooth",
@@ -242,23 +336,6 @@ function initScheduleGate(): void {
     });
     setSubmitting(false);
   });
-}
-
-// ---- Registro confirmado desde el flujo previo (?registration_confirmed=1) --
-function confirmedRegistration(): { lead_id: string; event_id: string } | null {
-  const p = new URLSearchParams(window.location.search);
-  const isConfirmed = ["1", "true", "yes"].includes(
-    String(p.get("registration_confirmed") || "").trim().toLowerCase(),
-  );
-  const leadId = String(p.get("lead_id") || "").trim();
-  if (!isConfirmed || !leadId) return null;
-  const upstream = String(p.get("registration_event_id") || "").trim();
-  return {
-    lead_id: leadId.slice(0, 160),
-    event_id:
-      upstream.slice(0, 200) ||
-      `soto_CompleteRegistration_${leadId.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 160)}`,
-  };
 }
 
 function scrollToCalendar(source: string): void {
@@ -271,15 +348,8 @@ function scrollToCalendar(source: string): void {
 // -----------------------------------------------------------------------------
 initScheduleGate();
 
+// CAPI view_page (ViewContent) al cargar la página.
 track("ViewContent");
-const confirmed = confirmedRegistration();
-if (confirmed) {
-  track(
-    "CompleteRegistration",
-    { lead_id: confirmed.lead_id, event_id: confirmed.event_id },
-    "soto_event_fired_CompleteRegistration",
-  );
-}
 
 document.querySelectorAll<HTMLElement>("[data-scroll-calendar]").forEach((el) => {
   el.addEventListener("click", (event) => {
@@ -290,25 +360,16 @@ document.querySelectorAll<HTMLElement>("[data-scroll-calendar]").forEach((el) =>
 
 document.querySelectorAll<HTMLElement>("[data-track-schedule]").forEach((el) => {
   el.addEventListener("click", () => {
-    track(
-      "Contact",
-      { content_name: "Abrir agenda Zcal" },
-      "soto_event_fired_Contact_zcal",
-    );
+    track("ClickButton", { content_name: "Abrir agenda Zcal" });
   });
 });
 
+// CAPI ClickButton en cada CTA.
 document.querySelectorAll<HTMLAnchorElement>("a[data-cta]").forEach((a) => {
   a.addEventListener("click", () => {
-    if (/wa\.link|whatsapp/i.test(a.href || "")) {
-      track(
-        "Contact",
-        { content_name: `WhatsApp ${a.getAttribute("data-cta") || ""}` },
-        "soto_event_fired_Contact_wa",
-      );
-    } else {
-      dataLayer.push({ event: "cta_click", cta: a.getAttribute("data-cta") || "" });
-    }
+    const cta = a.getAttribute("data-cta") || "";
+    track("ClickButton", { content_name: `CTA ${cta}` });
+    dataLayer.push({ event: "cta_click", cta });
   });
 });
 

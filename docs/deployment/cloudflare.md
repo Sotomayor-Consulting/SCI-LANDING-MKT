@@ -7,13 +7,13 @@ This project deploys as a **static Astro site** (no adapter, `output: 'static'`)
 | --- | --- |
 | `POST /api/leads` | Store a lead in Supabase (Turnstile-protected). |
 | `POST /api/calendar-confirmation` | Webhook that records `scheduled_at` / `calendar_event_id`. |
+| `POST /api/zcal-webhook` | Zcal booking webhook (event.created/rescheduled/cancelled). Verifies HMAC-SHA256; logs for now (meeting persistence pending, another team). |
 | `POST /api/validate-lead` | Validate a lead before showing the calendar (blacklist / existing appointment). |
-| `POST /api/create-lead` | Create the `crm.lead` in Odoo when the form is completed (idempotent). |
+| `POST /api/create-lead` | Persist the lead in Supabase when the form is completed (idempotent by `submission_id`); n8n syncs it to Odoo. |
 | `POST /api/tiktok-capi` | Server-side conversions (CAPI) to TikTok/Meta. |
 
 Shared server-side infrastructure lives in `functions/_infrastructure/` (e.g. the shared axios
-instance in `http.ts` and the Odoo JSON-RPC client in `odoo/`). Files/dirs prefixed with `_` are
-importable helpers, not routes.
+instance in `http.ts`). Files/dirs prefixed with `_` are importable helpers, not routes.
 
 > Astro Actions are **not** used: they require on-demand rendering, and `@astrojs/cloudflare`
 > only targets Cloudflare Workers. A static Pages deploy uses Pages Functions instead, which read
@@ -51,6 +51,8 @@ After the project exists, open **Settings**, then **Variables and Secrets** and 
 | Encrypted secret | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key |
 | Encrypted secret | `CALENDAR_WEBHOOK_SECRET` | Shared secret for calendar confirmations |
 | Encrypted secret | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key |
+| Encrypted secret | `DATABASE_URL` | Supabase pooler connection string (Supavisor, transaction mode, port 6543) for `/api/create-lead` |
+| Encrypted secret | `ZCAL_WEBHOOK_SECRET` | Secret configured in Zcal → Integrations → Webhooks; verifies `POST /api/zcal-webhook` (HMAC-SHA256) |
 | Encrypted secret | `TIKTOK_ACCESS_TOKEN` | TikTok Events API token (CAPI) |
 | Variable | `TIKTOK_PIXEL_ID` | TikTok pixel / `event_source_id` |
 | Variable | `TIKTOK_TEST_EVENT_CODE` | Optional; surfaces events in TikTok → Test Events |
@@ -60,11 +62,15 @@ Meta Conversions API is supported by `/api/tiktok-capi` too; add these only when
 `META_TEST_EVENT_CODE`. Each provider stays inactive until its credentials are present, so events
 are simply skipped (no-op) when a platform is not configured.
 
-Odoo lead creation (`/api/create-lead`) needs all four: `ODOO_URL` (variable),
-`ODOO_DB` (variable), `ODOO_USERNAME` (variable) and `ODOO_API_KEY` (encrypted secret). When any is
-missing the function responds `{ok:true, created:false, skipped:true}` and the booking flow
-continues. The `crm.lead` model must have a unique technical field `x_submission_id` (see
-`docs/leads/integration.md`) for idempotency.
+`/api/create-lead` connects to Postgres directly with `pg` (node-postgres) using `DATABASE_URL`
+— the Supabase **pooler** connection string (Supavisor, transaction mode, port 6543). It inserts
+into the `leads` table (idempotent by `submission_id`). When `DATABASE_URL` is absent it responds
+`{ok:true, created:false, skipped:true}` and the booking flow continues. Odoo is **not** written
+directly — n8n creates the `crm.lead` from Supabase (see `docs/leads/integration.md`).
+
+`pg` requires Node.js compatibility in the Workers runtime. It is enabled in `wrangler.toml`
+(`compatibility_flags = ["nodejs_compat"]`); mirror it in the Pages dashboard
+(**Settings → Functions → Compatibility flags**) if the project ignores `wrangler.toml`.
 
 Add `PUBLIC_TURNSTILE_SITE_KEY` as a build environment variable. For local development, put the site
 key in an ignored `.env` file and the matching test secret in `.dev.vars` (see `.dev.vars.example`).

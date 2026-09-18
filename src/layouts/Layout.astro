@@ -1,6 +1,7 @@
 ---
 import "@/styles/starwind.css";
 import "@/styles/global.css";
+import BackgroundGrid from "@/components/ui/blocks/BackgroundGrid.astro";
 
 interface Props {
   title?: string;
@@ -35,6 +36,7 @@ const {
     <slot name="head" />
   </head>
   <body>
+    <BackgroundGrid/>
     <slot />
   </body>
 </html>

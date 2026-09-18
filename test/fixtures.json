@@ -1,0 +1,65 @@
+{
+  "_comment": "Valores de prueba para /api/validate-lead. Hoy la validación es un STUB por email (functions/api/validate-lead.ts): 'blacklist'/'spam' → BLACKLISTED; 'agendado'/'scheduled' → EXISTED + hasAgenda; 'existe'/'existed' → EXISTED sin agenda; resto → OK. Cuando el equipo de Odoo conecte la validación real, ajustar estos emails/expectativas manteniendo el contrato { ok, status, hasAgenda }.",
+  "leads": [
+    {
+      "label": "blacklist",
+      "description": "Lista negra → BLACKLISTED → 'Inténtalo de nuevo más tarde'",
+      "payload": {
+        "name": "Lead Bloqueado",
+        "email": "blacklist@ejemplo.com",
+        "phone": "+593999000001",
+        "facturacion": "Menos de 10.000",
+        "tema": "Prueba lista negra"
+      },
+      "expect": { "status": "BLACKLISTED", "hasAgenda": false, "ok": false }
+    },
+    {
+      "label": "spam",
+      "description": "Lista negra (variante spam) → BLACKLISTED",
+      "payload": {
+        "name": "Lead Spam",
+        "email": "spam@ejemplo.com",
+        "phone": "+593999000002",
+        "facturacion": "Aún no factura",
+        "tema": "Prueba spam"
+      },
+      "expect": { "status": "BLACKLISTED", "hasAgenda": false, "ok": false }
+    },
+    {
+      "label": "registered_with_agenda",
+      "description": "Ya registrado y con agenda → EXISTED + hasAgenda → 'Ya estás registrado…'",
+      "payload": {
+        "name": "Lead Con Agenda",
+        "email": "agendado@ejemplo.com",
+        "phone": "+593999000003",
+        "facturacion": "Entre 50.000 y 100.000",
+        "tema": "Ya tengo cita"
+      },
+      "expect": { "status": "EXISTED", "hasAgenda": true, "ok": false }
+    },
+    {
+      "label": "registered_no_agenda",
+      "description": "Ya registrado sin agenda → EXISTED sin agenda → continúa al calendario",
+      "payload": {
+        "name": "Lead Registrado",
+        "email": "existe@ejemplo.com",
+        "phone": "+593999000004",
+        "facturacion": "Entre 10.000 y 50.000",
+        "tema": "Registrado sin cita"
+      },
+      "expect": { "status": "EXISTED", "hasAgenda": false, "ok": true }
+    },
+    {
+      "label": "new_ok",
+      "description": "Lead nuevo válido → OK → registrar + mostrar calendario",
+      "payload": {
+        "name": "Lead Nuevo",
+        "email": "nuevo@ejemplo.com",
+        "phone": "+593999000005",
+        "facturacion": "Más de 1.000.000",
+        "tema": "Quiero abrir mi LLC"
+      },
+      "expect": { "status": "OK", "hasAgenda": false, "ok": true }
+    }
+  ]
+}

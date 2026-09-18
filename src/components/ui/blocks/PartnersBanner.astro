@@ -17,7 +17,7 @@ const { badge, logos, title, points, note } = Astro.props;
     class="mx-auto grid max-w-7xl items-center gap-8 px-5 lg:grid-cols-[.9fr_1.4fr] lg:gap-12 lg:px-8"
   >
     <div class="flex flex-col items-start gap-4 border-slate-300 lg:border-r lg:pr-10">
-      <Badge tone="primary-accent" appearance="outline" eyebrow size="sm">{badge}</Badge>
+      <Badge tone="primary-accent" eyebrow size="sm">{badge}</Badge>
       <div class="flex items-center gap-6 text-[#12314c]">
         {logos.map((logo) => <Icon name={logo.name} class={logo.class} />)}
       </div>

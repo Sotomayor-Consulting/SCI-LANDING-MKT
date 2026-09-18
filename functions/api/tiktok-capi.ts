@@ -15,7 +15,13 @@ interface FunctionContext {
 }
 
 const MAX_BODY_SIZE = 8_192;
-const EVENTS: StandardEvent[] = ["ViewContent", "Contact", "CompleteRegistration", "Schedule"];
+const EVENTS: StandardEvent[] = [
+  "ViewContent",
+  "ClickButton",
+  "CompleteRegistration",
+  "Schedule",
+  "Lead",
+];
 
 function json(body: unknown, status = 200): Response {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store" } });

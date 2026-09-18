@@ -4,11 +4,13 @@
 // interna lista para activar. El `env` llega desde context.env de la Function.
 // ============================================================================
 
+// Eventos estándar de TikTok usados en el funnel.
 export type StandardEvent =
   | "ViewContent"
-  | "Contact"
+  | "ClickButton"
   | "CompleteRegistration"
-  | "Schedule";
+  | "Schedule"
+  | "Lead";
 
 export interface ConversionUser {
   email?: string;
@@ -161,9 +163,10 @@ async function sendTikTok(event: ConversionEvent, env: ConversionsEnv): Promise<
 
 const META_EVENT_MAP: Record<StandardEvent, string> = {
   ViewContent: "ViewContent",
-  Contact: "Contact",
-  CompleteRegistration: "Lead",
+  ClickButton: "ClickButton",
+  CompleteRegistration: "CompleteRegistration",
   Schedule: "Schedule",
+  Lead: "Lead",
 };
 
 async function sendMeta(event: ConversionEvent, env: ConversionsEnv): Promise<ProviderResult> {

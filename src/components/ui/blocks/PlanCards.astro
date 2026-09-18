@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/starwind/card";
 
+import { HoverCard } from "@components/starwind/hover-card";
+
 export interface Plan {
   name: string;
   price: string;
@@ -50,8 +52,11 @@ const {
         plans.map((plan) => (
           <Card
             class:list={[
-              "relative rounded-2xl",
-              { "border-primary-accent ring-primary-accent/20 ring-4": plan.favorite },
+              "relative rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+              {
+                "border-primary-accent ring-primary-accent/20 ring-4":
+                  plan.favorite,
+              },
             ]}
           >
             <CardHeader>
@@ -63,7 +68,9 @@ const {
               <CardTitle class="text-lg">{plan.name}</CardTitle>
               <p class="font-display text-2xl font-bold tracking-[-.02em] text-[#0d2638]">
                 {plan.price}{" "}
-                <span class="text-xs font-semibold text-slate-500">{plan.period}</span>
+                <span class="text-xs font-semibold text-slate-500">
+                  {plan.period}
+                </span>
               </p>
               <CardDescription>{plan.description}</CardDescription>
             </CardHeader>
@@ -81,9 +88,8 @@ const {
           data-cta="plans"
           class="rounded-xl font-bold">{ctaLabel}</Button
         >
-        {ctaNote && <p class="mt-2 text-xs text-slate-500">{ctaNote}</p>}
+        {ctaNote && <p class="m-2 text-xs text-slate-500">{ctaNote}</p>}
       </div>
-      {aside && <p class="text-sm text-slate-600">{aside}</p>}
     </div>
   </div>
 </section>

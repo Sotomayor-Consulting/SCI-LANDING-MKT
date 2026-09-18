@@ -1,6 +1,7 @@
 ---
 import { Badge } from "@/components/starwind/badge";
 import { Button } from "@/components/starwind/button";
+import type { defineCollection } from "astro:content";
 
 interface Props {
   statusLabel: string;
@@ -27,6 +28,10 @@ const {
     class="relative mx-auto grid max-w-7xl items-start gap-10 px-4 lg:grid-cols-[1.02fr_.9fr] lg:gap-14 lg:px-2"
   >
     <div>
+      <Badge 
+      class="my-2" color="red">
+        Asesoría gratuita
+      </Badge>
       <h1
         class="font-display text-4xl font-bold leading-[1.07] tracking-[-.03em] text-[#0d2638] sm:text-5xl"
       >
