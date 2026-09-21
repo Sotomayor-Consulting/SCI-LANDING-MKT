@@ -1,0 +1,6 @@
+# Configuración de Cloudflare Pages (sitio estático + Pages Functions).
+# `nodejs_compat` es requisito de `pg` (node-postgres) en el runtime de Workers.
+name = "sci-landing-mkt"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]

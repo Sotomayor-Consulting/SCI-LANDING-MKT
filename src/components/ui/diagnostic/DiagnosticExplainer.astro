@@ -1,0 +1,126 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+import { Separator } from "@/components/starwind/separator";
+import type {
+  DiagnosticPlan,
+  DiagnosticProcessStep,
+  DiagnosticReview,
+} from "./types";
+
+interface Props {
+  reviewPoints: string[];
+  process: DiagnosticProcessStep[];
+  plans: DiagnosticPlan[];
+  reviews: DiagnosticReview[];
+}
+
+const { reviewPoints, process, plans, reviews } = Astro.props as Props;
+---
+
+<div id="diagnostic-explainer" class="bg-background">
+  <p
+    class="border-border bg-muted border-b px-5 py-4 text-center text-sm text-muted-foreground"
+  >
+    Al terminar agendas tu reunión de asesoría, sin costo. Tu asesor la recibe con tu caso ya sobre la mesa.
+  </p>
+
+  <section class="px-5 py-16">
+    <div class="mx-auto max-w-3xl">
+      <p class="section-kicker">Qué vamos a revisar</p>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {
+          reviewPoints.map((point) => (
+            <Card size="sm" class="border-border/80 shadow-none">
+              <CardContent class="flex gap-3 py-5 text-sm leading-6">
+                <span class="text-primary font-bold" aria-hidden="true">→</span>
+                <p>{point}</p>
+              </CardContent>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-muted px-5 py-16">
+    <div class="mx-auto max-w-3xl">
+      <p class="section-kicker">Cómo funciona</p>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          process.map((step, index) => (
+            <Card class="h-full shadow-none">
+              <CardHeader>
+                <Badge class="size-9 justify-center rounded-full p-0">{index + 1}</Badge>
+                <CardTitle class="font-display mt-3 text-base">{step.title}</CardTitle>
+                <CardDescription class="leading-6">{step.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))
+        }
+      </div>
+      <p class="mt-8 text-sm leading-6 text-muted-foreground">
+        No hace falta que sepas de leyes ni de impuestos de EE. UU. Contesta con lo que sabes de tu negocio hoy.
+      </p>
+    </div>
+  </section>
+
+  <section class="px-5 py-16">
+    <div class="mx-auto max-w-3xl">
+      <p class="section-kicker">Planes con renovación anual</p>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          plans.map((plan) => (
+            <Card class:list={["h-full shadow-none", plan.featured && "border-primary ring-primary/15 ring-4"]}>
+              <CardHeader>
+                {plan.featured && <Badge class="w-fit">Favorito</Badge>}
+                <CardTitle class="font-display text-lg">{plan.name}</CardTitle>
+                <p class="text-primary-accent font-bold">{plan.price}</p>
+                <CardDescription class="leading-6">{plan.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          ))
+        }
+      </div>
+      <p class="mt-5 text-sm text-muted-foreground">
+        El plan exacto se define en tu asesoría, a la medida de tu caso.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-[#0e2637] px-5 py-16 text-white">
+    <div class="mx-auto max-w-3xl">
+      <p class="section-kicker text-primary">Experiencias verificadas</p>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          reviews.map((review) => (
+            <Card class="border-white/10 bg-white/5 text-white shadow-none">
+              <CardContent class="py-6">
+                <blockquote class="text-sm leading-6 text-white/80">“{review.quote}”</blockquote>
+                <p class="mt-4 text-xs text-white/45">Trustpilot · {review.country}</p>
+              </CardContent>
+            </Card>
+          ))
+        }
+      </div>
+      <Separator class="my-8 bg-white/10" />
+      <p class="text-center text-sm text-white/65">
+        <strong class="text-primary">★★★★☆ 4,3/5</strong> en Trustpilot · <strong>+5.000</strong> empresas incorporadas · <strong>10 años</strong>
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-muted px-5 py-14 text-center">
+    <Button id="start-diagnostic-secondary" type="button" size="lg" class="w-full max-w-xl rounded-xl font-bold">
+      Empezar el diagnóstico →
+    </Button>
+    <p class="mt-3 text-xs text-muted-foreground">3 minutos · Resultado al instante · Hecho a tu medida</p>
+  </section>
+</div>

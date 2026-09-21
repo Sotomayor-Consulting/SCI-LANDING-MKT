@@ -1,0 +1,41 @@
+---
+import { Button } from "@/components/starwind/button";
+
+interface Props {
+  whatsappUrl: string;
+  ctaHref: string;
+  ctaLabel: string;
+}
+const { whatsappUrl, ctaHref, ctaLabel } = Astro.props;
+---
+
+<div
+  id="sticky-bar"
+  aria-hidden="true"
+  class="fixed inset-x-0 bottom-0 z-40 hidden gap-2.5 border-t border-slate-200 bg-white/95 p-2.5 shadow-[0_-8px_24px_rgba(14,36,56,.1)] backdrop-blur data-[on]:flex md:!hidden"
+>
+  <Button
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener"
+    variant="outline"
+    size="lg"
+    data-cta="sticky-wa"
+    aria-label="WhatsApp"
+    class="flex-none rounded-xl px-3"
+  >
+    <svg viewBox="0 0 24 24" fill="currentColor" class="size-5"
+      ><path
+        d="M12 2a10 10 0 0 0-8.7 15l-1.3 5 5.1-1.3A10 10 0 1 0 12 2Zm5.7 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.8-.6-3-1.3-5-4.4-5.2-4.6-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.7.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"
+      ></path></svg
+    >
+  </Button>
+  <Button
+    href={ctaHref}
+    variant="primary"
+    size="lg"
+    data-scroll-calendar
+    data-cta="sticky"
+    class="flex-1 rounded-xl font-bold">{ctaLabel}</Button
+  >
+</div>

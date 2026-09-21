@@ -721,7 +721,7 @@ supabase/migrations/20260914220406_create_leads_pipeline.sql
 functions/api/leads.ts
 functions/api/calendar-confirmation.ts
 src/components/landing.astro
-LEADS-INTEGRATION.md
+docs/leads/integration.md
 ```
 
 ## 13. Referencias

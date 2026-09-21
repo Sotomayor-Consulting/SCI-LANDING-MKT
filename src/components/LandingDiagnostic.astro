@@ -1,0 +1,677 @@
+---
+import DiagnosticExplainer from "@/components/ui/diagnostic/DiagnosticExplainer.astro";
+import DiagnosticHero from "@/components/ui/diagnostic/DiagnosticHero.astro";
+import DiagnosticQuiz from "@/components/ui/diagnostic/DiagnosticQuiz.astro";
+import type {
+  DiagnosticPlan,
+  DiagnosticProcessStep,
+  DiagnosticQuestion,
+  DiagnosticReview,
+} from "@/components/ui/diagnostic/types";
+
+const hero = {
+  eyebrow: "Firma legal, fiscal y tecnológica · 10 años",
+  titleBefore: "¿Necesitas una ",
+  titleAccent: "LLC",
+  titleAfter: " en EE. UU.? Averígualo en 3 minutos.",
+  description:
+    "Respondes 6 preguntas y te decimos tres cosas claras: si te conviene una LLC, en qué estado abrirla y cuál es tu siguiente paso.",
+  badges: ["3 minutos", "6 preguntas", "Sin costo"],
+  disclaimer:
+    "Esta herramienta ofrece orientación consultiva preliminar; no constituye asesoramiento legal vinculante hasta revisar el caso en detalle.",
+};
+
+const reviewPoints = [
+  "Tu modelo de negocio y hacia dónde va tu proyecto.",
+  "Si una LLC es la estructura correcta para ti y en qué estado.",
+  "Los errores que más cuestan: forma fiscal, franchise tax y rechazos bancarios.",
+  "Tu siguiente paso concreto, con el costo real por delante.",
+];
+
+const process: DiagnosticProcessStep[] = [
+  { title: "Respondes 6 preguntas", description: "Tres minutos, desde el celular." },
+  { title: "Recibes tu hoja de ruta", description: "Al instante y personalizada con tus respuestas." },
+  { title: "Lo revisas con un asesor", description: "Con un especialista de la firma, no con otro formulario." },
+];
+
+const plans: DiagnosticPlan[] = [
+  { name: "Básico", price: "USD 350/año", description: "Constitución ante el estado, EIN y agente residente." },
+  { name: "Business", price: "USD 950/año", description: "Planificación legal-tributaria y acompañamiento bancario.", featured: true },
+  { name: "Estándar", price: "USD 600/año", description: "Operating Agreement y consultas ilimitadas." },
+];
+
+const reviews: DiagnosticReview[] = [
+  { quote: "Me evaluaron como si estuvieran en la oficina de al lado.", country: "Bolivia" },
+  { quote: "Aclararon las dudas y recomendaron lo mejor para la empresa.", country: "Ecuador" },
+  { quote: "Destacó la calidad y el profesionalismo de todo el equipo.", country: "Colombia" },
+];
+
+const questions: DiagnosticQuestion[] = [
+  {
+    id: "filter",
+    title: "¿A qué se dedica tu negocio?",
+    description: "Cada tipo de negocio juega con reglas distintas en EE. UU.",
+    options: [
+      { value: "Servicios", label: "Servicios, consultoría o freelance" },
+      { value: "Inversiones", label: "Bienes raíces, trading o inversiones" },
+      { value: "Ecom", label: "E-commerce, dropshipping o Amazon" },
+      { value: "Otro", label: "Otra cosa, o todavía no lo tengo claro" },
+    ],
+  },
+  {
+    id: "q2",
+    title: "¿En qué punto está tu negocio hoy?",
+    description: "De esto depende si necesitas la estructura ya o si puedes esperar.",
+    options: [
+      { value: "4", label: "Ya tengo una empresa en EE. UU. y quiero revisarla o mejorarla" },
+      { value: "3", label: "Opero formal en mi país y quiero expandirme a EE. UU." },
+      { value: "2", label: "Ya tengo clientes y ventas, pero facturo a nombre propio" },
+      { value: "1", label: "Todavía estoy validando la idea" },
+    ],
+  },
+  {
+    id: "q3",
+    title: "¿Qué es lo que más te apura resolver?",
+    description: "Marca lo que te tiene detenido hoy.",
+    options: [
+      { value: "cobros", label: "Poder cobrar en dólares sin trabas" },
+      { value: "orden", label: "Corregir mi empresa antes de que un error me pase factura" },
+      { value: "impuestos", label: "Pagar menos impuestos, de forma legal" },
+      { value: "explorando", label: "Nada urgente: estoy viendo opciones" },
+    ],
+  },
+  {
+    id: "q4",
+    title: "¿Cuánto factura tu negocio al año?",
+    description: "Un rango aproximado basta. Define qué tan afinada debe estar tu parte fiscal.",
+    options: [
+      { value: "4", label: "Más de USD 250.000" },
+      { value: "3", label: "Entre USD 50.000 y 250.000" },
+      { value: "2", label: "Entre USD 10.000 y 50.000" },
+      { value: "1", label: "Menos de USD 10.000" },
+    ],
+  },
+  {
+    id: "q5",
+    title: "¿Para dónde quieres llevar esto en 3 años?",
+    description: "La estructura de hoy tiene que aguantar el negocio de mañana.",
+    options: [
+      { value: "4-growth", label: "Construir una empresa grande, o venderla" },
+      { value: "4-assets", label: "Proteger mi patrimonio y diversificar" },
+      { value: "2", label: "Vivir de esto sin depender de nadie" },
+      { value: "1", label: "Un ingreso extra, sin que me robe tiempo" },
+    ],
+  },
+  {
+    id: "q6",
+    title: "¿Qué parte de tu operación te consume más tiempo?",
+    description: "La estructura resuelve lo legal. Dinos qué más te frena.",
+    options: [
+      { value: "pagos", label: "Cobrar y cuadrar los pagos a mano" },
+      { value: "automatizacion", label: "Dar seguimiento, mandar recordatorios y armar reportes" },
+      { value: "sistema", label: "Saltar entre correos, hojas de cálculo y apps sueltas" },
+      { value: "ninguno", label: "Nada: solo quiero la estructura lista" },
+    ],
+  },
+];
+
+---
+
+<DiagnosticHero {...hero} />
+<DiagnosticExplainer {reviewPoints} {process} {plans} {reviews} />
+<DiagnosticQuiz {questions} />
+
+<noscript>
+  <iframe
+    src="https://www.googletagmanager.com/ns.html?id=GTM-TNRQGDM"
+    height="0"
+    width="0"
+    class="hidden"
+    title="Google Tag Manager"
+  ></iframe>
+</noscript>
+
+<script is:inline>
+  window.SCI_TRACKING_CONFIG = {
+    page_name: "landing_diagnostico_llc",
+    page_category: "llc_advisory_diagnostic_lead_landing",
+    tiktok_pixel_id: "D5KFDEBC77U6BL6T7LDG",
+    gtm_id: "GTM-TNRQGDM",
+  };
+
+  (function () {
+    var config = window.SCI_TRACKING_CONFIG || {};
+    if (!config.gtm_id) return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtm.js?id=" + encodeURIComponent(config.gtm_id);
+    document.head.appendChild(script);
+  })();
+
+  (function (w, d, t) {
+    var config = w.SCI_TRACKING_CONFIG || {};
+    var params = new URLSearchParams(w.location.search);
+    if (!config.tiktok_pixel_id || (params.get("qa") === "1" && params.get("no_pixels") === "1")) return;
+    w.TiktokAnalyticsObject = t;
+    var ttq = w[t] = w[t] || [];
+    ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"];
+    ttq.setAndDefer = function (target, method) { target[method] = function () { target.push([method].concat(Array.prototype.slice.call(arguments))); }; };
+    for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+    ttq.load = function (id) {
+      var url = "https://analytics.tiktok.com/i18n/pixel/events.js";
+      ttq._i = ttq._i || {}; ttq._i[id] = []; ttq._i[id]._u = url;
+      var node = d.createElement("script"); node.async = true; node.src = url + "?sdkid=" + id + "&lib=" + t;
+      d.getElementsByTagName("script")[0].parentNode.insertBefore(node, d.getElementsByTagName("script")[0]);
+    };
+    ttq.load(config.tiktok_pixel_id);
+    ttq.page();
+  })(window, document, "ttq");
+</script>
+
+<script>
+  type Answers = Record<string, string>;
+  type Route = "guide" | "advisor" | "platform";
+
+  interface LeadData {
+    lead_id: string;
+    session_id: string;
+    first_name: string;
+    last_name: string;
+    full_name: string;
+    email: string;
+    phone_e164: string;
+    diag_stage_id: number;
+    diag_stage_title: string;
+    diag_industria: string;
+    diag_etapa: string;
+    diag_bloqueo: string;
+    diag_facturacion: string;
+    diag_vision: string;
+    diag_complejidad: string;
+    tech_interest: string;
+    lead_temp: string;
+    goal: string;
+    route: string;
+    chosen_path: string;
+    conversion_path: string;
+    [key: string]: string | number | boolean;
+  }
+
+  const CONFIG = {
+    webhookUrl: "/api/diagnostico-lead",
+    zcalUrl: "https://zcal.co/t/agendar-asesoria-llc/60min",
+    startUrl: "https://app.sotomayorconsulting.com/start",
+  };
+
+  const STAGES = {
+    1: {
+      label: "Exploración",
+      headline: "Todavía estás validando. Primero confirma que el mercado paga; la empresa puede abrirse cuando el negocio la necesite.",
+      cost: "Abrir demasiado pronto suma mantenimiento y reportes anuales a una empresa que todavía no factura.",
+    },
+    2: {
+      label: "Estructuración",
+      headline: "Ya vendes, pero cobros y contratos todavía caen sobre ti. Este es el momento de separar el negocio de tu patrimonio personal.",
+      cost: "Si lo postergas, mantienes tu patrimonio expuesto y sigues fuera de cuentas y pasarelas empresariales.",
+    },
+    3: {
+      label: "Formalización",
+      headline: "Tu negocio funciona y crece, pero la estructura no está a la altura. Cada mes hace más caro corregirlo.",
+      cost: "La informalidad termina en cuentas bloqueadas, contratos débiles y ajustes fiscales hacia atrás.",
+    },
+    4: {
+      label: "Optimización",
+      headline: "Tu volumen y tu meta exigen una estructura afinada. A este nivel, una configuración genérica se mide en dinero.",
+      cost: "Una estructura inadecuada puede producir impuestos de más y problemas ante compradores o inversionistas.",
+    },
+  } as const;
+
+  const ROUTES = {
+    advisor: {
+      cta: "Agendar mi sesión →",
+      note: "Sin costo · Sin compromiso · 30 minutos con un especialista.",
+      line: "Tu caso tiene decisiones que no salen de una plantilla. Debemos definirlas contigo y con tus números.",
+      outcomes: ["El estado que te conviene y por qué", "Tu estructura y el precio real", "El orden exacto de los próximos pasos"],
+    },
+    guide: {
+      cta: "Enviarme la guía →",
+      note: "Te llega al correo y te acompañamos por WhatsApp.",
+      line: "Todavía no necesitas una empresa. Lo inteligente es validar primero y estructurarte cuando el negocio lo pida.",
+      outcomes: ["Cómo validar sin gastar en trámites", "La señal de que ya es momento", "Los errores de quienes se apresuran"],
+    },
+    platform: {
+      cta: "Abrir mi empresa →",
+      note: "Para quien ya sabe exactamente qué necesita.",
+      line: "Nuestra plataforma arma tu empresa sin trámites ni idas y vueltas.",
+      outcomes: ["Eliges figura y estado", "Propones el nombre", "Un experto revisa antes de registrar"],
+    },
+  } as const;
+
+  const answers: Answers = {};
+  let currentStep = 1;
+  let leadData: LeadData | null = null;
+  let recommendedRoute: Route = "advisor";
+
+  const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+  const allSteps = Array.from(document.querySelectorAll<HTMLElement>(".diagnostic-step"));
+  const quiz = byId<HTMLElement>("diagnostic-quiz");
+  const card = byId<HTMLElement>("diagnostic-card");
+
+  function setButtonDisabled(button: HTMLButtonElement | null, disabled: boolean) {
+    if (!button) return;
+    button.disabled = disabled;
+    if (disabled) button.setAttribute("data-disabled", "");
+    else button.removeAttribute("data-disabled");
+  }
+
+  function uuid(prefix: string) {
+    return `${prefix}_${crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`}`;
+  }
+
+  function storageId(key: string, prefix: string) {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored) return stored;
+      const id = uuid(prefix);
+      localStorage.setItem(key, id);
+      return id;
+    } catch {
+      return uuid(prefix);
+    }
+  }
+
+  function track(event: string, payload: Record<string, unknown> = {}) {
+    const trackingWindow = window as Window & {
+      dataLayer?: Array<Record<string, unknown>>;
+      ttq?: { track?: (name: string, data: Record<string, unknown>) => void };
+    };
+    trackingWindow.dataLayer = trackingWindow.dataLayer || [];
+    trackingWindow.dataLayer.push({ event, page_name: "landing_diagnostico_llc", ...payload });
+    if (["ViewContent", "CompleteRegistration", "Subscribe", "InitiateCheckout", "Schedule"].includes(event)) {
+      trackingWindow.ttq?.track?.(event === "CompleteRegistration" ? "Lead" : event, payload);
+    }
+  }
+
+  function attribution() {
+    const params = new URLSearchParams(location.search);
+    return Object.fromEntries(
+      ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "ttclid", "fbclid"]
+        .map((key) => [key, params.get(key) || ""]),
+    );
+  }
+
+  function updateProgress() {
+    const percent = Math.round(((currentStep - 1) / 8) * 100);
+    const progress = byId<HTMLElement>("diagnostic-progress");
+    progress?.setAttribute("aria-valuenow", String(percent));
+    const indicator = progress?.querySelector<HTMLElement>('[data-slot="progress-indicator"]');
+    if (indicator) indicator.style.transform = `translateX(-${100 - percent}%)`;
+    const label = byId<HTMLElement>("diagnostic-progress-label");
+    if (!label) return;
+    const questionNumber: Record<number, number> = { 1: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 };
+    label.textContent = questionNumber[currentStep]
+      ? `Pregunta ${questionNumber[currentStep]} de 6`
+      : currentStep === 2 ? "Un dato más" : currentStep === 8 ? "Último paso" : "Resultado";
+  }
+
+  function showStep(step: number) {
+    currentStep = step;
+    allSteps.forEach((element) => element.classList.toggle("hidden", element.dataset.step !== String(step)));
+    updateProgress();
+    card?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const heading = document.querySelector<HTMLElement>(`.diagnostic-step[data-step="${step}"] h2`);
+    requestAnimationFrame(() => heading?.focus({ preventScroll: true }));
+    track(step === 8 ? "quiz_complete" : step === 9 ? "result_view" : "quiz_step_view", { step });
+  }
+
+  function startQuiz() {
+    byId<HTMLElement>("welcome-screen")?.classList.add("hidden");
+    byId<HTMLElement>("diagnostic-explainer")?.classList.add("hidden");
+    quiz?.classList.remove("hidden");
+    quiz?.setAttribute("aria-hidden", "false");
+    showStep(1);
+    track("quiz_start");
+  }
+
+  byId<HTMLButtonElement>("start-diagnostic")?.addEventListener("click", startQuiz);
+  byId<HTMLButtonElement>("start-diagnostic-secondary")?.addEventListener("click", startQuiz);
+
+  document.querySelectorAll<HTMLElement>(".diagnostic-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      const step = option.closest<HTMLElement>(".diagnostic-step");
+      const question = step?.dataset.question;
+      if (!step || !question || !option.dataset.answer) return;
+      answers[question] = option.dataset.answer;
+      answers[`${question}_text`] = option.dataset.label || "";
+      step.querySelectorAll<HTMLElement>(".diagnostic-option").forEach((item) => item.dataset.selected = String(item === option));
+      const next = step.querySelector<HTMLButtonElement>(".diagnostic-next");
+      setButtonDisabled(next, false);
+      track("quiz_answer", { question, answer: option.dataset.answer });
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>(".diagnostic-next").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (currentStep === 1) showStep(2);
+      else if (currentStep < 7) showStep(currentStep + 1);
+      else prepareGate();
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>(".diagnostic-back").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (currentStep === 8) showStep(7);
+      else if (currentStep === 3) showStep(2);
+      else if (currentStep === 2) showStep(1);
+      else showStep(Math.max(1, currentStep - 1));
+    });
+  });
+
+  const firstName = byId<HTMLInputElement>("diagnostic-first-name");
+  const nameNext = byId<HTMLButtonElement>("diagnostic-name-next");
+  firstName?.addEventListener("input", () => {
+    setButtonDisabled(nameNext, firstName.value.trim().length < 2);
+  });
+  nameNext?.addEventListener("click", () => {
+    if (!firstName?.checkValidity()) {
+      firstName?.reportValidity();
+      return;
+    }
+    answers.first_name = firstName.value.trim();
+    showStep(3);
+  });
+
+  function stageId() {
+    const values = [answers.q2, answers.q4, answers.q5].filter(Boolean).map((value) => Number.parseInt(value, 10));
+    const average = values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 1;
+    let stage = Math.max(1, Math.min(4, Math.round(average)));
+    if (answers.q2 === "1") stage = Math.min(stage, 2);
+    return stage as 1 | 2 | 3 | 4;
+  }
+
+  function complexity() {
+    return answers.filter === "Inversiones" || answers.q2 === "4" || answers.q4 === "4" ? "alta" : "baja";
+  }
+
+  function chooseRoute(): Route {
+    const stage = stageId();
+    if (stage === 1 || (answers.q3 === "explorando" && stage <= 2)) return "guide";
+    return "advisor";
+  }
+
+  function deriveGoal() {
+    if (answers.q2 === "4") return "ordenar_llc";
+    if (answers.filter === "Inversiones") return "inversion_patrimonio";
+    if (answers.filter === "Ecom") return "banca_pagos";
+    return "llc_nueva";
+  }
+
+  function prepareGate() {
+    const stage = stageId();
+    recommendedRoute = chooseRoute();
+    const stageBadge = byId<HTMLElement>("diagnostic-stage-badge");
+    const gateTitle = byId<HTMLElement>("diagnostic-gate-title");
+    const gateDescription = byId<HTMLElement>("diagnostic-gate-description");
+    if (stageBadge) stageBadge.textContent = `Etapa ${stage} de 4 · ${STAGES[stage].label}`;
+    if (gateTitle) gateTitle.textContent = `${answers.first_name || "Listo"}, tu diagnóstico está hecho.`;
+    if (gateDescription) gateDescription.textContent = `Nos contaste que facturas ${(answers.q4_text || "").toLowerCase()} y quieres ${(answers.q5_text || "").toLowerCase()}. Dinos a dónde enviamos tu hoja de ruta.`;
+    showStep(8);
+  }
+
+  function cleanPhone(value: string) {
+    return value.replace(/\D/g, "").replace(/^0+/, "");
+  }
+
+  function leadTemperature() {
+    if (answers.q3 === "explorando") return "frio";
+    if (["orden", "impuestos"].includes(answers.q3)) return "caliente";
+    return "tibio";
+  }
+
+  function assembleLead(formData: FormData): LeadData {
+    const stage = stageId();
+    const countryCode = String(formData.get("country_code") || "+1");
+    const phone = `${countryCode}${cleanPhone(String(formData.get("phone") || ""))}`;
+    const lastName = String(formData.get("last_name") || "").trim();
+    return {
+      event_name: "diagnostico_gate_submit",
+      lead_id: storageId("sci_lead_id_v1", "l"),
+      session_id: storageId("sci_session_id_v1", "s"),
+      first_name: answers.first_name,
+      last_name: lastName,
+      full_name: `${answers.first_name} ${lastName}`.trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone_e164: phone,
+      diag_stage_id: stage,
+      diag_stage_title: `Etapa ${stage}/4 · ${STAGES[stage].label}`,
+      diag_industria: answers.filter || "",
+      diag_etapa: answers.q2_text || "",
+      diag_bloqueo: answers.q3_text || "",
+      diag_facturacion: answers.q4_text || "",
+      diag_vision: answers.q5_text || "",
+      diag_complejidad: complexity(),
+      tech_interest: answers.q6 || "",
+      lead_temp: leadTemperature(),
+      goal: deriveGoal(),
+      route: recommendedRoute,
+      chosen_path: "",
+      conversion_path: "diagnostico_gate",
+      consent: true,
+      page_url: location.href,
+      ...attribution(),
+    };
+  }
+
+  async function sendLead(payload: LeadData) {
+    const params = new URLSearchParams(location.search);
+    if (params.get("qa") === "1" && params.get("no_webhook") === "1") return;
+    try {
+      await fetch(CONFIG.webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      });
+    } catch {
+      // The visitor should still receive the result when the integration is unavailable.
+    }
+  }
+
+  const leadForm = byId<HTMLFormElement>("diagnostic-lead-form");
+  leadForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!leadForm.checkValidity()) {
+      leadForm.reportValidity();
+      byId<HTMLElement>("diagnostic-form-error")?.classList.remove("hidden");
+      return;
+    }
+    const formData = new FormData(leadForm);
+    if (formData.get("website")) return;
+    byId<HTMLElement>("diagnostic-form-error")?.classList.add("hidden");
+    const submit = byId<HTMLButtonElement>("diagnostic-submit");
+    if (submit) { submit.disabled = true; submit.setAttribute("aria-busy", "true"); submit.textContent = "Preparando tu resultado..."; }
+    leadData = assembleLead(formData);
+    void sendLead(leadData);
+    const stage = stageId();
+    track(stage === 1 ? "Subscribe" : "CompleteRegistration", {
+      event_id: uuid("diagnostic"),
+      lead_id: leadData.lead_id,
+      value: stage === 1 ? 0 : ({ 2: 40, 3: 70, 4: 120 }[stage] || 40),
+      currency: "USD",
+    });
+    renderResult();
+    showStep(9);
+  });
+
+  function setText(id: string, value: string) {
+    const element = byId<HTMLElement>(id);
+    if (element) element.textContent = value;
+  }
+
+  function renderResult() {
+    const stage = stageId();
+    const stageData = STAGES[stage];
+    const route = ROUTES[recommendedRoute];
+    setText("result-eyebrow", `${answers.first_name}, este es tu diagnóstico`);
+    setText("result-verdict", `Etapa ${stage} de 4 · ${stageData.label}${answers.q2 === "4" ? " · ya con LLC" : ""}`);
+    setText("result-headline", stageData.headline);
+    setText("result-primary", route.cta);
+    setText("result-note", route.note);
+    setText("result-cost", `Si lo dejas para después: ${stageData.cost}`);
+    setText("result-route-line", route.line);
+    document.querySelectorAll<HTMLElement>("[data-result-stage]").forEach((segment) => {
+      const value = Number(segment.dataset.resultStage);
+      segment.classList.toggle("bg-primary", value <= stage);
+      segment.classList.toggle("bg-muted", value > stage);
+    });
+
+    const situation = byId<HTMLElement>("result-situation");
+    if (situation) {
+      situation.replaceChildren(...[
+        ["Modelo", answers.filter], ["Facturación", answers.q4_text],
+        ["Objetivo", answers.q5_text], ["Lo que urge", answers.q3_text],
+      ].map(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "grid grid-cols-[7rem_1fr] gap-3 py-3";
+        const term = document.createElement("dt"); term.className = "font-semibold text-muted-foreground"; term.textContent = label;
+        const detail = document.createElement("dd"); detail.textContent = value || "";
+        row.append(term, detail);
+        return row;
+      }));
+    }
+
+    const outcomes = byId<HTMLElement>("result-outcomes");
+    if (outcomes) {
+      outcomes.replaceChildren(...route.outcomes.map((outcome) => {
+        const item = document.createElement("li");
+        item.className = "flex gap-3";
+        item.textContent = `→ ${outcome}`;
+        return item;
+      }));
+    }
+
+    const alternate = recommendedRoute === "guide" ? "advisor" : "platform";
+    const alternateButton = byId<HTMLButtonElement>("result-alternate");
+    if (alternateButton) {
+      alternateButton.dataset.route = alternate;
+      alternateButton.textContent = alternate === "advisor" ? "Prefiero hablar con un especialista" : "Ya sé qué quiero abrir: ir a la plataforma";
+    }
+    const primary = byId<HTMLButtonElement>("result-primary");
+    if (primary) primary.dataset.route = recommendedRoute;
+    const sticky = byId<HTMLElement>("diagnostic-sticky");
+    const stickyButton = byId<HTMLButtonElement>("diagnostic-sticky-button");
+    if (stickyButton) { stickyButton.dataset.route = recommendedRoute; stickyButton.textContent = route.cta; }
+    window.setTimeout(() => sticky?.classList.remove("hidden"), 1500);
+  }
+
+  function zcalUrl() {
+    const url = new URL(CONFIG.zcalUrl);
+    if (leadData) {
+      url.searchParams.set("name", leadData.full_name);
+      url.searchParams.set("email", leadData.email);
+      url.searchParams.set("smsPhone", leadData.phone_e164);
+      url.searchParams.set("a0", leadData.phone_e164);
+    }
+    return url.toString();
+  }
+
+  function buildStartUrl() {
+    const url = new URL(CONFIG.startUrl);
+    url.searchParams.set("entity", "llc");
+    if (leadData) {
+      url.searchParams.set("lead_id", leadData.lead_id);
+      url.searchParams.set("stage", String(leadData.diag_stage_id));
+      url.searchParams.set("email", leadData.email);
+      Object.entries(attribution()).forEach(([key, value]) => value && url.searchParams.set(key, value));
+    }
+    return url.toString();
+  }
+
+  function choosePath(route: Route) {
+    byId<HTMLElement>("diagnostic-sticky")?.classList.add("hidden");
+    if (leadData) {
+      leadData.chosen_path = route;
+      leadData.conversion_path = `diagnostico_${route}`;
+      void sendLead(leadData);
+    }
+    track("path_chosen", { path: route, recommended: route === recommendedRoute });
+    byId<HTMLElement>("diagnostic-result")?.classList.add("hidden");
+
+    if (route === "advisor") {
+      const calendar = byId<HTMLElement>("diagnostic-calendar");
+      const frame = byId<HTMLIFrameElement>("diagnostic-calendar-frame");
+      const link = byId<HTMLAnchorElement>("diagnostic-calendar-link");
+      const url = zcalUrl();
+      if (frame && !frame.src) frame.src = url;
+      if (link) link.href = url;
+      setText("calendar-greeting", `${leadData?.first_name || "Tus"}, tus datos ya están cargados. Solo elige el día y la hora.`);
+      calendar?.classList.remove("hidden");
+      calendar?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+      return;
+    }
+
+    if (route === "platform") {
+      track("InitiateCheckout", { lead_id: leadData?.lead_id, value: 40, currency: "USD" });
+      location.href = buildStartUrl();
+      return;
+    }
+
+    const confirmation = byId<HTMLElement>("diagnostic-confirmation");
+    setText("confirmation-title", "Listo. Revisa tu correo.");
+    setText("confirmation-description", `Enviamos el diagnóstico y la guía a ${leadData?.email || "tu correo"}. También te acompañaremos por WhatsApp.`);
+    setText("confirmation-action", "Agendar una sesión en su lugar");
+    const action = byId<HTMLButtonElement>("confirmation-action");
+    if (action) action.dataset.route = "advisor";
+    confirmation?.classList.remove("hidden");
+    confirmation?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+  }
+
+  ["result-primary", "result-alternate", "diagnostic-sticky-button", "confirmation-action"].forEach((id) => {
+    byId<HTMLButtonElement>(id)?.addEventListener("click", (event) => {
+      const route = (event.currentTarget as HTMLButtonElement).dataset.route as Route | undefined;
+      if (route) choosePath(route);
+    });
+  });
+
+  function applyHook() {
+    const key = (new URLSearchParams(location.search).get("hook") || "").toLowerCase();
+    const hooks: Record<string, [string, string, string, string]> = {
+      cobros: ["Tu negocio ya vende. ¿Está preparado para ", "cobrar globalmente", "?", "Te decimos qué preparar para que bancos y pasarelas aprueben tu empresa."],
+      patrimonio: ["Protege tu patrimonio con la ", "estructura correcta", " en EE. UU.", "Evaluamos estructura, estado y siguiente paso para tu caso."],
+      inmobiliaria: ["¿Vas a invertir en ", "bienes raíces", " en EE. UU.?", "La forma de comprar cambia las consecuencias jurídicas y fiscales."],
+    };
+    const hook = hooks[key];
+    if (!hook) return;
+    const before = document.querySelector<HTMLElement>("[data-title-before]");
+    const accent = document.querySelector<HTMLElement>("[data-title-accent]");
+    const after = document.querySelector<HTMLElement>("[data-title-after]");
+    if (before) before.textContent = hook[0];
+    if (accent) accent.textContent = hook[1];
+    if (after) after.textContent = hook[2];
+    setText("diagnostic-hero-description", hook[3]);
+  }
+
+  applyHook();
+  track("ViewContent", { content_name: "Diagnóstico de madurez — LLC en EE. UU." });
+</script>
+
+<style>
+  :global(body) {
+    padding-bottom: 0;
+    background: #0e2637;
+  }
+
+  :global(.diagnostic-step:not(.hidden)) {
+    animation: diagnostic-enter 220ms ease-out both;
+  }
+
+  @keyframes diagnostic-enter {
+    from { opacity: 0; transform: translateY(.5rem); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.diagnostic-step:not(.hidden)) { animation: none; }
+  }
+</style>

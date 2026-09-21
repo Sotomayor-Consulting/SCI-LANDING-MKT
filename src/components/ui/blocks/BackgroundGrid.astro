@@ -1,0 +1,43 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+interface Props extends HTMLAttributes<"div"> {
+  /** Custom pattern ID (auto-generated if not provided) */
+  patternId?: string;
+  /** Grid cell size in pixels */
+  cellSize?: number;
+  /** Stroke opacity (0-1) */
+  opacity?: number;
+}
+
+const patternStyles = tv({
+  base: "pointer-events-none absolute inset-0 text-muted-foreground",
+});
+
+const {
+  patternId: customPatternId,
+  cellSize = 20,
+  opacity = 0.3,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const patternId = customPatternId ?? `bg-12-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class={patternStyles({ class: className })} aria-hidden="true" {...rest}>
+  <svg class="size-full" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id={patternId} width={cellSize} height={cellSize} patternUnits="userSpaceOnUse">
+        <path
+          d={`M${cellSize} 0v${cellSize}M0 ${cellSize}h${cellSize}`}
+          fill="none"
+          stroke="currentColor"
+          stroke-opacity={opacity}
+          stroke-width="0.5"></path>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill={`url(#${patternId})`}></rect>
+  </svg>
+</div>

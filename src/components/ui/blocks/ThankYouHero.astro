@@ -1,0 +1,70 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import type { defineCollection } from "astro:content";
+
+interface Props {
+  statusLabel: string;
+  titleLead: string;
+  titleHighlight: string;
+  titleTrail?: string;
+  ctaHref: string;
+  ctaLabel: string;
+  objectives: string[];
+}
+const {
+  statusLabel,
+  titleLead,
+  titleHighlight,
+  titleTrail = "",
+  ctaHref,
+  ctaLabel,
+  objectives,
+} = Astro.props;
+---
+
+<section class="bg-muted/50 relative py-12 sm:py-16">
+  <div
+    class="relative mx-auto grid max-w-7xl items-start gap-10 px-4 lg:grid-cols-[1.02fr_.9fr] lg:gap-14 lg:px-2"
+  >
+    <div>
+      <Badge 
+      class="my-2" color="red">
+        Asesoría gratuita
+      </Badge>
+      <h1
+        class="font-display text-4xl font-bold leading-[1.07] tracking-[-.03em] text-[#0d2638] sm:text-5xl"
+      >
+        {titleLead}{" "}<span
+          class="bg-[linear-gradient(transparent_76%,rgba(232,199,124,.6)_76%)]"
+          >{titleHighlight}</span
+        >{titleTrail}
+      </h1>
+      <p class="mt-5 max-w-xl leading-7 text-slate-600"><slot /></p>
+      <Button
+        id="hero-cta"
+        href={ctaHref}
+        variant="primary"
+        size="lg"
+        data-scroll-calendar
+        data-cta="hero"
+        class="mt-6 rounded-xl px-7 font-bold">{ctaLabel}</Button
+      >
+      <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
+        {
+          objectives.map((obj) => (
+            <span class="inline-flex items-center gap-1.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="size-3.5 text-emerald-600">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              {obj}
+            </span>
+          ))
+        }
+      </div>
+      <p class="mt-4 text-sm leading-7 text-slate-500"><slot name="trust" /></p>
+    </div>
+
+    <slot name="calendar" />
+  </div>
+</section>

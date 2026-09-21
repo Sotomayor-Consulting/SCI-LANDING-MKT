@@ -90,6 +90,18 @@
       "version": "2.1.1",
       "framework": "astro",
       "registry": "default"
+    },
+    {
+      "name": "progress",
+      "version": "2.0.3",
+      "framework": "astro",
+      "registry": "default"
+    },
+    {
+      "name": "hover-card",
+      "version": "2.2.0",
+      "framework": "astro",
+      "registry": "default"
     }
   ],
   "tailwind": {

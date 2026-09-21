@@ -1,0 +1,95 @@
+---
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/starwind/card";
+
+import { HoverCard } from "@components/starwind/hover-card";
+
+export interface Plan {
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  favorite?: boolean;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  plans: Plan[];
+  favoriteLabel?: string;
+  ctaHref: string;
+  ctaLabel: string;
+  ctaNote?: string;
+  aside?: string;
+}
+const {
+  kicker,
+  title,
+  plans,
+  favoriteLabel = "Favorito",
+  ctaHref,
+  ctaLabel,
+  ctaNote,
+  aside,
+} = Astro.props;
+---
+
+<section id="planes" class="scroll-mt-24 py-20 sm:py-24">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="max-w-2xl">
+      <p class="section-kicker">{kicker}</p>
+      <h2 class="section-title">{title}</h2>
+      <p class="mt-4 text-sm leading-6 text-slate-600"><slot name="note" /></p>
+    </div>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        plans.map((plan) => (
+          <Card
+            class:list={[
+              "relative rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+              {
+                "border-primary-accent ring-primary-accent/20 ring-4":
+                  plan.favorite,
+              },
+            ]}
+          >
+            <CardHeader>
+              {plan.favorite && (
+                <Badge variant="primary" size="sm" class="mb-1 w-fit">
+                  {favoriteLabel}
+                </Badge>
+              )}
+              <CardTitle class="text-lg">{plan.name}</CardTitle>
+              <p class="font-display text-2xl font-bold tracking-[-.02em] text-[#0d2638]">
+                {plan.price}{" "}
+                <span class="text-xs font-semibold text-slate-500">
+                  {plan.period}
+                </span>
+              </p>
+              <CardDescription>{plan.description}</CardDescription>
+            </CardHeader>
+          </Card>
+        ))
+      }
+    </div>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <div>
+        <Button
+          href={ctaHref}
+          variant="primary"
+          size="lg"
+          data-scroll-calendar
+          data-cta="plans"
+          class="rounded-xl font-bold">{ctaLabel}</Button
+        >
+        {ctaNote && <p class="m-2 text-xs text-slate-500">{ctaNote}</p>}
+      </div>
+    </div>
+  </div>
+</section>

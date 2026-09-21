@@ -1,0 +1,326 @@
+---
+// ============================================================================
+// GRACIAS POR TU REGISTRO — /crea-tu-llc-en-usa/
+// Lead que ya se registró en un form nativo (TikTok / Meta Lead Ads).
+// Objetivo único: que agende la asesoría por Zoom (calendario Zcal embebido).
+// La página aporta el contenido; cada sección es un bloque de src/components/ui
+// construido sobre Starwind. Interactividad (prefill, tracking) en @/scripts.
+// ============================================================================
+import Layout from "@/layouts/Layout.astro";
+
+import GtmHead from "@/components/ui/blocks/GtmHead.astro";
+import SiteHeader from "@/components/ui/blocks/SiteHeader.astro";
+import ThankYouHero from "@/components/ui/blocks/ThankYouHero.astro";
+import ScheduleGate from "@/components/ui/blocks/ScheduleGate.astro";
+import PartnersBanner from "@/components/ui/blocks/PartnersBanner.astro";
+import IconFeatureCards from "@/components/ui/blocks/IconFeatureCards.astro";
+import MeetingChecklist from "@/components/ui/blocks/MeetingChecklist.astro";
+import Steps from "@/components/ui/blocks/Steps.astro";
+import PlanCards from "@/components/ui/blocks/PlanCards.astro";
+import TrustReviews from "@/components/ui/blocks/TrustReviews.astro";
+import ChipList from "@/components/ui/blocks/ChipList.astro";
+import Faqs from "@/components/ui/blocks/Faq.astro";
+import FinalCta from "@/components/ui/blocks/FinalCta.astro";
+import SiteFooter from "@/components/ui/blocks/SiteFooter.astro";
+import StickyBar from "@/components/ui/blocks/StickyBar.astro";
+
+const GTM_ID = "GTM-TNRQGDM";
+const WHATSAPP_URL = "https://wa.link/jx59a9";
+const ZCAL_OPEN_URL = "https://zcal.co/t/agendar-asesoria-llc/60min";
+const TRUSTPILOT_URL = "https://www.trustpilot.com/review/sotomayorconsulting.com";
+
+const facturationOptions = [
+  "Aún no factura",
+  "Menos de 10.000",
+  "Entre 10.000 y 50.000",
+  "Entre 50.000 y 100.000",
+  "Entre 100.000 y 500.000",
+  "Entre 500.000 y 1.000.000",
+  "Más de 1.000.000",
+] as const;
+
+const partnerLogos = [
+  { name: "mercury", class: "h-6 w-auto" },
+  { name: "relay", class: "h-7 w-auto" },
+];
+
+const partnerPoints = [
+  "Preparamos tu solicitud con los criterios que estas fintech aprueban — antes de aplicar.",
+  "Acompañamiento directo en la apertura, accesos del equipo y orden de cuentas.",
+  "Si tu cuenta queda en revisión, sabemos qué documenta y pide cada una.",
+];
+
+const iconPaths = {
+  check: "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
+  shield: "M12 2 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-4Z",
+  compass: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM9 12l2 2 4-4",
+};
+const whyItems = [
+  {
+    title: "Un plan claro para tu caso",
+    description:
+      "Estado recomendado, el costo real (plan anual + tasa del estado que elijas) y los próximos pasos concretos.",
+    iconPath: iconPaths.check,
+  },
+  {
+    title: "Evitas el error caro",
+    description:
+      "Una estructura o un estado equivocado cuesta miles corregirlo. Lo revisamos antes de que pagues nada.",
+    iconPath: iconPaths.shield,
+  },
+  {
+    title: "Si una LLC no es lo tuyo, te lo decimos",
+    description:
+      "Si tu caso pide otra estructura u otra jurisdicción, te lo decimos en la reunión — gratis y sin insistir.",
+    iconPath: iconPaths.compass,
+  },
+];
+
+const meetingItems = [
+  "Tu país de residencia, tu actividad, tus socios y hacia dónde va el proyecto.",
+  "Si una LLC es la estructura correcta — y si no, qué conviene en su lugar.",
+  "El estado adecuado y el costo real: plan anual + tasa del estado (varía por jurisdicción).",
+  "El plan que se ajusta a tu caso y los próximos pasos concretos.",
+];
+const meetingDetails = [
+  { label: "Para quién", value: "Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas." },
+  { label: "Modalidad", value: "Online, por Zoom" },
+  { label: "Costo", value: "Gratuita, sin compromiso" },
+  { label: "Con quién", value: "Un asesor de la firma, en español" },
+  { label: "Si no es tu caso", value: "Te lo decimos en la reunión. Sin costo." },
+];
+
+const steps = [
+  {
+    title: "Asesoría inicial",
+    description: "Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.",
+    meta: "Online · sin compromiso",
+  },
+  {
+    title: "Eliges tu plan",
+    description:
+      "Completas el formulario guiado en nuestra app. Pasaporte y comprobante de domicilio se piden de forma progresiva.",
+    meta: "Pago seguro con Stripe",
+  },
+  {
+    title: "Constituimos tu LLC",
+    description:
+      "Registro ante el estado, EIN, agente residente y documentos. Preparamos el onboarding con Mercury o Relay.",
+    meta: "Estado: 5–7 días hábiles · EIN: 2–6 semanas",
+  },
+];
+
+const plans = [
+  { name: "Básico", price: "USD 350", period: "/ año", description: "Constitución ante el estado, EIN y agente residente." },
+  { name: "Estándar", price: "USD 600", period: "/ año", description: "Suma Operating Agreement, consultas ilimitadas y exención BE-13." },
+  { name: "Business", price: "USD 950", period: "/ año", description: "Planificación legal-tributaria, acompañamiento bancario y EIN acelerado.", favorite: true },
+  { name: "Diseño", price: "USD 350", period: "/ único", description: "Planificación y diseño de la LLC para ir paso a paso." },
+];
+
+const experience = [
+  { title: "5.000", description: "empresas incorporadas" },
+  { title: "1.354", description: "proyectos realizados" },
+  { title: "97 %", description: "de satisfacción" },
+  { title: "10", description: "años de experiencia" },
+];
+const reviews = [
+  { quote: "A pesar de la distancia, me evaluaron como si estuvieran en la oficina de al lado.", cite: "Trustpilot · Bolivia · abril de 2025", flag: "🇧🇴" },
+  { quote: "El equipo fue muy profesional, aclaró las dudas y recomendó lo mejor para la empresa.", cite: "Trustpilot · Ecuador · julio de 2026", flag: "🇪🇨" },
+  { quote: "Servicio recomendado para crear una LLC en Estados Unidos; destacaron la calidad del equipo profesional.", cite: "Trustpilot · Colombia · junio de 2026", flag: "🇨🇴" },
+];
+
+const suiteChips = [
+  "Holding y operativas en otras jurisdicciones",
+  "ITIN",
+  "Contabilidad y declaraciones (IRS)",
+  "Asesoría tributaria internacional",
+  "Registro y protección de marcas",
+  "Bienes raíces · Florida y Madrid",
+  "Servicios migratorios · EE. UU. y España",
+  "Web, Odoo y telefonía con número de EE. UU.",
+];
+
+const faqs = [
+  { question: "Ya llené el formulario, ¿por qué debo agendar una reunión?", answer: "El formulario nos dice que te interesa. La reunión es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural." },
+  { question: "¿La asesoría tiene algún costo o compromiso?", answer: "No. Es gratuita y sin compromiso. No hacemos llamadas de venta: es una reunión de trabajo sobre tu caso." },
+  { question: "¿Es legal tener una LLC siendo no residente?", answer: "Sí. Una LLC de no residente es una estructura legal y la usan personas de todo el mundo para operar internacionalmente. Lo importante es armarla y mantenerla bien; ese es el objetivo de la asesoría." },
+  { question: "¿Cuánto cuesta abrir una LLC?", answer: "Los planes son anuales: desde USD 350 (Básico), USD 600 (Estándar) y USD 950 (Business). La tasa del estado se paga aparte y varía según la jurisdicción. El costo exacto de la renovación se detalla con número en la reunión." },
+  { question: "¿Qué requisitos necesito?", answer: "Solo pasaporte vigente de cada socio y un comprobante de domicilio reciente. Los pedimos de forma progresiva al completar el formulario. No necesitas residir en EE. UU., ni visa, SSN o ITIN para constituir." },
+  { question: "¿Cuánto tarda el proceso?", answer: "El registro ante el estado suele tomar de 5 a 7 días hábiles. El EIN, que gestiona el IRS federal, entre 2 y 6 semanas. Nos encargamos de todo el trámite y te mantenemos informado en cada etapa." },
+  { question: "¿Y si una LLC no es lo que me conviene?", answer: "Te lo decimos en la reunión, sin costo, y te orientamos sobre la alternativa (otra estructura, otra jurisdicción o esperar). No forzamos una LLC si tu caso pide otra cosa." },
+];
+
+const LOGO_HEADER = "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png";
+const LOGO_FOOTER = "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-7.png";
+const BRAND = "Sotomayor Consulting International";
+---
+
+<Layout
+  title="Agenda tu asesoría | Sotomayor Consulting International"
+  description="Tu registro fue recibido. Elige fecha y hora para tu asesoría gratuita por Zoom: revisamos tu caso y sales con un plan claro. Firma boutique, 10 años, partner de Mercury y Relay."
+>
+  <GtmHead
+    slot="head"
+    gtmId={GTM_ID}
+    pageName="thank_you_crea_tu_llc_agenda"
+    pageCategory="llc_advisory_meeting_lead_landing"
+  />
+  <link slot="head" rel="preconnect" href="https://zcal.co" />
+  <link slot="head" rel="preconnect" href="https://static.zcal.co" />
+
+  <noscript>
+    <iframe
+      src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+      height="0"
+      width="0"
+      style="display:none;visibility:hidden"
+      title="gtm"></iframe>
+  </noscript>
+
+  <SiteHeader
+    logoSrc={LOGO_HEADER}
+    logoAlt={BRAND}
+    brandHref="https://sotomayorconsulting.com/"
+    ctaHref="#agendar"
+    ctaLabel="Elegir horario"
+  />
+
+  <main id="inicio" class="overflow-hidden">
+    <ThankYouHero
+      statusLabel="Registro recibido"
+      titleLead="Ya casi está. Elige el horario de tu"
+      titleHighlight="asesoría gratuita"
+      titleTrail="."
+      ctaHref="#agendar"
+      ctaLabel="Elegir mi horario →"
+      objectives={["Gratuita", "En español"]}
+    >
+      Solo falta un paso. Elige un horario y confirma tus datos de contacto para
+      recibir el enlace de Zoom. Asesoría <strong>gratuita</strong> para <strong
+        >e-commerce</strong
+      >, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong
+      > e <strong>inversionistas</strong>.
+      <Fragment slot="trust">
+        <b class="font-display font-semibold text-[#0d2638]">+5.000 empresas</b> incorporadas | <b class="font-display font-semibold text-[#0d2638]">
+          10 años</b> | <b class="font-display font-semibold text-[#0d2638]"
+          >Partner de Mercury &amp; Relay</b
+        ><br />
+        <span class="tracking-widest text-[#c0872e]" aria-hidden="true">★★★★☆</span>
+        4,3/5 en Trustpilot con reseñas verificadas
+      </Fragment>
+      <ScheduleGate
+        slot="calendar"
+        badge="Asesoría gratuita · por Zoom"
+        formTitle="Completa tus datos"
+        formDescription="Validamos tu registro y, si todo está en orden, eliges tu horario en el acto."
+        link={ZCAL_OPEN_URL}
+        openUrl={ZCAL_OPEN_URL}
+        facturacionOptions={facturationOptions}
+        meetingTitle="Elige tu horario"
+        meetingDescription="Reserva el día y la hora que mejor te convengan para tu asesoría."
+      />
+    </ThankYouHero>
+
+    <PartnersBanner
+      badge="Partners oficiales"
+      logos={partnerLogos}
+      title="Partners oficiales de Mercury y Relay para banking empresarial"
+      points={partnerPoints}
+      note="Mercury y Relay son bancos de terceros; Sotomayor Consulting no es banco. Actuamos como partner para preparar y acompañar tu onboarding con ellos."
+    />
+
+    <IconFeatureCards
+      kicker="Qué sacas de la reunión"
+      title="Ya diste el primer paso. En la reunión lo convertimos en un plan."
+      description="Por Zoom, sin costo. Sales con decisiones concretas — no con una cotización genérica."
+      items={whyItems}
+      footLead="No hacemos llamadas de venta. Priorizamos una reunión de trabajo sobre tu caso."
+      ctaHref="#agendar"
+      ctaLabel="Elegir mi horario"
+      ctaNote="Gratis · sin compromiso · por Zoom"
+    />
+
+    <MeetingChecklist
+      kicker="La reunión inicial"
+      title="Qué revisamos contigo"
+      items={meetingItems}
+      detailsTitle="Detalles"
+      details={meetingDetails}
+      ctaHref="#agendar"
+      ctaLabel="Elegir horario"
+      ctaNote="Gratis · sin compromiso · por Zoom"
+    />
+
+    <Steps kicker="Cómo funciona" title="Del primer contacto a tu LLC activa" steps={steps} />
+
+    <PlanCards
+      kicker="Planes"
+      title="Planes con renovación anual"
+      plans={plans}
+      ctaHref="#agendar"
+      ctaLabel="Ver qué plan me conviene"
+      ctaNote="Gratis · sin compromiso · por Zoom"
+      aside="Te lo recomendamos en la asesoría, según tu caso."
+    >
+      <Fragment slot="note">
+        <b class="text-[#0d2638]">Los planes son anuales, desde USD 350</b> (Básico).
+        La <b class="text-[#0d2638]">tasa del estado</b> se paga aparte y varía según
+        la jurisdicción. El costo exacto de la renovación —según el plan y el estado
+        que elijas— lo ves con número en la reunión.
+      </Fragment>
+    </PlanCards>
+
+    <TrustReviews
+      label="Confianza"
+      title="10 años estructurando negocios internacionales"
+      description="Reseñas verificadas en Trustpilot (4,3/5) y una trayectoria de miles de empresas incorporadas junto a partners de banca como Mercury y Relay."
+      experience={experience}
+      reviews={reviews}
+      reviewsHref={TRUSTPILOT_URL}
+    />
+
+    <ChipList
+      kicker="Una sola firma"
+      title="Cuando tu proyecto necesita más que una LLC"
+      description="Empiezas con la LLC y, si el caso lo pide, seguimos con el resto — con el mismo equipo y sin volver a explicar tu situación."
+      chips={suiteChips}
+      note="Jurisdicciones: Reino Unido, Canadá, Panamá, Portugal, Chile, México, Belice, Islas Vírgenes Británicas, Islas Marshall."
+    />
+
+    <section id="preguntas" class="scroll-mt-24 py-20 sm:py-24">
+      <Faqs
+        label="Preguntas frecuentes"
+        title="Antes de agendar"
+        description="Si tu duda no aparece, la resolvemos durante la asesoría gratuita."
+        faqs={faqs}
+      />
+    </section>
+
+    <FinalCta
+      title="Solo falta un paso: elige tu horario"
+      description="Revisamos tu caso y sales con una recomendación clara: si la LLC te conviene, en qué estado y con qué plan. Sin costo y sin compromiso."
+      primaryHref="#agendar"
+      primaryLabel="Elegir horario"
+      secondaryHref={WHATSAPP_URL}
+      secondaryLabel="Hablar por WhatsApp"
+      note="Gratis · sin compromiso · por Zoom"
+    />
+  </main>
+
+  <SiteFooter
+    logoSrc={LOGO_FOOTER}
+    logoAlt={BRAND}
+    disclaimer="Sotomayor Consulting International no es un banco, entidad financiera ni presta servicios de crédito directo. Somos una empresa de consultoría que brinda asesoría y acompañamiento en constitución de empresas, apertura de cuentas, trámites y servicios tecnológicos."
+    links={[
+      { label: "Privacidad", href: "https://sotomayorconsulting.com/politica-de-privacidad/" },
+      { label: "Términos", href: "https://sotomayorconsulting.com/terminos-de-servicio/" },
+    ]}
+    copyright="© 2026 Sotomayor Consulting International"
+  />
+
+  <StickyBar whatsappUrl={WHATSAPP_URL} ctaHref="#agendar" ctaLabel="Elegir horario · gratis" />
+</Layout>
+
+<script>
+  import "@/scripts/gracias";
+</script>
