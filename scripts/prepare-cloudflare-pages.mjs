@@ -34,7 +34,9 @@ const wranglerConfig = JSON.parse(await readFile(wranglerPath, "utf8"));
 
 // Pages provides ASSETS itself and rejects an explicit binding with that name.
 delete wranglerConfig.assets;
+delete wranglerConfig.main;
 delete wranglerConfig.no_bundle;
+delete wranglerConfig.rules;
 
 if (Array.isArray(wranglerConfig.kv_namespaces)) {
   wranglerConfig.kv_namespaces = wranglerConfig.kv_namespaces.filter(
