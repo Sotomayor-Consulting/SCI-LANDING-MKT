@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "packageManager": "pnpm@12.3.4",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.22.2"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/prepare-cloudflare-pages.mjs",
     "pages:dev": "pnpm run build && wrangler pages dev",
     "test:leads": "node test/validate-lead.mjs",
     "preview": "astro preview",
