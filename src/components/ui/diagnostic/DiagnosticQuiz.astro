@@ -67,7 +67,7 @@ const countries = [
         <CardTitle><h2 tabindex="-1" class="font-display text-2xl font-bold outline-none sm:text-3xl">Antes de seguir, ¿cómo te llamas?</h2></CardTitle>
         <CardDescription>Para hacerte el diagnóstico con tu nombre, no genérico.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent class="h-60">
         <Field name="first_name">
           <FieldLabel for="diagnostic-first-name">Nombre</FieldLabel>
           <FieldControl id="diagnostic-first-name" name="first_name" autocomplete="given-name" required minlength="2" maxlength="40" placeholder="Tu nombre" />
@@ -75,7 +75,7 @@ const countries = [
           <FieldError match="tooShort">Escribe al menos dos caracteres.</FieldError>
         </Field>
       </CardContent>
-      <CardFooter class="grid grid-cols-[auto_1fr] gap-3">
+      <CardFooter class="grid grid-cols-[auto_1fr] gap-3 mt-5">
         <Button type="button" variant="outline" size="lg" class="diagnostic-back rounded-xl" aria-label="Atrás">←</Button>
         <Button id="diagnostic-name-next" type="button" size="lg" class="rounded-xl font-bold" disabled>Continuar</Button>
       </CardFooter>
