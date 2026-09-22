@@ -11,6 +11,7 @@ import Faqs from "@components/ui/blocks/Faq.astro";
 import Marquee from "@components/ui/blocks/Marquee.astro";
 import Pricing, { type PricingPlan } from "@components/ui/blocks/Pricing.astro";
 
+
 const benefits = [
   "Sin visa ni residencia",
   "Sin SSN ni ITIN",
@@ -63,6 +64,8 @@ const adviceOptions = [
   "Primero quiero más información",
   "Me interesa, pero aún no estoy listo",
 ];
+
+
 const steps = [
   {
     titulo: "Cuéntanos tu caso",
@@ -423,8 +426,23 @@ const experience = [
         }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
         setForm2Error("No pudimos guardar tus datos. Inténtalo nuevamente.");
+        return;
+      }
+
+      if (result.showCalendar !== true) {
+        if (result.code === 'BLACKLISTED') {
+          setForm2Error(
+            "Intentalo nuevamente más tarde. Si el problema persiste, contáctanos.",
+          );
+        } else {
+          setForm2Error(
+      "Recibimos tus datos. Te enviaremos más información próximamente.",
+    );
+        }
         return;
       }
 
