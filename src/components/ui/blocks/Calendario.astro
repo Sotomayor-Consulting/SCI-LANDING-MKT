@@ -1,0 +1,947 @@
+---
+import IconArrowRight from "@tabler/icons/outline/arrow-right.svg";
+import IconCalendar from "@tabler/icons/outline/calendar.svg";
+import IconChevronLeft from "@tabler/icons/outline/chevron-left.svg";
+import IconChevronRight from "@tabler/icons/outline/chevron-right.svg";
+import IconWorld from "@tabler/icons/outline/world.svg";
+
+import { Badge } from "@/components/starwind/badge";
+import { Button } from "@/components/starwind/button";
+import { Card } from "@/components/starwind/card";
+import {
+  Field,
+  FieldControl,
+  FieldError,
+  FieldLabel,
+} from "@/components/starwind/field";
+import { Form } from "@/components/starwind/form";
+import { Separator } from "@/components/starwind/separator";
+---
+
+<section class="relative overflow-hidden bg-muted/45 py-12 sm:py-16 lg:py-20">
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary)_16%,transparent),transparent_35%)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto w-full max-w-4xl px-4 sm:px-6">
+    <Card
+      data-calendar-root
+      class="gap-0 overflow-hidden rounded-3xl py-0 shadow-2xl shadow-foreground/10"
+    >
+      <div
+        class="flex flex-col gap-3 border-b bg-primary px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7"
+      >
+        <div class="flex items-center gap-3 text-sm font-medium">
+          <span
+            class="flex size-7 items-center justify-center rounded-full bg-foreground text-xs text-background"
+            >1</span
+          >
+          <span>Selecciona fecha y hora</span>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-foreground sm:text-sm">
+          <IconWorld class="size-4" />
+          <span>Zona horaria:</span>
+          <strong data-timezone class="font-semibold text-foreground"
+            >Hora local</strong
+          >
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-[1.35fr_0.80fr] bg-foreground">
+        <div class="p-5 sm:p-8 lg:border-r flex flex-col">
+          <div class="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <h3
+                data-month-label
+                class="text-lg font-semibold capitalize text-primary"
+              >
+              </h3>
+              <p class="mt-1 text-xs text-muted-foreground">
+                Los días disponibles aparecen resaltados.
+              </p>
+            </div>
+            <div class="flex items-center gap-1 rounded-xl bg-muted p-1">
+              <Button
+                data-previous-month
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Mostrar mes anterior"
+                class="rounded-lg"
+              >
+                <IconChevronLeft />
+              </Button>
+              <Button
+                data-next-month
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Mostrar mes siguiente"
+                class="rounded-lg"
+              >
+                <IconChevronRight />
+              </Button>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-7 gap-1 text-center text-[0.7rem] font-semibold tracking-wide text-muted-foreground uppercase"
+          >
+            {
+              ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"].map((day) => (
+                <span class="py-2">{day}</span>
+              ))
+            }
+          </div>
+          <div data-calendar-grid class="grid grid-cols-7 gap-1 h-full"></div>
+        </div>
+
+        <div class="h-[31rem] p-5">
+          <div data-slots-view class="flex h-full flex-col">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p
+                  class="text-xs font-semibold tracking-[0.14em] text-primary-accent uppercase"
+                >
+                  Horarios
+                </p>
+                <h3
+                  data-slots-date
+                  class="mt-1 text-sm font-semibold text-white"
+                >
+                  Cargando agenda...
+                </h3>
+              </div>
+              <Badge
+                data-slots-count
+                tone="success"
+                appearance="soft"
+                size="sm"
+                class="text-primary">0 cupos</Badge
+              >
+            </div>
+            <p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+              Todos los horarios se muestran en tu zona horaria.
+            </p>
+
+            <div
+              data-slots-list
+              class="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1 overflow-x-auto no-scrollbar h-80 auto-rows-8 scrollbar-thin scrollbar-thumb-[#d9a84e]"
+            >
+            </div>
+
+            <p
+              data-selection-status
+              class="mt-4 min-h-4 text-center text-xs text-muted-foreground"
+              aria-live="polite"
+            >
+            </p>
+          </div>
+
+          <Form
+            data-booking-form
+            class="hidden h-full flex-col gap-5 overflow-y-auto px-5 scrollbar-thin scrollbar-thumb-[#d9a84e]"
+            validationTiming="submit"
+          >
+            <div>
+              <div class="rounded-xl flex justify-center items-center">
+                <Button
+                  data-back-to-slots
+                  type="button"
+                  size="sm"
+                  class="w-fit h-fit text-xs"
+                >
+                  <IconChevronLeft />
+                  Atrás
+                </Button>
+                <div class="text-right w-full">
+                  <p data-form-date class="text-xs font-semibold text-white">
+                  </p>
+                  <p
+                    data-form-time
+                    class="mt-1 text-xs text-foregorund text-white"
+                  >
+                  </p>
+                </div>
+              </div>
+
+              <p
+                class="text-xs font-semibold tracking-[0.14em] text-primary-accent uppercase mt-2"
+              >
+                Último paso
+              </p>
+              <h3 class="mt-1 text-xl font-semibold text-white">
+                Confirma tus datos
+              </h3>
+            </div>
+
+            <Field name="name">
+              <FieldLabel for="calendar-name" class="text-white"
+                >Nombre completo</FieldLabel
+              >
+              <FieldControl
+                class="h-8 placeholder:text-sm text-sm"
+                id="calendar-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                minlength="2"
+                placeholder="Tu nombre y apellido"
+                required
+              />
+              <FieldError match="valueMissing">Ingresa tu nombre.</FieldError>
+              <FieldError match="tooShort"
+                >Ingresa al menos 2 caracteres.</FieldError
+              >
+            </Field>
+
+            <Field name="email" class="text-muted">
+              <FieldLabel for="calendar-email" class="text-white"
+                >Correo electrónico</FieldLabel
+              >
+              <FieldControl
+                class="h-8 placeholder:text-sm text-sm"
+                id="calendar-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="nombre@empresa.com"
+                required
+              />
+              <FieldError match="valueMissing">Ingresa tu correo.</FieldError>
+              <FieldError match="typeMismatch"
+                >Ingresa un correo válido.</FieldError
+              >
+            </Field>
+
+            <div data-booking-questions class="flex flex-col gap-5"></div>
+
+            <div class="mt-auto">
+              <Button
+                data-submit-booking
+                type="submit"
+                class="w-full rounded-xl"
+                variant="primary"
+                disabled
+              >
+                Confirmar reserva
+                <IconArrowRight />
+              </Button>
+              <p
+                data-booking-status
+                class="mt-3 min-h-4 text-center text-xs text-muted-foreground"
+                aria-live="polite"
+              >
+              </p>
+            </div>
+          </Form>
+
+          <div
+            data-booking-success
+            class="hidden h-full flex-col items-center justify-center text-center"
+          >
+            <div
+              class="flex size-14 items-center justify-center rounded-2xl bg-success/20 text-success-foreground"
+            >
+              <IconCalendar class="size-7" />
+            </div>
+            <h3 class="mt-5 text-xl font-semibold">Reunión confirmada</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Te enviamos los detalles y la invitación a tu correo electrónico.
+            </p>
+            <div
+              class="mt-5 w-full rounded-xl border bg-muted/45 p-4 text-left"
+            >
+              <p data-success-date class="text-sm font-semibold"></p>
+              <p data-success-time class="mt-1 text-xs text-muted-foreground">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  </div>
+</section>
+
+<script>
+  const monthFormatter = new Intl.DateTimeFormat("es", {
+    month: "long",
+    year: "numeric",
+  });
+  const dateFormatter = new Intl.DateTimeFormat("es", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  const timeFormatter = new Intl.DateTimeFormat("es", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  type JsonRecord = Record<string, unknown>;
+  type AvailableSlot = {
+    startAt: string;
+    endAt?: string;
+    date: Date;
+  };
+  type BookingQuestion = {
+    id: string;
+    label: string;
+    type: string;
+    required: boolean;
+    position: number;
+    options: string[];
+  };
+
+  const startOfDay = (date: Date) => {
+    const value = new Date(date);
+    value.setHours(0, 0, 0, 0);
+    return value;
+  };
+
+  const toDateKey = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const isRecord = (value: unknown): value is JsonRecord =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+
+  const getSlotStart = (value: JsonRecord) =>
+    value.start_at ??
+    value.startAt ??
+    value.start ??
+    value.datetime ??
+    value.dateTime ??
+    value.time;
+
+  const getSlotEnd = (value: JsonRecord) =>
+    value.end_at ?? value.endAt ?? value.end;
+
+  const parseSlotDate = (value: unknown, dateHint?: string) => {
+    if (typeof value !== "string") return null;
+    const candidate =
+      dateHint && /^\d{1,2}:\d{2}/.test(value) ? `${dateHint}T${value}` : value;
+    const date = new Date(candidate);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const normalizeSlots = (payload: unknown) => {
+    const normalized: AvailableSlot[] = [];
+    const seen = new Set<string>();
+
+    const visit = (value: unknown, dateHint?: string) => {
+      if (Array.isArray(value)) {
+        value.forEach((item) => visit(item, dateHint));
+        return;
+      }
+
+      if (typeof value === "string") {
+        const date = parseSlotDate(value, dateHint);
+        if (!date) return;
+        const startAt = date.toISOString();
+        if (!seen.has(startAt)) {
+          seen.add(startAt);
+          normalized.push({ startAt, date });
+        }
+        return;
+      }
+
+      if (!isRecord(value)) return;
+      if (value.available === false || value.is_available === false) return;
+
+      const rawStart = getSlotStart(value);
+      if (rawStart !== undefined) {
+        const date = parseSlotDate(rawStart, dateHint);
+        if (!date) return;
+        const startAt =
+          typeof rawStart === "string" && !dateHint
+            ? rawStart
+            : date.toISOString();
+        if (seen.has(startAt)) return;
+        seen.add(startAt);
+        const rawEnd = getSlotEnd(value);
+        normalized.push({
+          startAt,
+          endAt: typeof rawEnd === "string" ? rawEnd : undefined,
+          date,
+        });
+        return;
+      }
+
+      Object.entries(value).forEach(([key, nested]) => {
+        const nextHint = /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : dateHint;
+        visit(nested, nextHint);
+      });
+    };
+
+    if (isRecord(payload)) {
+      const data = payload.data;
+      const container =
+        payload.slots ??
+        (isRecord(data) ? (data.slots ?? data) : data) ??
+        payload;
+      visit(container);
+    } else {
+      visit(payload);
+    }
+
+    return normalized.sort((a, b) => a.date.getTime() - b.date.getTime());
+  };
+
+  document
+    .querySelectorAll<HTMLElement>("[data-calendar-root]")
+    .forEach((root) => {
+      const today = startOfDay(new Date());
+      let visibleMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      let selectedDate: Date | null = null;
+      let selectedSlot: AvailableSlot | null = null;
+      let slotsByDate = new Map<string, AvailableSlot[]>();
+      let bookingQuestions: BookingQuestion[] = [];
+      let activeRequest = 0;
+
+      const monthLabel = root.querySelector<HTMLElement>("[data-month-label]");
+      const calendarGrid = root.querySelector<HTMLElement>(
+        "[data-calendar-grid]",
+      );
+      const previousButton = root.querySelector<HTMLButtonElement>(
+        "[data-previous-month]",
+      );
+      const nextButton =
+        root.querySelector<HTMLButtonElement>("[data-next-month]");
+      const slotsDate = root.querySelector<HTMLElement>("[data-slots-date]");
+      const slotsCount = root.querySelector<HTMLElement>("[data-slots-count]");
+      const slotsList = root.querySelector<HTMLElement>("[data-slots-list]");
+      const selectionStatus = root.querySelector<HTMLElement>(
+        "[data-selection-status]",
+      );
+      const timezone = root.querySelector<HTMLElement>("[data-timezone]");
+      const slotsView = root.querySelector<HTMLElement>("[data-slots-view]");
+      const bookingForm = root.querySelector<HTMLFormElement>(
+        "[data-booking-form]",
+      );
+      const backToSlots = root.querySelector<HTMLButtonElement>(
+        "[data-back-to-slots]",
+      );
+      const formDate = root.querySelector<HTMLElement>("[data-form-date]");
+      const formTime = root.querySelector<HTMLElement>("[data-form-time]");
+      const submitBooking = root.querySelector<HTMLButtonElement>(
+        "[data-submit-booking]",
+      );
+      const bookingStatus = root.querySelector<HTMLElement>(
+        "[data-booking-status]",
+      );
+      const bookingQuestionsContainer = root.querySelector<HTMLElement>(
+        "[data-booking-questions]",
+      );
+      const bookingSuccess = root.querySelector<HTMLElement>(
+        "[data-booking-success]",
+      );
+      const successDate = root.querySelector<HTMLElement>(
+        "[data-success-date]",
+      );
+      const successTime = root.querySelector<HTMLElement>(
+        "[data-success-time]",
+      );
+      const nameInput =
+        root.querySelector<HTMLInputElement>('input[name="name"]');
+      const emailInput = root.querySelector<HTMLInputElement>(
+        'input[name="email"]',
+      );
+
+      if (
+        !monthLabel ||
+        !calendarGrid ||
+        !previousButton ||
+        !nextButton ||
+        !slotsDate ||
+        !slotsCount ||
+        !slotsList ||
+        !selectionStatus ||
+        !timezone ||
+        !slotsView ||
+        !bookingForm ||
+        !backToSlots ||
+        !formDate ||
+        !formTime ||
+        !submitBooking ||
+        !bookingStatus ||
+        !bookingQuestionsContainer ||
+        !bookingSuccess ||
+        !successDate ||
+        !successTime ||
+        !nameInput ||
+        !emailInput
+      )
+        return;
+
+      timezone.textContent = Intl.DateTimeFormat()
+        .resolvedOptions()
+        .timeZone.replaceAll("_", " ");
+      const pageParams = new URLSearchParams(window.location.search);
+      nameInput.value = pageParams.get("name") ?? "";
+      emailInput.value = pageParams.get("email") ?? "";
+
+      const setButtonDisabled = (
+        button: HTMLButtonElement,
+        disabled: boolean,
+      ) => {
+        button.disabled = disabled;
+        button.toggleAttribute("data-disabled", disabled);
+        if (disabled) {
+          button.setAttribute("aria-disabled", "true");
+        } else {
+          button.removeAttribute("aria-disabled");
+        }
+      };
+
+      const renderQuestions = () => {
+        bookingQuestionsContainer.replaceChildren();
+
+        bookingQuestions.forEach((question, index) => {
+          const field = document.createElement("div");
+          field.className = "flex flex-col gap-2";
+          const controlId = `calendar-question-${index}`;
+          const label = document.createElement("label");
+          label.className = "text-sm font-medium text-white";
+          label.htmlFor = controlId;
+          label.textContent = `${question.label}${question.required ? " *" : ""}`;
+
+          if (question.type === "checkbox") {
+            const checkboxLabel = document.createElement("label");
+            checkboxLabel.className =
+              "flex cursor-pointer items-center gap-3 text-sm text-white";
+            const input = document.createElement("input");
+            input.id = controlId;
+            input.type = "checkbox";
+            input.required = question.required;
+            input.dataset.bookingQuestion = String(index);
+            input.className =
+              "size-4 rounded border-input accent-primary focus-visible:ring-2 focus-visible:ring-outline";
+            const text = document.createElement("span");
+            text.textContent = `${question.label}${question.required ? " *" : ""}`;
+            checkboxLabel.append(input, text);
+            field.append(checkboxLabel);
+          } else if (question.type === "select") {
+            const select = document.createElement("select");
+            select.id = controlId;
+            select.required = question.required;
+            select.dataset.bookingQuestion = String(index);
+            select.className =
+              "h-8 w-full rounded-md border border-input bg-transparent px-2 py-0 text-sm leading-5 text-white shadow-xs focus-visible:border-outline focus-visible:ring-3 focus-visible:ring-outline/50";
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = "Selecciona una opción";
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            select.append(placeholder);
+            question.options.forEach((option) => {
+              const optionElement = document.createElement("option");
+              optionElement.value = option;
+              optionElement.textContent = option;
+              optionElement.className = "text-foreground";
+              select.append(optionElement);
+            });
+            field.append(label, select);
+          } else if (question.type === "radio") {
+            const fieldset = document.createElement("fieldset");
+            fieldset.className = "flex flex-col gap-2";
+            const legend = document.createElement("legend");
+            legend.className = "text-sm font-medium text-white";
+            legend.textContent = label.textContent;
+            fieldset.append(legend);
+            question.options.forEach((option, optionIndex) => {
+              const optionLabel = document.createElement("label");
+              optionLabel.className =
+                "flex cursor-pointer items-center gap-3 text-sm text-white";
+              const input = document.createElement("input");
+              input.id = `${controlId}-${optionIndex}`;
+              input.type = "radio";
+              input.name = `calendar-question-${question.id}`;
+              input.value = option;
+              input.required = question.required;
+              input.dataset.bookingQuestion = String(index);
+              input.className = "size-4 accent-primary";
+              optionLabel.append(input, document.createTextNode(option));
+              fieldset.append(optionLabel);
+            });
+            field.append(fieldset);
+          } else if (question.type === "textarea") {
+            const textarea = document.createElement("textarea");
+            textarea.id = controlId;
+            textarea.rows = 3;
+            textarea.required = question.required;
+            textarea.dataset.bookingQuestion = String(index);
+            textarea.className =
+              "min-h-20 w-full rounded-md border border-input bg-transparent px-2 py-1 text-sm text-white shadow-xs placeholder:text-muted-foreground focus-visible:border-outline focus-visible:ring-3 focus-visible:ring-outline/50";
+            field.append(label, textarea);
+          } else {
+            const input = document.createElement("input");
+            input.id = controlId;
+            input.type = "text";
+            input.required = question.required;
+            input.dataset.bookingQuestion = String(index);
+            input.className =
+              "h-8 w-full rounded-md border border-input bg-transparent px-2 text-sm text-white shadow-xs placeholder:text-muted-foreground focus-visible:border-outline focus-visible:ring-3 focus-visible:ring-outline/50";
+            field.append(label, input);
+          }
+
+          bookingQuestionsContainer.append(field);
+        });
+      };
+
+      const loadQuestions = async () => {
+        try {
+          const response = await fetch("/api/questions", {
+            headers: { Accept: "application/json" },
+          });
+          const payload: unknown = await response.json().catch(() => null);
+          if (!response.ok) {
+            const message =
+              isRecord(payload) && typeof payload.error === "string"
+                ? payload.error
+                : "No fue posible cargar las preguntas.";
+            throw new Error(message);
+          }
+          if (!isRecord(payload) || !Array.isArray(payload.items)) {
+            throw new Error("Calnode devolvió preguntas inválidas.");
+          }
+
+          bookingQuestions = payload.items
+            .filter(isRecord)
+            .map((item, index) => ({
+              id: typeof item.id === "string" ? item.id : String(index),
+              label: typeof item.label === "string" ? item.label.trim() : "",
+              type:
+                typeof item.type === "string" ? item.type.toLowerCase() : "text",
+              required: item.required === true,
+              position:
+                typeof item.position === "number" ? item.position : index,
+              options: Array.isArray(item.options)
+                ? item.options.filter(
+                    (option): option is string => typeof option === "string",
+                  )
+                : [],
+            }))
+            .filter((question) => question.label.length > 0)
+            .sort((a, b) => a.position - b.position);
+          renderQuestions();
+          setButtonDisabled(submitBooking, false);
+        } catch (error) {
+          bookingStatus.textContent =
+            error instanceof Error
+              ? error.message
+              : "No fue posible cargar las preguntas.";
+        }
+      };
+
+      const getQuestionResponses = () => {
+        const responses: Record<string, string | boolean> = {};
+
+        bookingQuestions.forEach((question, index) => {
+          const controls = bookingQuestionsContainer.querySelectorAll<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+          >(`[data-booking-question="${index}"]`);
+          const firstControl = controls[0];
+          if (!firstControl) return;
+
+          if (question.type === "checkbox" && firstControl instanceof HTMLInputElement) {
+            responses[question.label] = firstControl.checked;
+          } else if (question.type === "radio") {
+            const selected = Array.from(controls).find(
+              (control) => control instanceof HTMLInputElement && control.checked,
+            );
+            responses[question.label] = selected?.value ?? "";
+          } else {
+            responses[question.label] = firstControl.value.trim();
+          }
+        });
+
+        return responses;
+      };
+
+      const renderSlots = () => {
+        slotsList.replaceChildren();
+        selectedSlot = null;
+        selectionStatus.textContent = "";
+
+        if (!selectedDate) {
+          slotsCount.textContent = "0 cupos";
+          return;
+        }
+
+        const slots = slotsByDate.get(toDateKey(selectedDate)) ?? [];
+        slotsDate.textContent = dateFormatter.format(selectedDate);
+        slotsCount.textContent = `${slots.length} ${slots.length === 1 ? "cupo" : "cupos"}`;
+
+        if (slots.length === 0) {
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className =
+            "rounded-xl border border-dashed p-4 text-center text-xs text-muted-foreground";
+          emptyMessage.textContent =
+            "Ya no quedan horarios disponibles para este día.";
+          slotsList.append(emptyMessage);
+          return;
+        }
+
+        slots.forEach((slot) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className =
+            "flex h-8 w-11/12 items-center justify-between rounded-xl border bg-white px-2 text-sm font-semibold text-foreground transition-all hover:bg-white/80 focus-visible:outline-none";
+          button.setAttribute("aria-pressed", "false");
+          const time = document.createElement("span");
+          time.textContent = timeFormatter.format(slot.date);
+          const duration = document.createElement("span");
+          duration.className = "text-xs font-normal text-muted-foreground";
+          duration.textContent = "60 min";
+          button.append(time, duration);
+
+          button.addEventListener("click", () => {
+            slotsList.querySelectorAll("button").forEach((slotButton) => {
+              slotButton.classList.remove(
+                "border-foreground",
+                "bg-foreground",
+                "text-background",
+                "text-foreground",
+                "hover:text-foreground",
+              );
+              slotButton.setAttribute("aria-pressed", "false");
+            });
+            button.classList.add(
+              "border-foreground",
+              "bg-foreground",
+              "text-background",
+              "text-foreground",
+              "hover:text-foreground",
+            );
+            button.setAttribute("aria-pressed", "true");
+            selectedSlot = slot;
+            formDate.textContent = dateFormatter.format(selectedDate!);
+            formTime.textContent = `${timeFormatter.format(slot.date)} · 60 minutos`;
+            slotsView.classList.add("hidden");
+            bookingForm.classList.remove("hidden");
+            bookingForm.classList.add("flex");
+            nameInput.focus();
+          });
+
+          slotsList.append(button);
+        });
+      };
+
+      const selectDate = (date: Date) => {
+        selectedDate = date;
+        renderCalendar();
+        renderSlots();
+      };
+
+      const renderCalendar = () => {
+        monthLabel.textContent = monthFormatter.format(visibleMonth);
+        calendarGrid.replaceChildren();
+        const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        previousButton.disabled = visibleMonth <= currentMonth;
+        nextButton.disabled = false;
+
+        const year = visibleMonth.getFullYear();
+        const month = visibleMonth.getMonth();
+        const firstWeekday = new Date(year, month, 1).getDay();
+        const leadingDays = firstWeekday === 0 ? 6 : firstWeekday - 1;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let index = 0; index < leadingDays; index += 1) {
+          const spacer = document.createElement("span");
+          spacer.className = "size-10 sm:size-11";
+          spacer.setAttribute("aria-hidden", "true");
+          calendarGrid.append(spacer);
+        }
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const date = startOfDay(new Date(year, month, day));
+          const available =
+            date >= today &&
+            (slotsByDate.get(toDateKey(date))?.length ?? 0) > 0;
+          const selected = selectedDate?.getTime() === date.getTime();
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = String(day);
+          button.disabled = !available;
+          button.setAttribute("aria-label", dateFormatter.format(date));
+          button.setAttribute("aria-pressed", String(selected));
+          button.className = [
+            "relative flex size-10 items-center justify-center rounded-xl text-sm font-semibold transition-all sm:size-11 place-self-center",
+            selected
+              ? "bg-[#173951] text-white shadow-md border-2 border-[#2b6086]"
+              : available
+                ? "bg-[#173951] text-white shadow-md shadow-white/10 hover:bg-primary focus-visible:outline-none"
+                : "cursor-not-allowed bg-foreground/20 text-muted-foreground/35",
+          ].join(" ");
+
+          if (available && !selected) {
+            const dot = document.createElement("span");
+            dot.className =
+              "absolute bottom-1 size-1 rounded-full bg-primary-accent";
+            button.append(dot);
+          }
+
+          if (available)
+            button.addEventListener("click", () => selectDate(date));
+          calendarGrid.append(button);
+        }
+      };
+
+      const resetSelection = () => {
+        selectedDate = null;
+        selectedSlot = null;
+        renderSlots();
+      };
+
+      const loadMonth = async () => {
+        const requestId = ++activeRequest;
+        const year = visibleMonth.getFullYear();
+        const month = visibleMonth.getMonth();
+        const from = toDateKey(new Date(year, month, 1));
+        const to = toDateKey(new Date(year, month + 1, 0));
+
+        slotsByDate = new Map();
+        resetSelection();
+        monthLabel.textContent = monthFormatter.format(visibleMonth);
+        slotsDate.textContent = "Consultando disponibilidad...";
+        selectionStatus.textContent = "";
+        previousButton.disabled = true;
+        nextButton.disabled = true;
+        calendarGrid.innerHTML = Array.from(
+          { length: 35 },
+          () =>
+            '<span class="size-10 animate-pulse rounded-xl bg-muted sm:size-11"></span>',
+        ).join("");
+
+        try {
+          const response = await fetch(`/api/slots?from=${from}&to=${to}`, {
+            headers: { Accept: "application/json" },
+          });
+          const payload: unknown = await response.json().catch(() => null);
+          if (!response.ok) {
+            const message =
+              isRecord(payload) && typeof payload.error === "string"
+                ? payload.error
+                : "No fue posible cargar la agenda.";
+            throw new Error(message);
+          }
+          if (requestId !== activeRequest) return;
+
+          const slots = normalizeSlots(payload);
+          slots.forEach((slot) => {
+            const key = toDateKey(slot.date);
+            const current = slotsByDate.get(key) ?? [];
+            current.push(slot);
+            slotsByDate.set(key, current);
+          });
+
+          const firstAvailableSlot = slots.find(
+            (slot) => startOfDay(slot.date) >= today,
+          );
+          if (firstAvailableSlot) {
+            selectedDate = startOfDay(firstAvailableSlot.date);
+            renderSlots();
+          } else {
+            slotsDate.textContent = "No hay cupos este mes";
+          }
+        } catch (error) {
+          if (requestId !== activeRequest) return;
+          slotsDate.textContent =
+            error instanceof Error
+              ? error.message
+              : "No fue posible cargar la agenda.";
+          selectionStatus.textContent = "Intenta nuevamente en unos minutos.";
+        } finally {
+          if (requestId === activeRequest) renderCalendar();
+        }
+      };
+
+      previousButton.addEventListener("click", () => {
+        visibleMonth = new Date(
+          visibleMonth.getFullYear(),
+          visibleMonth.getMonth() - 1,
+          1,
+        );
+        void loadMonth();
+      });
+
+      nextButton.addEventListener("click", () => {
+        visibleMonth = new Date(
+          visibleMonth.getFullYear(),
+          visibleMonth.getMonth() + 1,
+          1,
+        );
+        void loadMonth();
+      });
+
+      backToSlots.addEventListener("click", () => {
+        bookingForm.classList.add("hidden");
+        bookingForm.classList.remove("flex");
+        slotsView.classList.remove("hidden");
+        if (!submitBooking.disabled) bookingStatus.textContent = "";
+      });
+
+      bookingForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!bookingForm.reportValidity() || !selectedDate || !selectedSlot)
+          return;
+
+        setButtonDisabled(submitBooking, true);
+        submitBooking.setAttribute("aria-busy", "true");
+        bookingStatus.textContent = "Confirmando tu reserva...";
+
+        try {
+          const response = await fetch("/api/booking", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              start_at: selectedSlot.startAt,
+              name: nameInput.value.trim(),
+              email: emailInput.value.trim(),
+              responses: getQuestionResponses(),
+            }),
+          });
+          const payload: unknown = await response.json().catch(() => null);
+          if (!response.ok) {
+            const message =
+              isRecord(payload) && typeof payload.error === "string"
+                ? payload.error
+                : "No fue posible confirmar la reserva.";
+            throw new Error(message);
+          }
+
+          successDate.textContent = dateFormatter.format(selectedDate);
+          successTime.textContent = `${timeFormatter.format(selectedSlot.date)} · 30 minutos`;
+          bookingForm.classList.add("hidden");
+          bookingForm.classList.remove("flex");
+          bookingSuccess.classList.remove("hidden");
+          bookingSuccess.classList.add("flex");
+          root.dispatchEvent(
+            new CustomEvent("calendar:booked", {
+              bubbles: true,
+              detail: payload,
+            }),
+          );
+        } catch (error) {
+          bookingStatus.textContent =
+            error instanceof Error
+              ? error.message
+              : "No fue posible confirmar la reserva.";
+        } finally {
+          setButtonDisabled(submitBooking, false);
+          submitBooking.removeAttribute("aria-busy");
+        }
+      });
+
+      void Promise.all([loadMonth(), loadQuestions()]);
+    });
+</script>
