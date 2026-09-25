@@ -580,26 +580,28 @@ import { Form } from "@/components/starwind/form";
         }
       };
 
-      const getQuestionResponses = () => {
-        const responses: Record<string, string | boolean> = {};
+      const getQuestionAnswers = () => {
+        const answers: { question_id: string; value: string }[] = [];
         bookingQuestions.forEach((question, index) => {
           const controls = questionsContainer.querySelectorAll<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
           >(`[data-booking-question="${index}"]`);
           const first = controls[0];
           if (!first) return;
+          let value = "";
           if (question.type === "checkbox" && first instanceof HTMLInputElement) {
-            responses[question.label] = first.checked;
+            value = first.checked ? "yes" : "no";
           } else if (question.type === "radio") {
             const selected = Array.from(controls).find(
               (control) => control instanceof HTMLInputElement && control.checked,
             );
-            responses[question.label] = selected?.value ?? "";
+            value = selected?.value ?? "";
           } else {
-            responses[question.label] = first.value.trim();
+            value = first.value.trim();
           }
+          answers.push({ question_id: question.id, value });
         });
-        return responses;
+        return answers;
       };
 
       const renderSlots = () => {
@@ -794,7 +796,7 @@ import { Form } from "@/components/starwind/form";
               start_at: selectedSlot.startAt,
               name: nameInput.value.trim(),
               email: emailInput.value.trim(),
-              responses: getQuestionResponses(),
+              answers: getQuestionAnswers(),
             }),
           });
           const payload: unknown = await response.json().catch(() => null);

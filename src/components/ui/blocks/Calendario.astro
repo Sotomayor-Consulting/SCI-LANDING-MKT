@@ -15,7 +15,6 @@ import {
   FieldLabel,
 } from "@/components/starwind/field";
 import { Form } from "@/components/starwind/form";
-import { Separator } from "@/components/starwind/separator";
 ---
 
 <section class="relative overflow-hidden bg-muted/45 py-12 sm:py-16 lg:py-20">
@@ -639,8 +638,8 @@ import { Separator } from "@/components/starwind/separator";
         }
       };
 
-      const getQuestionResponses = () => {
-        const responses: Record<string, string | boolean> = {};
+      const getQuestionAnswers = () => {
+        const answers: { question_id: string; value: string }[] = [];
 
         bookingQuestions.forEach((question, index) => {
           const controls = bookingQuestionsContainer.querySelectorAll<
@@ -649,19 +648,21 @@ import { Separator } from "@/components/starwind/separator";
           const firstControl = controls[0];
           if (!firstControl) return;
 
+          let value = "";
           if (question.type === "checkbox" && firstControl instanceof HTMLInputElement) {
-            responses[question.label] = firstControl.checked;
+            value = firstControl.checked ? "yes" : "no";
           } else if (question.type === "radio") {
             const selected = Array.from(controls).find(
               (control) => control instanceof HTMLInputElement && control.checked,
             );
-            responses[question.label] = selected?.value ?? "";
+            value = selected?.value ?? "";
           } else {
-            responses[question.label] = firstControl.value.trim();
+            value = firstControl.value.trim();
           }
+          answers.push({ question_id: question.id, value });
         });
 
-        return responses;
+        return answers;
       };
 
       const renderSlots = () => {
@@ -907,7 +908,7 @@ import { Separator } from "@/components/starwind/separator";
               start_at: selectedSlot.startAt,
               name: nameInput.value.trim(),
               email: emailInput.value.trim(),
-              responses: getQuestionResponses(),
+              answers: getQuestionAnswers(),
             }),
           });
           const payload: unknown = await response.json().catch(() => null);

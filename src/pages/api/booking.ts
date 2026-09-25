@@ -11,12 +11,15 @@ const bookingSchema = z.object({
     (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
     "Correo electrónico inválido.",
   ),
-  responses: z
-    .record(
-      z.string().min(1).max(500),
-      z.union([z.string().max(5_000), z.boolean()]),
+  answers: z
+    .array(
+      z.object({
+        question_id: z.string().min(1).max(100),
+        value: z.string().max(5_000),
+      }),
     )
-    .default({}),
+    .max(100)
+    .default([]),
 });
 
 export const POST: APIRoute = async ({ request }) => {
@@ -72,7 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
           start_at: startAt.toISOString(),
           name: parsed.data.name,
           email: parsed.data.email,
-          responses: parsed.data.responses,
+          answers: parsed.data.answers,
         }),
         signal: AbortSignal.timeout(10_000),
       },
