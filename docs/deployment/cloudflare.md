@@ -51,6 +51,8 @@ After the project exists, open **Settings**, then **Variables and Secrets** and 
 | Encrypted secret | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key |
 | Encrypted secret | `CALENDAR_WEBHOOK_SECRET` | Shared secret for calendar confirmations |
 | Encrypted secret | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key |
+| Encrypted secret | `CALNODE_API_KEY` | API key usada por `/api/slots`, `/api/questions` y `/api/booking` |
+| Variable | `CALNODE_EVENT_TYPE_SLUG` | Slug del tipo de evento que muestra el calendario |
 | Encrypted secret | `DATABASE_URL` | Supabase pooler connection string (Supavisor, transaction mode, port 6543) for `/api/create-lead` |
 | Encrypted secret | `ZCAL_WEBHOOK_SECRET` | Secret configured in Zcal → Integrations → Webhooks; verifies `POST /api/zcal-webhook` (HMAC-SHA256) |
 | Encrypted secret | `TIKTOK_ACCESS_TOKEN` | TikTok Events API token (CAPI) |
