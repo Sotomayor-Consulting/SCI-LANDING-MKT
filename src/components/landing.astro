@@ -202,6 +202,7 @@ const experience = [
     description: "atención en español",
   },
 ];
+import Calendario from "@components/ui/blocks/Calendariolite.astro";
 ---
 
 <main id="inicio" class="overflow-hidden">
@@ -231,7 +232,8 @@ const experience = [
         benefits={benefits}
       />
 
-      <Formulario adviceOptions={adviceOptions} activities={activities} />
+      <!-- <Formulario adviceOptions={adviceOptions} activities={activities} /> -->
+      <Calendario />
     </div>
   </section>
 

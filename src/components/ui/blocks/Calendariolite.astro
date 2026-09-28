@@ -1,0 +1,86 @@
+---
+import CalendarioB from "./CalendarioB.astro";
+---
+
+<div data-calendar-lite-root data-lite-step="calendar" class="w-full h-full place-content-center">
+  <CalendarioB variant="extended"/>
+</div>
+
+<style>
+  [data-calendar-lite-root] {
+    width: 100%;
+  }
+
+  [data-calendar-lite-root] :global([data-calendar-b-root]) {
+    display: block;
+    max-width: 32rem;
+  }
+
+  [data-calendar-lite-root] :global([data-calendar-panel]),
+  [data-calendar-lite-root] :global([data-booking-panel]) {
+    padding: 1.25rem;
+  }
+
+  [data-calendar-lite-root] :global([data-calendar-panel]) {
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  [data-calendar-lite-root] :global([data-booking-panel]) {
+    display: block;
+  }
+
+  [data-calendar-lite-root][data-lite-step="calendar"]
+    :global([data-booking-panel]),
+  [data-calendar-lite-root][data-lite-step="booking"]
+    :global([data-calendar-panel]) {
+    display: none !important;
+  }
+
+  [data-calendar-lite-root][data-lite-step="booking"]
+    :global([data-booking-panel]) {
+    display: block !important;
+  }
+
+  [data-calendar-lite-root] :global([data-back-to-calendar]) {
+    display: inline-flex !important;
+  }
+
+  [data-calendar-lite-root] :global([data-calendar-grid] > button),
+  [data-calendar-lite-root] :global([data-calendar-grid] > span) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+</style>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-calendar-lite-root]")
+    .forEach((liteRoot) => {
+      const calendar = liteRoot.querySelector<HTMLElement>(
+        "[data-calendar-b-root]",
+      );
+      const calendarGrid = calendar?.querySelector<HTMLElement>(
+        "[data-calendar-grid]",
+      );
+      const backToCalendar = calendar?.querySelector<HTMLButtonElement>(
+        "[data-back-to-calendar]",
+      );
+
+      if (!calendar || !calendarGrid || !backToCalendar) return;
+
+      calendarGrid.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const dayButton = target.closest<HTMLButtonElement>("button");
+        if (!dayButton || dayButton.disabled) return;
+
+        liteRoot.dataset.liteStep = "booking";
+      });
+
+      backToCalendar.addEventListener("click", () => {
+        liteRoot.dataset.liteStep = "calendar";
+      });
+    });
+</script>

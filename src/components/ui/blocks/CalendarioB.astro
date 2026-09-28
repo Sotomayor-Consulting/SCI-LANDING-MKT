@@ -4,6 +4,7 @@ import IconCheck from "@tabler/icons/outline/check.svg";
 import IconChevronLeft from "@tabler/icons/outline/chevron-left.svg";
 import IconChevronRight from "@tabler/icons/outline/chevron-right.svg";
 import IconWorld from "@tabler/icons/outline/world.svg";
+import type { HTMLAttributes } from "astro/types";
 
 import { Button } from "@/components/starwind/button";
 import { Card } from "@/components/starwind/card";
@@ -14,16 +15,40 @@ import {
   FieldLabel,
 } from "@/components/starwind/field";
 import { Form } from "@/components/starwind/form";
+import { Skeleton } from "@/components/starwind/skeleton";
+
+interface Props extends HTMLAttributes<"section"> {
+  variant?: "standar" | "extended";
+}
+
+const {
+  variant = "standar",
+  class: className,
+  ...rest
+} = Astro.props;
 ---
 
-<section class="bg-muted px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
+<section
+  class:list={[
+    "bg-muted",
+    className,
+    { "h-full min-h-0 w-full": variant === "extended" },
+  ]}
+  {...rest}
+>
   <Card
     data-calendar-b-root
-    class="mx-auto grid w-full max-w-3xl gap-0 overflow-hidden rounded-2xl bg-card py-0 shadow-2xl md:grid-cols-[minmax(0,1.1fr)_minmax(17rem,0.9fr)]"
+    class:list={[
+      "mx-auto grid w-full gap-0 overflow-hidden rounded-2xl bg-card py-0 shadow-2xl md:grid-cols-[minmax(0,1.1fr)_minmax(17rem,0.9fr)]",
+      variant === "standar" ? "max-w-3xl" : "h-full min-h-0 max-w-none",
+    ]}
   >
     <section
       data-calendar-panel
-      class="border-b p-5 sm:p-8 md:border-r md:border-b-0 border-neutral-200"
+      class:list={[
+        "border-b border-neutral-200 p-5 sm:p-8 md:border-r md:border-b-0",
+        { "flex h-full min-h-0 flex-col": variant === "extended" },
+      ]}
       aria-label="Selector de fecha"
     >
       <div class="mb-4 flex items-center gap-2">
@@ -67,9 +92,20 @@ import { Form } from "@/components/starwind/form";
       </div>
       <div
         data-calendar-grid
-        class="grid grid-cols-7 gap-0.5"
+        class:list={[
+          "grid grid-cols-7 gap-0.5",
+          { "min-h-0 flex-1 auto-rows-fr": variant === "extended" },
+        ]}
         role="grid"
       >
+        {
+          Array.from({ length: 35 }, () => (
+            <Skeleton
+              class="size-9 place-self-center rounded-lg sm:size-10"
+              aria-hidden="true"
+            />
+          ))
+        }
       </div>
 
       <p class="mt-3 flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
@@ -81,7 +117,10 @@ import { Form } from "@/components/starwind/form";
 
     <section
       data-booking-panel
-      class="hidden h-[29rem] min-w-0 p-5 sm:p-8 md:block"
+      class:list={[
+        "hidden min-w-0 p-5 sm:p-8 md:block",
+        variant === "standar" ? "h-[29rem]" : "h-full min-h-0",
+      ]}
       aria-label="Horarios y reserva"
       aria-live="polite"
     >
@@ -96,11 +135,13 @@ import { Form } from "@/components/starwind/form";
           <IconChevronLeft class="size-3.5" />
           Atrás
         </Button>
+        <div data-slots-date-skeleton>
+          <Skeleton class="h-4 w-40" aria-hidden="true" />
+        </div>
         <h2
           data-slots-date
-          class="text-[0.9375rem] font-semibold text-foreground"
+          class="hidden text-[0.9375rem] font-semibold text-foreground"
         >
-          Cargando agenda...
         </h2>
         <p class="mt-1 text-xs text-muted-foreground">
           Selecciona el horario que mejor te convenga.
@@ -109,6 +150,11 @@ import { Form } from "@/components/starwind/form";
           data-slots-list
           class="mt-4 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-border"
         >
+          {
+            Array.from({ length: 6 }, () => (
+              <Skeleton class="h-10 w-full rounded-lg" aria-hidden="true" />
+            ))
+          }
         </div>
         <p
           data-selection-status
@@ -173,7 +219,10 @@ import { Form } from "@/components/starwind/form";
             <FieldError match="typeMismatch">Ingresa un correo válido.</FieldError>
           </Field>
 
-          <div data-booking-questions class="flex flex-col gap-4"></div>
+          <div data-booking-questions class="flex flex-col gap-4">
+            <Skeleton class="h-9 w-full rounded-lg" aria-hidden="true" />
+            <Skeleton class="h-9 w-full rounded-lg" aria-hidden="true" />
+          </div>
         </div>
 
         <p
@@ -187,7 +236,10 @@ import { Form } from "@/components/starwind/form";
           type="submit"
           variant="default"
           size="sm"
-          class="mt-2 w-full rounded-lg py-4"
+          class:list={[
+            "w-full rounded-lg py-4",
+            variant === "standar" ? "mt-2" : "mt-auto",
+          ]}
           disabled
         >
           Confirmar reserva
@@ -352,6 +404,7 @@ import { Form } from "@/components/starwind/form";
       const calendarPanel = get<HTMLElement>("[data-calendar-panel]");
       const bookingPanel = get<HTMLElement>("[data-booking-panel]");
       const slotsView = get<HTMLElement>("[data-slots-view]");
+      const slotsDateSkeleton = get<HTMLElement>("[data-slots-date-skeleton]");
       const slotsDate = get<HTMLElement>("[data-slots-date]");
       const slotsList = get<HTMLElement>("[data-slots-list]");
       const selectionStatus = get<HTMLElement>("[data-selection-status]");
@@ -378,6 +431,7 @@ import { Form } from "@/components/starwind/form";
         !calendarPanel ||
         !bookingPanel ||
         !slotsView ||
+        !slotsDateSkeleton ||
         !slotsDate ||
         !slotsList ||
         !selectionStatus ||
@@ -396,6 +450,35 @@ import { Form } from "@/components/starwind/form";
         !nameInput ||
         !emailInput
       ) return;
+
+      const SKELETON_BASE_CLASS = "animate-pulse rounded-md bg-muted";
+
+      const captureSkeletonNodes = (container: HTMLElement, count: number) => {
+        const captured = Array.from(container.children).map((node) =>
+          node.cloneNode(true),
+        );
+        if (captured.length > 0) return captured;
+        return Array.from({ length: count }, () => {
+          const node = document.createElement("div");
+          node.dataset.slot = "skeleton";
+          node.className = SKELETON_BASE_CLASS;
+          node.setAttribute("aria-hidden", "true");
+          return node;
+        });
+      };
+
+      const renderSkeletonNodes = (
+        container: HTMLElement,
+        nodes: readonly Node[],
+      ) => {
+        const fragment = document.createDocumentFragment();
+        nodes.forEach((node) => fragment.append(node.cloneNode(true)));
+        container.replaceChildren(fragment);
+      };
+
+      const calendarSkeletonNodes = captureSkeletonNodes(calendarGrid, 35);
+      const slotSkeletonNodes = captureSkeletonNodes(slotsList, 6);
+      const questionSkeletonNodes = captureSkeletonNodes(questionsContainer, 2);
 
       timezone.textContent = Intl.DateTimeFormat()
         .resolvedOptions()
@@ -429,6 +512,21 @@ import { Form } from "@/components/starwind/form";
         submitButton.disabled = disabled;
         submitButton.toggleAttribute("data-disabled", disabled);
         submitButton.setAttribute("aria-disabled", String(disabled));
+      };
+
+      const showSlotsDate = (text: string) => {
+        slotsDate.textContent = text;
+        slotsDate.classList.remove("hidden");
+        slotsDateSkeleton.classList.add("hidden");
+      };
+
+      const setAgendaLoading = (loading: boolean) => {
+        bookingPanel.setAttribute("aria-busy", String(loading));
+        slotsDateSkeleton.classList.toggle("hidden", !loading);
+        slotsDate.classList.toggle("hidden", loading);
+        if (!loading) return;
+        renderSkeletonNodes(slotsList, slotSkeletonNodes);
+        renderSkeletonNodes(calendarGrid, calendarSkeletonNodes);
       };
 
       const showSlots = () => {
@@ -538,6 +636,7 @@ import { Form } from "@/components/starwind/form";
       };
 
       const loadQuestions = async () => {
+        renderSkeletonNodes(questionsContainer, questionSkeletonNodes);
         try {
           const response = await fetch("/api/questions", {
             headers: { Accept: "application/json" },
@@ -573,6 +672,7 @@ import { Form } from "@/components/starwind/form";
           renderQuestions();
           setSubmitDisabled(false);
         } catch (error) {
+          questionsContainer.replaceChildren();
           bookingStatus.textContent =
             error instanceof Error
               ? error.message
@@ -611,7 +711,7 @@ import { Form } from "@/components/starwind/form";
         if (!selectedDate) return;
 
         const slots = slotsByDate.get(toDateKeyB(selectedDate)) ?? [];
-        slotsDate.textContent = dateFormatterB.format(selectedDate);
+        showSlotsDate(dateFormatterB.format(selectedDate));
         if (slots.length === 0) {
           selectionStatus.textContent =
             "Ya no quedan horarios disponibles para este día.";
@@ -701,8 +801,8 @@ import { Form } from "@/components/starwind/form";
         selectedDate = null;
         selectedSlot = null;
         slotsByDate = new Map();
-        slotsDate.textContent = "Consultando disponibilidad...";
-        slotsList.replaceChildren();
+        selectionStatus.textContent = "";
+        setAgendaLoading(true);
         previousButton.disabled = true;
         nextButton.disabled = true;
 
@@ -734,17 +834,20 @@ import { Form } from "@/components/starwind/form";
             selectedDate = startOfDayB(firstAvailable.date);
             renderSlots();
           } else {
-            slotsDate.textContent = "No hay cupos este mes";
+            showSlotsDate("No hay cupos este mes");
             selectionStatus.textContent =
               "Prueba avanzando al siguiente mes.";
           }
         } catch (error) {
           if (requestId !== activeRequest) return;
-          slotsDate.textContent = "No fue posible cargar la agenda";
+          showSlotsDate("No fue posible cargar la agenda");
           selectionStatus.textContent =
             error instanceof Error ? error.message : "Intenta nuevamente más tarde.";
         } finally {
-          if (requestId === activeRequest) renderCalendar();
+          if (requestId === activeRequest) {
+            setAgendaLoading(false);
+            renderCalendar();
+          }
         }
       };
 
