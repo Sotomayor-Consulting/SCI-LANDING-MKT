@@ -21,14 +21,11 @@ interface Props extends HTMLAttributes<"section"> {
   variant?: "standar" | "extended";
 }
 
-const {
-  variant = "standar",
-  class: className,
-  ...rest
-} = Astro.props;
+const { variant = "standar", class: className, ...rest } = Astro.props;
 ---
 
 <section
+  id="agendar"
   class:list={[
     "bg-muted",
     className,
@@ -108,7 +105,9 @@ const {
         }
       </div>
 
-      <p class="mt-3 flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground">
+      <p
+        class="mt-3 flex items-center gap-1.5 text-[0.6875rem] text-muted-foreground"
+      >
         <IconWorld class="size-3" />
         <span>Zona horaria:</span>
         <strong data-timezone class="truncate font-medium">Hora local</strong>
@@ -185,7 +184,10 @@ const {
 
         <div class="flex flex-col gap-4">
           <Field name="name">
-            <FieldLabel for="calendar-b-name" class="text-xs text-muted-foreground">
+            <FieldLabel
+              for="calendar-b-name"
+              class="text-xs text-muted-foreground"
+            >
               Nombre
             </FieldLabel>
             <FieldControl
@@ -199,11 +201,16 @@ const {
               class="h-9 rounded-lg border-[1.5px] text-sm text-foreground"
             />
             <FieldError match="valueMissing">Ingresa tu nombre.</FieldError>
-            <FieldError match="tooShort">Ingresa al menos 2 caracteres.</FieldError>
+            <FieldError match="tooShort"
+              >Ingresa al menos 2 caracteres.</FieldError
+            >
           </Field>
 
           <Field name="email">
-            <FieldLabel for="calendar-b-email" class="text-xs text-muted-foreground">
+            <FieldLabel
+              for="calendar-b-email"
+              class="text-xs text-muted-foreground"
+            >
               Correo electrónico
             </FieldLabel>
             <FieldControl
@@ -216,7 +223,9 @@ const {
               class="h-9 rounded-lg border-[1.5px] text-sm text-foreground"
             />
             <FieldError match="valueMissing">Ingresa tu correo.</FieldError>
-            <FieldError match="typeMismatch">Ingresa un correo válido.</FieldError>
+            <FieldError match="typeMismatch"
+              >Ingresa un correo válido.</FieldError
+            >
           </Field>
 
           <div data-booking-questions class="flex flex-col gap-4">
@@ -251,11 +260,16 @@ const {
         data-booking-success
         class="hidden h-full flex-col items-start justify-center"
       >
-        <div class="flex size-12 items-center justify-center rounded-full bg-green-100 text-green-700">
+        <div
+          class="flex size-12 items-center justify-center rounded-full bg-green-100 text-green-700"
+        >
           <IconCheck class="size-5" />
         </div>
-        <h2 class="mt-4 text-base font-bold text-foreground">Reserva confirmada</h2>
-        <p data-success-date class="mt-2 text-sm font-semibold text-foreground"></p>
+        <h2 class="mt-4 text-base font-bold text-foreground">
+          Reserva confirmada
+        </h2>
+        <p data-success-date class="mt-2 text-sm font-semibold text-foreground">
+        </p>
         <p data-success-time class="mt-1 text-xs text-muted-foreground"></p>
         <p class="mt-3 text-xs leading-relaxed text-muted-foreground">
           Te hemos enviado un correo de confirmación.
@@ -338,7 +352,12 @@ const {
         }
         return;
       }
-      if (!isRecordB(value) || value.available === false || value.is_available === false) return;
+      if (
+        !isRecordB(value) ||
+        value.available === false ||
+        value.is_available === false
+      )
+        return;
 
       const rawStart =
         value.start_at ??
@@ -449,7 +468,8 @@ const {
         !successTime ||
         !nameInput ||
         !emailInput
-      ) return;
+      )
+        return;
 
       const SKELETON_BASE_CLASS = "animate-pulse rounded-md bg-muted";
 
@@ -658,9 +678,13 @@ const {
             .map((item, index) => ({
               id: typeof item.id === "string" ? item.id : String(index),
               label: typeof item.label === "string" ? item.label.trim() : "",
-              type: typeof item.type === "string" ? item.type.toLowerCase() : "text",
+              type:
+                typeof item.type === "string"
+                  ? item.type.toLowerCase()
+                  : "text",
               required: item.required === true,
-              position: typeof item.position === "number" ? item.position : index,
+              position:
+                typeof item.position === "number" ? item.position : index,
               options: Array.isArray(item.options)
                 ? item.options.filter(
                     (option): option is string => typeof option === "string",
@@ -689,11 +713,15 @@ const {
           const first = controls[0];
           if (!first) return;
           let value = "";
-          if (question.type === "checkbox" && first instanceof HTMLInputElement) {
+          if (
+            question.type === "checkbox" &&
+            first instanceof HTMLInputElement
+          ) {
             value = first.checked ? "yes" : "no";
           } else if (question.type === "radio") {
             const selected = Array.from(controls).find(
-              (control) => control instanceof HTMLInputElement && control.checked,
+              (control) =>
+                control instanceof HTMLInputElement && control.checked,
             );
             value = selected?.value ?? "";
           } else {
@@ -757,7 +785,8 @@ const {
         for (let day = 1; day <= daysInMonth; day += 1) {
           const date = startOfDayB(new Date(year, month, day));
           const available =
-            date >= today && (slotsByDate.get(toDateKeyB(date))?.length ?? 0) > 0;
+            date >= today &&
+            (slotsByDate.get(toDateKeyB(date))?.length ?? 0) > 0;
           const selected = selectedDate?.getTime() === date.getTime();
           const isToday = date.getTime() === today.getTime();
           const button = document.createElement("button");
@@ -835,14 +864,15 @@ const {
             renderSlots();
           } else {
             showSlotsDate("No hay cupos este mes");
-            selectionStatus.textContent =
-              "Prueba avanzando al siguiente mes.";
+            selectionStatus.textContent = "Prueba avanzando al siguiente mes.";
           }
         } catch (error) {
           if (requestId !== activeRequest) return;
           showSlotsDate("No fue posible cargar la agenda");
           selectionStatus.textContent =
-            error instanceof Error ? error.message : "Intenta nuevamente más tarde.";
+            error instanceof Error
+              ? error.message
+              : "Intenta nuevamente más tarde.";
         } finally {
           if (requestId === activeRequest) {
             setAgendaLoading(false);
@@ -883,7 +913,8 @@ const {
 
       bookingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (!bookingForm.reportValidity() || !selectedDate || !selectedSlot) return;
+        if (!bookingForm.reportValidity() || !selectedDate || !selectedSlot)
+          return;
         setSubmitDisabled(true);
         submitButton.setAttribute("aria-busy", "true");
         bookingStatus.textContent = "Confirmando tu reserva...";
