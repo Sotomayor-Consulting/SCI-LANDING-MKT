@@ -2,9 +2,12 @@ import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
 import { z } from "zod";
 
+import { resolveCalnodeEventTypeSlug } from "@/infrastructure/calnode/calnode-event-type";
+
 export const prerender = false;
 
 const bookingSchema = z.object({
+  event_type_slug: z.string().optional(),
   start_at: z.string().min(1),
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().max(254).refine(
@@ -50,7 +53,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   const runtimeEnv = env as Record<string, string | undefined>;
   const apiKey = runtimeEnv.CALNODE_API_KEY;
-  const eventTypeSlug = runtimeEnv.CALNODE_EVENT_TYPE_SLUG ?? "test-SCI";
+  const eventTypeSlug = resolveCalnodeEventTypeSlug(
+    runtimeEnv,
+    parsed.data.event_type_slug,
+  );
+
+  if (!eventTypeSlug) {
+    return Response.json({ error: "El slug de Calnode no es válido." }, { status: 400 });
+  }
 
   if (!apiKey) {
     console.error("CALNODE_API_KEY is not configured");

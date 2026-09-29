@@ -1,6 +1,8 @@
 import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
 
+import { resolveCalnodeEventTypeSlug } from "@/infrastructure/calnode/calnode-event-type";
+
 export const prerender = false;
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -36,7 +38,14 @@ export const GET: APIRoute = async ({ request }) => {
 
   const runtimeEnv = env as Record<string, string | undefined>;
   const apiKey = runtimeEnv.CALNODE_API_KEY;
-  const eventTypeSlug = runtimeEnv.CALNODE_EVENT_TYPE_SLUG ?? "test-SCI";
+  const eventTypeSlug = resolveCalnodeEventTypeSlug(
+    runtimeEnv,
+    requestUrl.searchParams.get("slug"),
+  );
+
+  if (!eventTypeSlug) {
+    return Response.json({ error: "El slug de Calnode no es válido." }, { status: 400 });
+  }
 
   if (!apiKey) {
     console.error("CALNODE_API_KEY is not configured");
