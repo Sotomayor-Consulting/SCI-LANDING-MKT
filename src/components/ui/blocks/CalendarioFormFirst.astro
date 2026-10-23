@@ -1,0 +1,34 @@
+---
+import CalendarioB from "./CalendarioB.astro";
+
+interface Props {
+  slug?: string;
+}
+
+const { slug = "test-sci-2" } = Astro.props;
+---
+
+<div data-calendar-form-first-root class="w-full place-content-center">
+  <CalendarioB flow="form-first" variant="standar" {slug} />
+</div>
+
+<style>
+  [data-calendar-form-first-root] {
+    width: 100%;
+  }
+
+  [data-calendar-form-first-root] :global([data-calendar-b-root]) {
+    max-width: 32rem;
+  }
+
+  [data-calendar-form-first-root] :global([data-calendar-panel]),
+  [data-calendar-form-first-root] :global([data-booking-panel]) {
+    padding: 1.25rem;
+  }
+
+  [data-calendar-form-first-root] :global([data-calendar-grid] > button),
+  [data-calendar-form-first-root] :global([data-calendar-grid] > span) {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+</style>

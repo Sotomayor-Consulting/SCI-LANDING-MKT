@@ -20,7 +20,7 @@ export class OdooBlacklistRepository implements BlacklistRepository {
         fields: ['id', 'name', 'email_from', 'phone'],
         limit: 1,
       }
-    );
+    ); 
 
     const record = response.data[0];
 

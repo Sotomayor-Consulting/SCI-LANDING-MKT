@@ -27,7 +27,8 @@ import StickyBar from "@/components/ui/blocks/StickyBar.astro";
 const GTM_ID = "GTM-TNRQGDM";
 const WHATSAPP_URL = "https://wa.link/jx59a9";
 const ZCAL_OPEN_URL = "https://zcal.co/t/agendar-asesoria-llc/60min";
-const TRUSTPILOT_URL = "https://www.trustpilot.com/review/sotomayorconsulting.com";
+const TRUSTPILOT_URL =
+  "https://www.trustpilot.com/review/sotomayorconsulting.com";
 
 const facturationOptions = [
   "Aún no factura",
@@ -51,7 +52,8 @@ const partnerPoints = [
 ];
 
 const iconPaths = {
-  check: "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
+  check:
+    "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",
   shield: "M12 2 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-4Z",
   compass: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM9 12l2 2 4-4",
 };
@@ -83,17 +85,25 @@ const meetingItems = [
   "El plan que se ajusta a tu caso y los próximos pasos concretos.",
 ];
 const meetingDetails = [
-  { label: "Para quién", value: "Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas." },
+  {
+    label: "Para quién",
+    value:
+      "Fundadores de e-commerce, agencias, SaaS, consultores e inversionistas.",
+  },
   { label: "Modalidad", value: "Online, por Zoom" },
   { label: "Costo", value: "Gratuita, sin compromiso" },
   { label: "Con quién", value: "Un asesor de la firma, en español" },
-  { label: "Si no es tu caso", value: "Te lo decimos en la reunión. Sin costo." },
+  {
+    label: "Si no es tu caso",
+    value: "Te lo decimos en la reunión. Sin costo.",
+  },
 ];
 
 const steps = [
   {
     title: "Asesoría inicial",
-    description: "Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.",
+    description:
+      "Revisamos tu caso y definimos si la LLC te conviene, en qué estado y con qué plan.",
     meta: "Online · sin compromiso",
   },
   {
@@ -111,10 +121,33 @@ const steps = [
 ];
 
 const plans = [
-  { name: "Básico", price: "USD 350", period: "/ año", description: "Constitución ante el estado, EIN y agente residente." },
-  { name: "Estándar", price: "USD 600", period: "/ año", description: "Suma Operating Agreement, consultas ilimitadas y exención BE-13." },
-  { name: "Business", price: "USD 950", period: "/ año", description: "Planificación legal-tributaria, acompañamiento bancario y EIN acelerado.", favorite: true },
-  { name: "Diseño", price: "USD 350", period: "/ único", description: "Planificación y diseño de la LLC para ir paso a paso." },
+  {
+    name: "Básico",
+    price: "USD 350",
+    period: "/ año",
+    description: "Constitución ante el estado, EIN y agente residente.",
+  },
+  {
+    name: "Estándar",
+    price: "USD 600",
+    period: "/ año",
+    description:
+      "Suma Operating Agreement, consultas ilimitadas y exención BE-13.",
+  },
+  {
+    name: "Business",
+    price: "USD 950",
+    period: "/ año",
+    description:
+      "Planificación legal-tributaria, acompañamiento bancario y EIN acelerado.",
+    favorite: true,
+  },
+  {
+    name: "Diseño",
+    price: "USD 350",
+    period: "/ único",
+    description: "Planificación y diseño de la LLC para ir paso a paso.",
+  },
 ];
 
 const experience = [
@@ -124,9 +157,24 @@ const experience = [
   { title: "10", description: "años de experiencia" },
 ];
 const reviews = [
-  { quote: "A pesar de la distancia, me evaluaron como si estuvieran en la oficina de al lado.", cite: "Trustpilot · Bolivia · abril de 2025", flag: "🇧🇴" },
-  { quote: "El equipo fue muy profesional, aclaró las dudas y recomendó lo mejor para la empresa.", cite: "Trustpilot · Ecuador · julio de 2026", flag: "🇪🇨" },
-  { quote: "Servicio recomendado para crear una LLC en Estados Unidos; destacaron la calidad del equipo profesional.", cite: "Trustpilot · Colombia · junio de 2026", flag: "🇨🇴" },
+  {
+    quote:
+      "A pesar de la distancia, me evaluaron como si estuvieran en la oficina de al lado.",
+    cite: "Trustpilot · Bolivia · abril de 2025",
+    flag: "🇧🇴",
+  },
+  {
+    quote:
+      "El equipo fue muy profesional, aclaró las dudas y recomendó lo mejor para la empresa.",
+    cite: "Trustpilot · Ecuador · julio de 2026",
+    flag: "🇪🇨",
+  },
+  {
+    quote:
+      "Servicio recomendado para crear una LLC en Estados Unidos; destacaron la calidad del equipo profesional.",
+    cite: "Trustpilot · Colombia · junio de 2026",
+    flag: "🇨🇴",
+  },
 ];
 
 const suiteChips = [
@@ -141,17 +189,47 @@ const suiteChips = [
 ];
 
 const faqs = [
-  { question: "Ya llené el formulario, ¿por qué debo agendar una reunión?", answer: "El formulario nos dice que te interesa. La reunión es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural." },
-  { question: "¿La asesoría tiene algún costo o compromiso?", answer: "No. Es gratuita y sin compromiso. No hacemos llamadas de venta: es una reunión de trabajo sobre tu caso." },
-  { question: "¿Es legal tener una LLC siendo no residente?", answer: "Sí. Una LLC de no residente es una estructura legal y la usan personas de todo el mundo para operar internacionalmente. Lo importante es armarla y mantenerla bien; ese es el objetivo de la asesoría." },
-  { question: "¿Cuánto cuesta abrir una LLC?", answer: "Los planes son anuales: desde USD 350 (Básico), USD 600 (Estándar) y USD 950 (Business). La tasa del estado se paga aparte y varía según la jurisdicción. El costo exacto de la renovación se detalla con número en la reunión." },
-  { question: "¿Qué requisitos necesito?", answer: "Solo pasaporte vigente de cada socio y un comprobante de domicilio reciente. Los pedimos de forma progresiva al completar el formulario. No necesitas residir en EE. UU., ni visa, SSN o ITIN para constituir." },
-  { question: "¿Cuánto tarda el proceso?", answer: "El registro ante el estado suele tomar de 5 a 7 días hábiles. El EIN, que gestiona el IRS federal, entre 2 y 6 semanas. Nos encargamos de todo el trámite y te mantenemos informado en cada etapa." },
-  { question: "¿Y si una LLC no es lo que me conviene?", answer: "Te lo decimos en la reunión, sin costo, y te orientamos sobre la alternativa (otra estructura, otra jurisdicción o esperar). No forzamos una LLC si tu caso pide otra cosa." },
+  {
+    question: "Ya llené el formulario, ¿por qué debo agendar una reunión?",
+    answer:
+      "El formulario nos dice que te interesa. La reunión es donde revisamos tu caso concreto y sales con un plan: si la LLC te conviene, en qué estado y con qué plan. Es gratuita y es el siguiente paso natural.",
+  },
+  {
+    question: "¿La asesoría tiene algún costo o compromiso?",
+    answer:
+      "No. Es gratuita y sin compromiso. No hacemos llamadas de venta: es una reunión de trabajo sobre tu caso.",
+  },
+  {
+    question: "¿Es legal tener una LLC siendo no residente?",
+    answer:
+      "Sí. Una LLC de no residente es una estructura legal y la usan personas de todo el mundo para operar internacionalmente. Lo importante es armarla y mantenerla bien; ese es el objetivo de la asesoría.",
+  },
+  {
+    question: "¿Cuánto cuesta abrir una LLC?",
+    answer:
+      "Los planes son anuales: desde USD 350 (Básico), USD 600 (Estándar) y USD 950 (Business). La tasa del estado se paga aparte y varía según la jurisdicción. El costo exacto de la renovación se detalla con número en la reunión.",
+  },
+  {
+    question: "¿Qué requisitos necesito?",
+    answer:
+      "Solo pasaporte vigente de cada socio y un comprobante de domicilio reciente. Los pedimos de forma progresiva al completar el formulario. No necesitas residir en EE. UU., ni visa, SSN o ITIN para constituir.",
+  },
+  {
+    question: "¿Cuánto tarda el proceso?",
+    answer:
+      "El registro ante el estado suele tomar de 5 a 7 días hábiles. El EIN, que gestiona el IRS federal, entre 2 y 6 semanas. Nos encargamos de todo el trámite y te mantenemos informado en cada etapa.",
+  },
+  {
+    question: "¿Y si una LLC no es lo que me conviene?",
+    answer:
+      "Te lo decimos en la reunión, sin costo, y te orientamos sobre la alternativa (otra estructura, otra jurisdicción o esperar). No forzamos una LLC si tu caso pide otra cosa.",
+  },
 ];
 
-const LOGO_HEADER = "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png";
-const LOGO_FOOTER = "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-7.png";
+const LOGO_HEADER =
+  "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-4.png";
+const LOGO_FOOTER =
+  "https://sotomayorconsulting.com/wp-content/uploads/2026/06/Recurso-7.png";
 const BRAND = "Sotomayor Consulting International";
 ---
 
@@ -198,14 +276,18 @@ const BRAND = "Sotomayor Consulting International";
       Solo falta un paso. Elige un horario y confirma tus datos de contacto para
       recibir el enlace de Zoom. Asesoría <strong>gratuita</strong> para <strong
         >e-commerce</strong
-      >, <strong>agencias</strong>, <strong>SaaS</strong>, <strong>consultores</strong
+      >, <strong>agencias</strong>, <strong>SaaS</strong>, <strong
+        >consultores</strong
       > e <strong>inversionistas</strong>.
       <Fragment slot="trust">
-        <b class="font-display font-semibold text-[#0d2638]">+5.000 empresas</b> incorporadas | <b class="font-display font-semibold text-[#0d2638]">
-          10 años</b> | <b class="font-display font-semibold text-[#0d2638]"
+        <b class="font-display font-semibold text-[#0d2638]">+5.000 empresas</b> incorporadas
+        | <b class="font-display font-semibold text-[#0d2638]"> 10 años</b> | <b
+          class="font-display font-semibold text-[#0d2638]"
           >Partner de Mercury &amp; Relay</b
         ><br />
-        <span class="tracking-widest text-[#c0872e]" aria-hidden="true">★★★★☆</span>
+        <span class="tracking-widest text-[#c0872e]" aria-hidden="true"
+          >★★★★☆</span
+        >
         4,3/5 en Trustpilot con reseñas verificadas
       </Fragment>
       <ScheduleGate
@@ -251,7 +333,11 @@ const BRAND = "Sotomayor Consulting International";
       ctaNote="Gratis · sin compromiso · por Zoom"
     />
 
-    <Steps kicker="Cómo funciona" title="Del primer contacto a tu LLC activa" steps={steps} />
+    <Steps
+      kicker="Cómo funciona"
+      title="Del primer contacto a tu LLC activa"
+      steps={steps}
+    />
 
     <PlanCards
       kicker="Planes"
@@ -312,13 +398,23 @@ const BRAND = "Sotomayor Consulting International";
     logoAlt={BRAND}
     disclaimer="Sotomayor Consulting International no es un banco, entidad financiera ni presta servicios de crédito directo. Somos una empresa de consultoría que brinda asesoría y acompañamiento en constitución de empresas, apertura de cuentas, trámites y servicios tecnológicos."
     links={[
-      { label: "Privacidad", href: "https://sotomayorconsulting.com/politica-de-privacidad/" },
-      { label: "Términos", href: "https://sotomayorconsulting.com/terminos-de-servicio/" },
+      {
+        label: "Privacidad",
+        href: "https://sotomayorconsulting.com/politica-de-privacidad/",
+      },
+      {
+        label: "Términos",
+        href: "https://sotomayorconsulting.com/terminos-de-servicio/",
+      },
     ]}
     copyright="© 2026 Sotomayor Consulting International"
   />
 
-  <StickyBar whatsappUrl={WHATSAPP_URL} ctaHref="#agendar" ctaLabel="Elegir horario · gratis" />
+  <StickyBar
+    whatsappUrl={WHATSAPP_URL}
+    ctaHref="#agendar"
+    ctaLabel="Elegir horario · gratis"
+  />
 </Layout>
 
 <script>

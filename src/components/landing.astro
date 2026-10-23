@@ -1,6 +1,5 @@
 ---
 import Herolabels from "@components/ui/blocks/Herolabels.astro";
-import Formulario from "@components/ui/blocks/Formulario.astro";
 import Insights from "@components/ui/blocks/Insights.astro";
 import Insight_1 from "@components/ui/blocks/Insights_1.astro";
 import Insight_2 from "@components/ui/blocks/insights_2.astro";
@@ -10,7 +9,6 @@ import Cta from "@components/ui/blocks/Cta.astro";
 import Faqs from "@components/ui/blocks/Faq.astro";
 import Marquee from "@components/ui/blocks/Marquee.astro";
 import Pricing, { type PricingPlan } from "@components/ui/blocks/Pricing.astro";
-
 
 const benefits = [
   "Sin visa ni residencia",
@@ -49,22 +47,6 @@ const audiences = [
     description: "Ordena inversiones y activos en Estados Unidos.",
   },
 ];
-const activities = [
-  "Exportación de servicios profesionales",
-  "E-commerce",
-  "Trader / compra-venta de productos",
-  "Invertir en Bolsa de Valores",
-  "Trader de Stocks",
-  "Proteger mi patrimonio",
-  "Negocios en bienes raíces",
-  "Fintech",
-];
-const adviceOptions = [
-  "Sí, quiero revisar mi caso con un experto",
-  "Primero quiero más información",
-  "Me interesa, pero aún no estoy listo",
-];
-
 
 const steps = [
   {
@@ -95,8 +77,7 @@ const faqs = [
   },
   {
     question: "¿Cuánto tarda el proceso de incorporación de LLC?",
-    answer:
-      "El proceso de incorporación dura aproximadamente: hasta 15 días",
+    answer: "El proceso de incorporación dura aproximadamente: hasta 15 días",
   },
   {
     question: "¿Qué documentos necesito?",
@@ -139,7 +120,7 @@ const planes: PricingPlan[] = [
       { text: "Agente Residente por un año.", included: true },
     ],
     buttonText: "Agenda un cita",
-    buttonHref: "/tu-llc-en-usa/#agendar",
+    buttonHref: "/#agendar",
   },
   {
     name: "Business",
@@ -158,10 +139,13 @@ const planes: PricingPlan[] = [
         included: true,
       },
 
-      { text: "Acompañamiento para la obtención del Número de Identificación Tributaria en hasta 1 semana.", included: true },
+      {
+        text: "Acompañamiento para la obtención del Número de Identificación Tributaria en hasta 1 semana.",
+        included: true,
+      },
     ],
     buttonText: "Agenda un cita",
-    buttonHref: "/tu-llc-en-usa/#agendar",
+    buttonHref: "/#agendar",
     highlighted: true,
     badge: "Más Popular",
   },
@@ -177,10 +161,13 @@ const planes: PricingPlan[] = [
       },
       { text: "Elaboración del Acuerdo de Operación.", included: true },
       { text: "Consultas ilimitadas por un año.", included: true },
-      { text: "Acompañamiento para la solicitud de exención BE-13", included: true },
+      {
+        text: "Acompañamiento para la solicitud de exención BE-13",
+        included: true,
+      },
     ],
     buttonText: "Agenda un cita",
-    buttonHref: "/tu-llc-en-usa/#agendar",
+    buttonHref: "/#agendar",
   },
 ];
 
@@ -202,17 +189,17 @@ const experience = [
     description: "atención en español",
   },
 ];
-import Calendario from "@components/ui/blocks/Calendariolite.astro";
+import Calendario from "@components/ui/blocks/CalendarioFormFirst.astro";
 ---
 
 <main id="inicio" class="overflow-hidden">
-  <section class="bg-muted/50 relative py-14 sm:py-14">
+  <section class="bg-muted/50 relative py-14 sm:py-14" id="agendar">
     <div
       class="pointer-events-none absolute inset-0 [background-image:radial-gradient(#c9d3dc_1px,transparent_1px)] [background-size:28px_28px] opacity-60"
     >
     </div>
     <div
-      class="pointer-events-none absolute top-4 -right-36 size-[32rem] rounded-full bg-[#e8c77c]/20 blur-3xl"
+      class="pointer-events-none absolute top-4 -right-36 size-128 rounded-full bg-[#e8c77c]/20 blur-3xl"
     >
     </div>
     <div
@@ -223,7 +210,7 @@ import Calendario from "@components/ui/blocks/Calendariolite.astro";
         titleLine1="Tu LLC en Estados Unidos,"
         highlighted="bien hecha"
         description=" Una asesoría estratégica para definir si una LLC es lo que necesitas, en qué
-    estado conviene abrirla y cómo evitar errores legales, fiscales y bancarios."
+        estado conviene abrirla y cómo evitar errores legales, fiscales y bancarios."
         note="30 min · por Zoom · sin compromiso"
         labelBtn="Agendar mi asesoría"
         infolabels="+5.000"
@@ -234,6 +221,7 @@ import Calendario from "@components/ui/blocks/Calendariolite.astro";
 
       <!-- <Formulario adviceOptions={adviceOptions} activities={activities} /> -->
       <Calendario />
+
     </div>
   </section>
 
@@ -436,14 +424,14 @@ import Calendario from "@components/ui/blocks/Calendariolite.astro";
       }
 
       if (result.showCalendar !== true) {
-        if (result.code === 'BLACKLISTED') {
+        if (result.code === "BLACKLISTED") {
           setForm2Error(
             "Intentalo nuevamente más tarde. Si el problema persiste, contáctanos.",
           );
         } else {
           setForm2Error(
-      "Recibimos tus datos. Te enviaremos más información próximamente.",
-    );
+            "Recibimos tus datos. Te enviaremos más información próximamente.",
+          );
         }
         return;
       }
