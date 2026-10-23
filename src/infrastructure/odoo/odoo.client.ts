@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = import.meta.env.ODOO_BAS  E_URL?.replace(/\/$/, '');
+const baseUrl = import.meta.env.ODOO_BASE_URL?.replace(/\/$/, '');
 const database = import.meta.env.ODOO_DATABASE;
 const apiKey = import.meta.env.ODOO_API_KEY;
 const timeout = Number(import.meta.env.ODOO_API_TIMEOUT_MS ?? 5000);
