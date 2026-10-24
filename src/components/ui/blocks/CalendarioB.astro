@@ -1,6 +1,7 @@
 ---
 import IconArrowRight from "@tabler/icons/outline/arrow-right.svg";
 import IconCheck from "@tabler/icons/outline/check.svg";
+import IconChevronDown from "@tabler/icons/outline/chevron-down.svg";
 import IconChevronLeft from "@tabler/icons/outline/chevron-left.svg";
 import IconChevronRight from "@tabler/icons/outline/chevron-right.svg";
 import IconWorld from "@tabler/icons/outline/world.svg";
@@ -15,7 +16,12 @@ import {
   FieldLabel,
 } from "@/components/starwind/field";
 import { Form } from "@/components/starwind/form";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@/components/starwind/native-select";
 import { Skeleton } from "@/components/starwind/skeleton";
+import { PHONE_COUNTRIES } from "@/domain/phone/countries";
 
 interface Props extends HTMLAttributes<"section"> {
   variant?: "standar" | "extended";
@@ -35,7 +41,7 @@ const {
 <section
   id="agendar"
   class:list={[
-    "bg-muted",
+    "bg-muted h-full",
     className,
     { "h-full min-h-0 w-full": variant === "extended" },
   ]}
@@ -48,14 +54,14 @@ const {
     data-flow-step={flow === "form-first" ? "details" : undefined}
     class:list={[
       "mx-auto grid w-full gap-0 overflow-hidden rounded-2xl bg-card py-0 shadow-2xl md:grid-cols-[minmax(0,1.1fr)_minmax(17rem,0.9fr)]",
-      variant === "standar" ? "max-w-3xl" : "h-full min-h-0 max-w-none",
+      variant === "standar" ? "h-full max-w-3xl" : "h-full min-h-0 max-w-none",
     ]}
   >
     <section
       data-calendar-panel
       class:list={[
-        "border-b border-neutral-200 p-5 sm:p-8 md:border-r md:border-b-0",
-        { "flex h-full min-h-0 flex-col": variant === "extended" },
+        "h-full min-h-0 border-b border-neutral-200 p-5 sm:p-8 md:border-r md:border-b-0",
+        { "flex flex-col": variant === "extended" },
       ]}
       aria-label="Selector de fecha"
     >
@@ -128,8 +134,7 @@ const {
     <section
       data-booking-panel
       class:list={[
-        "hidden min-w-0 p-5 sm:p-8 md:block",
-        variant === "standar" ? "h-116" : "h-full min-h-0",
+        "hidden h-full min-h-0 min-w-0 p-5 sm:p-8 md:block",
       ]}
       aria-label="Horarios y reserva"
       aria-live="polite"
@@ -254,6 +259,68 @@ const {
             >
           </Field>
 
+          <div data-attendee-phone-field hidden>
+            <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-2">
+              <Field class="gap-1.5">
+                <FieldLabel
+                  for="calendar-b-phone-country"
+                  class="text-xs text-muted-foreground"
+                >
+                  País
+                </FieldLabel>
+                <NativeSelect
+                  id="calendar-b-phone-country"
+                  name="attendee_phone_country"
+                  size="sm"
+                  disabled
+                  data-attendee-phone-country
+                  class="h-9 rounded-lg border-[1.5px] text-sm text-foreground focus-visible:ring-1"
+                >
+                  {PHONE_COUNTRIES.map((country) => (
+                    <NativeSelectOption value={country.iso2}>
+                      {`${country.iso2} ${country.dialCode}`}
+                    </NativeSelectOption>
+                  ))}
+                  <IconChevronDown
+                    slot="icon"
+                    class="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                </NativeSelect>
+              </Field>
+
+              <Field name="attendee_phone" class="gap-1.5">
+                <FieldLabel
+                  for="calendar-b-phone"
+                  class="text-xs text-muted-foreground"
+                >
+                  Teléfono móvil
+                </FieldLabel>
+                <FieldControl
+                  id="calendar-b-phone"
+                  name="attendee_phone"
+                  data-attendee-phone
+                  type="tel"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  pattern="\+?\(?[0-9][0-9 ()-]{5,19}"
+                  placeholder="Número de teléfono"
+                  disabled
+                  class="h-9 rounded-lg border-[1.5px] text-sm text-foreground focus-visible:ring-1"
+                />
+                <FieldError match="valueMissing">
+                  Escribe tu número de teléfono.
+                </FieldError>
+                <FieldError match="patternMismatch">
+                  Usa solo números, espacios o guiones.
+                </FieldError>
+                <FieldError match="customError">
+                  Escribe un número de teléfono válido.
+                </FieldError>
+              </Field>
+            </div>
+          </div>
+
           <div data-booking-questions class="flex flex-col gap-4">
             <Skeleton class="h-9 w-full rounded-lg" aria-hidden="true" />
             <Skeleton class="h-9 w-full rounded-lg" aria-hidden="true" />
@@ -308,6 +375,10 @@ const {
           <div>
             <dt class="text-xs text-muted-foreground">Correo electrónico</dt>
             <dd data-review-email class="mt-0.5 font-medium text-foreground"></dd>
+          </div>
+          <div data-review-phone-row hidden>
+            <dt class="text-xs text-muted-foreground">Teléfono móvil</dt>
+            <dd data-review-phone class="mt-0.5 font-medium text-foreground"></dd>
           </div>
         </dl>
 
@@ -409,6 +480,12 @@ const {
 </style>
 
 <script>
+  import {
+    DEFAULT_PHONE_COUNTRY_ISO,
+    PHONE_COUNTRY_BY_ISO,
+    detectPhoneCountryIso,
+  } from "@/domain/phone/countries";
+
   type JsonRecord = Record<string, unknown>;
   type AvailableSlot = {
     startAt: string;
@@ -583,6 +660,16 @@ const {
       const reviewTime = get<HTMLElement>("[data-review-time]");
       const reviewName = get<HTMLElement>("[data-review-name]");
       const reviewEmail = get<HTMLElement>("[data-review-email]");
+      const reviewPhoneRow = get<HTMLElement>("[data-review-phone-row]");
+      const reviewPhone = get<HTMLElement>("[data-review-phone]");
+      const attendeePhoneField = get<HTMLElement>(
+        "[data-attendee-phone-field]",
+      );
+      const attendeePhoneInput =
+        get<HTMLInputElement>("[data-attendee-phone]");
+      const attendeePhoneCountry = get<HTMLSelectElement>(
+        "[data-attendee-phone-country]",
+      );
       const confirmBookingButton = get<HTMLButtonElement>(
         "[data-confirm-booking]",
       );
@@ -624,6 +711,11 @@ const {
         !reviewTime ||
         !reviewName ||
         !reviewEmail ||
+        !reviewPhoneRow ||
+        !reviewPhone ||
+        !attendeePhoneField ||
+        !attendeePhoneInput ||
+        !attendeePhoneCountry ||
         !confirmBookingButton ||
         !editDetailsButton ||
         !changeScheduleButton ||
@@ -666,6 +758,26 @@ const {
       const pageParams = new URLSearchParams(window.location.search);
       nameInput.value = pageParams.get("name") ?? "";
       emailInput.value = pageParams.get("email") ?? "";
+
+      const getDeviceTimeZone = () => {
+        try {
+          return Intl.DateTimeFormat().resolvedOptions().timeZone ?? "";
+        } catch {
+          return "";
+        }
+      };
+      const deviceTimeZone = getDeviceTimeZone();
+      const detectedPhoneCountryIso = detectPhoneCountryIso(
+        deviceTimeZone,
+        navigator.languages?.length
+          ? navigator.languages
+          : [navigator.language].filter(Boolean),
+      );
+      const bookingLanguage = (
+        document.documentElement.lang ||
+        navigator.language ||
+        "es"
+      ).split("-")[0];
 
       const mobileLayout = window.matchMedia("(max-width: 767px)");
       let mobileStep: "calendar" | "booking" = "calendar";
@@ -729,6 +841,115 @@ const {
         nameInput.focus();
       };
 
+      let phoneCountryTouched = false;
+
+      const updatePhonePlaceholder = () => {
+        const country = PHONE_COUNTRY_BY_ISO.get(attendeePhoneCountry.value);
+        attendeePhoneInput.placeholder =
+          country?.placeholder ?? "Número de teléfono";
+      };
+
+      const applyAttendeePhoneConfig = (
+        visible: boolean,
+        required: boolean,
+      ) => {
+        attendeePhoneField.hidden = !visible;
+        attendeePhoneInput.disabled = !visible;
+        attendeePhoneCountry.disabled = !visible;
+        attendeePhoneInput.required = visible && required;
+        attendeePhoneCountry.required = visible && required;
+        attendeePhoneInput.setCustomValidity("");
+
+        if (!visible) {
+          attendeePhoneInput.value = "";
+          return;
+        }
+
+        if (
+          !phoneCountryTouched ||
+          !PHONE_COUNTRY_BY_ISO.has(attendeePhoneCountry.value)
+        ) {
+          attendeePhoneCountry.value = detectedPhoneCountryIso;
+        }
+
+        updatePhonePlaceholder();
+      };
+
+      attendeePhoneCountry.addEventListener("change", () => {
+        phoneCountryTouched = true;
+        updatePhonePlaceholder();
+        attendeePhoneInput.setCustomValidity("");
+      });
+
+      const validateAttendeePhone = () => {
+        if (attendeePhoneField.hidden || !attendeePhoneInput.value.trim()) {
+          attendeePhoneInput.setCustomValidity("");
+          return;
+        }
+
+        const digits = attendeePhoneInput.value.replace(/\D/g, "");
+        attendeePhoneInput.setCustomValidity(
+          digits.length >= 6 && digits.length <= 15
+            ? ""
+            : "Escribe un número de teléfono válido.",
+        );
+      };
+
+      attendeePhoneInput.addEventListener("input", validateAttendeePhone);
+
+      const getAttendeePhone = () => {
+        if (attendeePhoneField.hidden) return null;
+
+        const raw = attendeePhoneInput.value.trim();
+        if (!raw) return null;
+
+        return {
+          raw,
+          countryIso:
+            PHONE_COUNTRY_BY_ISO.get(attendeePhoneCountry.value)?.iso2 ??
+            DEFAULT_PHONE_COUNTRY_ISO,
+        };
+      };
+
+      const getAttendeePhonePayload = () => {
+        const phone = getAttendeePhone();
+        if (!phone) return {};
+
+        return buildAttendeePhonePayload(phone.raw, phone.countryIso) ?? {};
+      };
+
+      const loadAttendeePhoneConfig = async () => {
+        try {
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), 8_000);
+
+          try {
+            const response = await fetch(withSlug("/api/event-type"), {
+              headers: { Accept: "application/json" },
+              signal: controller.signal,
+            });
+            const payload: unknown = await response.json().catch(() => null);
+
+            if (!response.ok || !isRecordB(payload)) {
+              throw new Error(
+                "No fue posible cargar la configuración del teléfono.",
+              );
+            }
+
+            const required = payload.requireAttendeePhone === true;
+            applyAttendeePhoneConfig(required, required);
+          } finally {
+            window.clearTimeout(timeout);
+          }
+        } catch (error) {
+          console.warn(
+            "No se pudo cargar la configuración del teléfono",
+            error,
+          );
+          applyAttendeePhoneConfig(false, false);
+        }
+      };
+
       const showReview = () => {
         if (!selectedDate || !selectedSlot) return;
         slotsView.classList.add("hidden");
@@ -740,6 +961,23 @@ const {
         reviewTime.textContent = `${timeFormatterB.format(selectedSlot.date)} · 60 minutos`;
         reviewName.textContent = nameInput.value.trim();
         reviewEmail.textContent = emailInput.value.trim();
+
+        const phone = getAttendeePhone();
+
+        if (phone) {
+          const country = PHONE_COUNTRY_BY_ISO.get(phone.countryIso);
+          const isInternational =
+            phone.raw.startsWith("+") || phone.raw.startsWith("00");
+
+          reviewPhone.textContent = isInternational
+            ? `+${phone.raw.replace(/\D/g, "").replace(/^00/, "")}`
+            : `${country?.iso2 ?? phone.countryIso} ${country?.dialCode ?? ""} ${phone.raw}`.trim();
+          reviewPhoneRow.hidden = false;
+        } else {
+          reviewPhone.textContent = "";
+          reviewPhoneRow.hidden = true;
+        }
+
         reviewStatus.textContent = "";
         reviewView.classList.remove("hidden");
         reviewView.classList.add("flex");
@@ -814,13 +1052,16 @@ const {
               fieldset.append(optionLabel);
             });
             field.append(fieldset);
-          } else if (question.type === "textarea") {
+          } else if (
+            question.type === "text" ||
+            question.type === "textarea"
+          ) {
             const textarea = document.createElement("textarea");
             textarea.id = controlId;
-            textarea.rows = 3;
+            textarea.rows = 2;
             textarea.required = question.required;
             textarea.dataset.bookingQuestion = String(index);
-            textarea.className = `${controlClass} min-h-18 resize-y py-2`;
+            textarea.className = `${controlClass} min-h-15 resize-y py-2`;
             field.append(label, textarea);
           } else {
             const input = document.createElement("input");
@@ -836,7 +1077,7 @@ const {
         });
       };
 
-      const loadQuestions = async () => {
+      const loadQuestions = async (): Promise<boolean> => {
         renderSkeletonNodes(questionsContainer, questionSkeletonNodes);
         try {
           const response = await fetch(withSlug("/api/questions"), {
@@ -875,14 +1116,24 @@ const {
             .filter((question) => question.label.length > 0)
             .sort((a, b) => a.position - b.position);
           renderQuestions();
-          setSubmitDisabled(false);
+          return true;
         } catch (error) {
           questionsContainer.replaceChildren();
           bookingStatus.textContent =
             error instanceof Error
               ? error.message
               : "No fue posible cargar las preguntas.";
+          return false;
         }
+      };
+
+      const loadBookingForm = async () => {
+        const [questionsOk] = await Promise.all([
+          loadQuestions(),
+          loadAttendeePhoneConfig(),
+        ]);
+
+        if (questionsOk) setSubmitDisabled(false);
       };
 
       const getQuestionAnswers = () => {
@@ -1121,16 +1372,21 @@ const {
               start_at: selectedSlot.startAt,
               name: nameInput.value.trim(),
               email: emailInput.value.trim(),
+              ...getAttendeePhonePayload(),
+              timezone: deviceTimeZone || undefined,
+              language: bookingLanguage,
               answers: getQuestionAnswers(),
             }),
           });
           const payload: unknown = await response.json().catch(() => null);
           if (!response.ok) {
-            throw new Error(
+            const message =
               isRecordB(payload) && typeof payload.error === "string"
                 ? payload.error
-                : "No fue posible confirmar la reserva.",
-            );
+                : isRecordB(payload) && typeof payload.message === "string"
+                  ? payload.message
+                  : "No fue posible confirmar la reserva.";
+            throw new Error(message);
           }
 
           successDate.textContent = dateFormatterB.format(selectedDate);
@@ -1196,6 +1452,6 @@ const {
       });
 
       if (formFirst) showForm();
-      void Promise.all([loadMonth(), loadQuestions()]);
+      void Promise.all([loadMonth(), loadBookingForm()]);
     });
 </script>

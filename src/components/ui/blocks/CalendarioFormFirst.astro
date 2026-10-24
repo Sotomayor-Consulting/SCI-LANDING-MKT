@@ -5,10 +5,10 @@ interface Props {
   slug?: string;
 }
 
-const { slug = "test-sci-2" } = Astro.props;
+const { slug = "landig-agenda-sci" } = Astro.props;
 ---
 
-<div data-calendar-form-first-root class="w-full place-content-center">
+<div data-calendar-form-first-root class="w-full place-content-center h-full">
   <CalendarioB flow="form-first" variant="standar" {slug} />
 </div>
 

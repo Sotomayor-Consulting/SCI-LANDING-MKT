@@ -1,0 +1,75 @@
+import { env } from "cloudflare:workers";
+import type { APIRoute } from "astro";
+
+import { resolveCalnodeEventTypeSlug } from "@/infrastructure/calnode/calnode-event-type";
+
+export const prerender = false;
+
+export const GET: APIRoute = async ({ request }) => {
+  const runtimeEnv = env as Record<string, string | undefined>;
+  const apiKey = runtimeEnv.CALNODE_API_KEY;
+  const eventTypeSlug = resolveCalnodeEventTypeSlug(
+    runtimeEnv,
+    new URL(request.url).searchParams.get("slug"),
+  );
+
+  if (!eventTypeSlug) {
+    return Response.json(
+      { error: "El slug de Calnode no es válido." },
+      { status: 400 },
+    );
+  }
+
+  if (!apiKey) {
+    console.error("CALNODE_API_KEY is not configured");
+    return Response.json(
+      { error: "El calendario no está configurado temporalmente." },
+      { status: 503 },
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `https://calnode.sotomayorconsulting.com/v1/event-types/${encodeURIComponent(eventTypeSlug)}`,
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+    const data: unknown = await response.json().catch(() => null);
+
+    if (data === null || typeof data !== "object" || Array.isArray(data)) {
+      return Response.json(
+        { error: "Calnode devolvió una respuesta inválida." },
+        { status: 502 },
+      );
+    }
+
+    if (!response.ok) {
+      return Response.json(
+        { error: "No fue posible consultar la configuración del evento." },
+        { status: 502 },
+      );
+    }
+
+    const record = data as Record<string, unknown>;
+
+    return Response.json(
+      {
+        slug: eventTypeSlug,
+        requireAttendeePhone: record.require_attendee_phone === true,
+        allowPhoneCall: record.allow_phone_call === true,
+      },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  } catch (error) {
+    console.error("Unable to fetch Calnode event type", error);
+    return Response.json(
+      { error: "No fue posible consultar la configuración del evento." },
+      { status: 502 },
+    );
+  }
+};

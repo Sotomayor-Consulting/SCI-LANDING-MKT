@@ -1,0 +1,68 @@
+[
+  {
+    "iso2": "EC",
+    "name": "Ecuador",
+    "dialCode": "+593",
+    "placeholder": "099 123 4567",
+    "timezones": ["America/Guayaquil", "Pacific/Galapagos"]
+  },
+  {
+    "iso2": "CO",
+    "name": "Colombia",
+    "dialCode": "+57",
+    "placeholder": "300 123 4567",
+    "timezones": ["America/Bogota"]
+  },
+  {
+    "iso2": "MX",
+    "name": "México",
+    "dialCode": "+52",
+    "placeholder": "55 1234 5678",
+    "timezones": [
+      "America/Mexico_City",
+      "America/Cancun",
+      "America/Monterrey",
+      "America/Tijuana",
+      "America/Chihuahua",
+      "America/Hermosillo",
+      "America/Mazatlan",
+      "America/Merida",
+      "America/Bahia_Banderas"
+    ]
+  },
+  {
+    "iso2": "AR",
+    "name": "Argentina",
+    "dialCode": "+54",
+    "placeholder": "11 15 1234 5678",
+    "timezonePrefixes": ["America/Argentina/"]
+  },
+  {
+    "iso2": "US",
+    "name": "Estados Unidos",
+    "dialCode": "+1",
+    "placeholder": "(555) 123 4567",
+    "timezones": [
+      "America/New_York",
+      "America/Chicago",
+      "America/Denver",
+      "America/Los_Angeles",
+      "America/Phoenix",
+      "America/Anchorage",
+      "Pacific/Honolulu",
+      "America/Detroit"
+    ],
+    "timezonePrefixes": [
+      "America/Indiana/",
+      "America/Kentucky/",
+      "America/North_Dakota/"
+    ]
+  },
+  {
+    "iso2": "ES",
+    "name": "España",
+    "dialCode": "+34",
+    "placeholder": "612 345 678",
+    "timezones": ["Europe/Madrid", "Atlantic/Canary"]
+  }
+]

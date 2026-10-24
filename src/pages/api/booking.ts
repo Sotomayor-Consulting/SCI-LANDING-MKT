@@ -14,6 +14,21 @@ const bookingSchema = z.object({
     (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
     "Correo electrónico inválido.",
   ),
+  attendee_phone: z
+    .string()
+    .trim()
+    .min(6)
+    .max(20)
+    .regex(/^\+?\(?[0-9][0-9\s\-()]{4,19}$/, "Teléfono inválido.")
+    .optional(),
+  attendee_phone_country: z
+    .string()
+    .trim()
+    .regex(/^[A-Za-z]{2}$/)
+    .transform((value) => value.toUpperCase())
+    .optional(),
+  timezone: z.string().trim().max(64).optional(),
+  language: z.string().trim().max(8).optional(),
   answers: z
     .array(
       z.object({
@@ -41,7 +56,19 @@ export const POST: APIRoute = async ({ request }) => {
   const parsed = bookingSchema.safeParse(rawBody);
   if (!parsed.success || Number.isNaN(Date.parse(parsed.data?.start_at ?? ""))) {
     return Response.json(
-      { error: "Nombre, correo y horario válido son requeridos." },
+      { error: "Nombre, correo, teléfono y horario válido son requeridos." },
+      { status: 400 },
+    );
+  }
+
+  const attendeePhone = parsed.data.attendee_phone;
+  const attendeePhoneCountry = parsed.data.attendee_phone_country;
+  const shouldSendPhoneCountry =
+    attendeePhone && !attendeePhone.startsWith("+") && attendeePhoneCountry;
+
+  if (attendeePhone && !attendeePhone.startsWith("+") && !attendeePhoneCountry) {
+    return Response.json(
+      { error: "Selecciona el país de tu número de teléfono." },
       { status: 400 },
     );
   }
@@ -85,6 +112,16 @@ export const POST: APIRoute = async ({ request }) => {
           start_at: startAt.toISOString(),
           name: parsed.data.name,
           email: parsed.data.email,
+          ...(attendeePhone ? { attendee_phone: attendeePhone } : {}),
+          ...(shouldSendPhoneCountry
+            ? { attendee_phone_country: attendeePhoneCountry }
+            : {}),
+          ...(parsed.data.timezone
+            ? { timezone: parsed.data.timezone }
+            : {}),
+          ...(parsed.data.language
+            ? { language: parsed.data.language }
+            : {}),
           answers: parsed.data.answers,
         }),
         signal: AbortSignal.timeout(10_000),
@@ -92,11 +129,23 @@ export const POST: APIRoute = async ({ request }) => {
     );
     const data = await response.json().catch(() => null);
 
-    if (data === null) {
+    if (data === null || typeof data !== "object" || Array.isArray(data)) {
       return Response.json(
         { error: "Calnode devolvió una respuesta inválida." },
         { status: 502 },
       );
+    }
+
+    if (!response.ok) {
+      const record = data as Record<string, unknown>;
+      const message =
+        typeof record.error === "string"
+          ? record.error
+          : typeof record.message === "string"
+            ? record.message
+            : "No fue posible confirmar la reserva.";
+
+      return Response.json({ error: message }, { status: response.status });
     }
 
     return Response.json(data, {
